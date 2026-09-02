@@ -2,37 +2,64 @@
 sidebar_position: 6
 ---
 
-# Async with `await`
+# Async & Concurrency Reference
 
-`await` is a unary prefix operator. When you place it before a call, the
-program waits for that call to finish and then binds its result before moving
-to the next line:
+Kyna integrates asynchronous operations directly into the language through `async` function definitions and the `await` prefix expression.
 
-```kyna
-var awaited = await double(21);   # pauses for double(21), then binds 42
-print(awaited);
-```
+---
 
-## The natural network pattern
+## Asynchronous Functions: `async fn`
 
-`await` reads naturally around processing such as `fetch(...).json()`, where a
-response must first arrive and then be decoded before the value is used:
+Functions that perform non-blocking operations such as networking, disk I/O, or timers are declared with `async fn`:
 
 ```kyna
-try {
-    const users = await fetch("https://api.example.com/v1/users").json();
-    print(len(users), users[0].name);
-} catch (failure) {
-    print(failure.code, failure.message);
+async fn fetchUserProfile(userId: int): str {
+    const url = "https://api.kyna.dev/users/" + userId;
+    const raw = await fetch(url, { timeout: 5000 });
+    return raw;
 }
 ```
 
-## Current behavior
+---
 
-Today `await` passes synchronous results through, so `await fetch(...)` code
-compiles and runs on both the tree-walk and bytecode runtimes without a
-separate async runtime. An event loop is a planned improvement tracked in the
-project's implementation status — `await` is the syntax you keep either way.
+## Awaiting Values: `await`
 
-See the full deterministic example at
-`examples/language/await_and_network.kyna` in the repository.
+The `await` keyword pauses evaluation of the current asynchronous execution flow until the target operation resolves, without blocking other concurrent tasks on the runtime event loop:
+
+```kyna
+async fn main() {
+    print("Initiating requests...");
+
+    const userPromise = await fetchUserProfile(42);
+    print("Profile received:", userPromise);
+}
+
+await main();
+```
+
+---
+
+## Error Handling in Async Contexts
+
+Async operations use standard `try` / `catch` blocks to capture timeouts, DNS resolution failures, and rejected network requests:
+
+```kyna
+async fn safeFetch(url: str): str? {
+    try {
+        const response = await fetch(url, { timeout: 3000 });
+        return response;
+    } catch (err) {
+        print("Async fetch failed with code:", err.code);
+        print("Message:", err.message);
+        return null;
+    }
+}
+```
+
+---
+
+## Concurrency Patterns & Best Practices
+
+1. **Explicit Timeouts**: Always specify a `timeout` option (in milliseconds) when calling `fetch()` to prevent infinite hangs.
+2. **Graceful Degradation**: Pair nullable returns (`T?`) with `try` / `catch` around network borders to handle offline conditions safely.
+3. **Structured Logging**: Log request duration by capturing `time.nowMs()` before and after `await` calls.

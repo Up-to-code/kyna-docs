@@ -2,50 +2,46 @@
 sidebar_position: 6
 ---
 
-# Timing and memory
+# Standard Library: Timing & Performance
 
-Measure work and inspect garbage collection.
+The `std.time` module provides high-resolution timers, epoch timestamps, and sleep utilities for benchmarking, timeouts, and metrics.
 
-## Timing
+---
 
-`clockMs()` returns monotonic milliseconds; `measure(fn)` runs a zero-argument
-function and returns the elapsed time so any computation can be timed:
+## High-Resolution Benchmarking
 
 ```kyna
-fn accumulate(): int {
-    var total = 0;
-    loop (var i = 0; i < 20000; i = i + 1) {
-        total = total + i;
-    }
-    return total;
+import std.time;
+
+# Measure nanoseconds
+const startNs = time.nowNs();
+
+# Perform intensive calculation
+var total = 0;
+loop (var i = 0; i < 100000; i = i + 1) {
+    total = total + i;
 }
 
-var start = clockMs();
-var result = accumulate();
-profileLog("accumulate-by-clock", clockMs() - start);
+const elapsedNs = time.nowNs() - startNs;
+const elapsedMs = elapsedNs / 1000000;
 
-var elapsed = measure(accumulate);
-print("result", result, "measure-ms", elapsed);
+print("Execution time:", elapsedMs, "ms (", elapsedNs, "ns)");
 ```
 
-- `clockMs()` — monotonic milliseconds;
-- `measure(fn)` — run a callable and return elapsed milliseconds;
-- `profileLog(label, value)` — emit a profiling line.
+---
 
-## Memory
+## Standard Timestamps & Sleep
+
+| Function | Signature | Description |
+| :--- | :--- | :--- |
+| `time.nowMs` | `time.nowMs(): int` | Milliseconds since Unix epoch |
+| `time.nowNs` | `time.nowNs(): int` | Nanoseconds for precision benchmarks |
+| `time.sleep` | `time.sleep(ms: int): void` | Pauses execution for `ms` milliseconds |
 
 ```kyna
-collectGarbage();
-print(gcStats());
+import std.time;
+
+print("Starting task...");
+time.sleep(1000); # Pause for 1 second
+print("1 second elapsed.");
 ```
-
-- `collectGarbage()` — force a collection;
-- `gcStats()` — current garbage-collection statistics.
-
-:::tip
-
-Builtins that take significant time are measurable by design: wrap the work in
-a thunk and call `measure(thunk)` to record elapsed time, then `profileLog(...)`
-to emit it.
-
-:::

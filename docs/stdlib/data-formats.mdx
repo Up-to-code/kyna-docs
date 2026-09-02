@@ -2,33 +2,76 @@
 sidebar_position: 3
 ---
 
-# Data formats
+# Standard Library: Data Formats (JSON & TOML)
 
-Kyna encodes and decodes JSON, TOML, and XML.
+Kyna provides native, high-speed encoding and decoding for standard serialization formats including JSON and TOML without needing third-party libraries.
 
-## JSON
+---
+
+## JSON Processing
+
+### Parsing JSON Strings (`jsonParse`)
+
+`jsonParse` converts a valid JSON string into native Kyna maps, lists, and scalar types:
 
 ```kyna
-const data = jsonParse("{\"items\":[20,22],\"ready\":true}");
-print(data.ready);                    # true
+const rawJson = '{"status":"ok","code":200,"items":["alpha","beta"]}';
+const data = jsonParse(rawJson);
 
-const text = jsonStringify({ items: [20, 22], ready: true });
-print(text);                          # {"items":[20,22],"ready":true}
+print(data["status"]); # "ok"
+print(data["code"]);   # 200
+print(data["items"][0]); # "alpha"
 ```
 
-JSON object keys become accessible fields on the decoded object.
+### Serializing to JSON (`jsonStringify`)
 
-## TOML
+`jsonStringify` encodes native Kyna objects, maps, and lists into a UTF-8 JSON string:
 
 ```kyna
-const config = tomlParse("name = \"Kyna\"\nport = 8080");
-print(config.name);                   # Kyna
-print(tomlStringify(config));
+const payload = {
+    "service": "kyna-auth",
+    "timestamp": 1788320000,
+    "active": true
+};
+
+const jsonOutput = jsonStringify(payload);
+print(jsonOutput);
+# Output: {"service":"kyna-auth","timestamp":1788320000,"active":true}
 ```
 
-## XML
+---
+
+## Handling Malformed JSON
+
+When `jsonParse()` encounters invalid syntax, it throws an `Error` with error code `K5100`:
 
 ```kyna
-const doc = xmlParse("<project name=\"Kyna\" />");
-print(xmlStringify(doc));
+try {
+    const invalid = jsonParse("{ invalid_json: true ");
+} catch (err) {
+    print("Failed to parse JSON!");
+    print("Error code:", err.code);     # K5100
+    print("Error message:", err.message);
+}
+```
+
+---
+
+## TOML Support
+
+Kyna includes `tomlParse()` for reading configuration files:
+
+```kyna
+const tomlConfig = """
+[server]
+host = "0.0.0.0"
+port = 8080
+
+[database]
+max_connections = 50
+""";
+
+const config = tomlParse(tomlConfig);
+print("Server Host:", config["server"]["host"]);
+print("Max DB Conns:", config["database"]["max_connections"]);
 ```

@@ -2,63 +2,124 @@
 sidebar_position: 4
 ---
 
-# Classes and objects
+# Classes, Objects & Interfaces Reference
 
-`class` declares a type with fields and methods; `init` is the constructor and
-`self` refers to the instance.
+Kyna supports object-oriented programming with single inheritance, structural interfaces, constructors via `init`, encapsulation modifiers (`public`, `private`), and instance binding through `self`.
 
-```kyna
-class Animal {
-    public name: str;
+---
 
-    public init(name: str) {
-        self.name = name;
-    }
+## Defining a Class
 
-    public fn speak(): str {
-        return self.name;
-    }
-}
-```
-
-## Inheritance and overriding
-
-Use `extends` to inherit, and `override` to replace a base method:
+Classes are declared using the `class` keyword. Instance variables and methods are declared with access visibility modifiers.
 
 ```kyna
-class Dog extends Animal {
-    public override fn speak(): str {
-        return "woof " + self.name;
+class DatabaseConnection {
+    private host: str;
+    private port: int;
+    private isConnected: bool;
+
+    public init(host: str, port: int) {
+        self.host = host;
+        self.port = port;
+        self.isConnected = false;
+    }
+
+    public fn connect(): bool {
+        self.isConnected = true;
+        print("Connected to database at", self.host + ":" + self.port);
+        return true;
+    }
+
+    public fn getStatus(): str {
+        return if (self.isConnected) "ONLINE" else "OFFLINE";
     }
 }
 
-var pet = new Dog("Rex");
-print(pet.speak());   # woof Rex
+# Instantiation using 'new'
+var db = new DatabaseConnection("db.internal.kyna", 5432);
+db.connect();
+print("Status:", db.getStatus()); # ONLINE
 ```
 
-## Interfaces
+---
 
-Interfaces (`intf`) are structural contracts checked at `implements`
-conformance and object-literal assignment:
+## Inheritance & Method Overriding
+
+Use `extends` to inherit from a base class. To override a virtual method in a child class, use the `override` modifier.
 
 ```kyna
-intf Shape {
-    area(): float;
-}
+class HttpRequest {
+    public url: str;
+    public method: str;
 
-class Circle implements Shape {
-    public fn area(): float {
-        return 3.14;
+    public init(url: str, method: str) {
+        self.url = url;
+        self.method = method;
+    }
+
+    public fn summary(): str {
+        return self.method + " " + self.url;
     }
 }
+
+class JsonHttpRequest extends HttpRequest {
+    public body: str;
+
+    public init(url: str, method: str, body: str) {
+        super.init(url, method);
+        self.body = body;
+    }
+
+    public override fn summary(): str {
+        return "[JSON] " + super.summary() + " | Body Bytes: " + len(self.body);
+    }
+}
+
+var req = new JsonHttpRequest("https://api.kyna.dev/users", "POST", "{\"name\":\"Ada\"}");
+print(req.summary());
+# Outputs: [JSON] POST https://api.kyna.dev/users | Body Bytes: 14
 ```
 
-- `extends` merges parent contracts and can specialize generics, e.g.
-  `extends Base<int>`.
-- Optional properties (`name?: T`) are not required of implementers.
-- `implements` requires compatible public fields and methods.
+---
 
-## Type definitions
+## Structural Interfaces: `intf`
 
-Ambient type-definition files (`.kyna.d`, `.d.ky`, `.ky.d`) declare interfaces
-used only at compile time and never executed.
+Interfaces in Kyna define contracts. Any class that implements the required method signatures satisfies the interface contract either explicitly via `implements` or structurally.
+
+```kyna
+intf Logger {
+    log(message: str): void;
+}
+
+class ConsoleLogger implements Logger {
+    public fn log(message: str): void {
+        print("[LOG]", message);
+    }
+}
+
+class FileLogger implements Logger {
+    private filename: str;
+
+    public init(filename: str) {
+        self.filename = filename;
+    }
+
+    public fn log(message: str): void {
+        # File writing logic
+        print("[FILE " + self.filename + "]", message);
+    }
+}
+
+fn executeWithLogger(logger: Logger, text: str) {
+    logger.log(text);
+}
+
+executeWithLogger(new ConsoleLogger(), "System booted.");
+executeWithLogger(new FileLogger("server.log"), "User logged in.");
+```
+
+---
+
+## Ambient Type Definitions (`.kyna.d`)
+
+Kyna supports ambient declaration files (`.kyna.d`, `.d.ky`) for declaring third-party interfaces and global contract types without generating runtime bytecode.

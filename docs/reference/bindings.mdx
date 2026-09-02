@@ -2,60 +2,139 @@
 sidebar_position: 1
 ---
 
-# Bindings & types
+# Bindings & Type System Reference
 
-## Mutability: `var` and `const`
+In Kyna, variables and constants bind identifiers to values within lexical scopes. The type system is statically verified at compile time to ensure type safety, eliminate unexpected null dereferences, and optimize bytecode execution.
 
-`var` declares a mutable binding; `const` declares an immutable one. Assigning
-to a `const` is a compile-time error.
+---
 
-```kyna
-var count = 1;          # type inferred as int
-count = 2;              # ok
+## Variable Bindings: `var` vs `const`
 
-const name: str = "Kyna";
-# name = "other";       # error: cannot assign to const
-```
+Kyna offers two primary keywords for binding variables:
 
-## Explicit types
-
-Mark a binding's type with colon-annotation:
+- **`var`**: Declares a mutable variable that can be reassigned over its lifecycle.
+- **`const`**: Declares an immutable binding. Attempting to reassign a `const` results in a compile-time diagnostic error (`K1002`).
 
 ```kyna
-var city: str = "Paris";
-const pi: float = 3.14159;
-var maybe: str? = null;   # nullable string
+# Mutable binding
+var requestCount = 0;
+requestCount = requestCount + 1; # OK
+
+# Immutable constant
+const maxConnections: int = 100;
+# maxConnections = 200;          # Compile Error: Cannot reassign constant 'maxConnections'
 ```
 
-## The type system at a glance
+---
 
-| Concept | Example | Notes |
-| --- | --- | --- |
-| Literal types | `int`, `float`, `str`, `bool`, `null` | nominal names |
-| Numeric fit | `float` fits `num` | signatures may use `num` |
-| Nullable | `str?`, `int? list` | `null` fits nullable types |
-| Unions | `str \| int` | a value fits if it fits one arm |
-| `any` | `any` | only bypasses checks where written |
+## Type Annotations & Type Inference
 
-Directional compatibility is checked before execution: `int` and `float` fit
-`num`; `any` is not widened from inferred types; unrelated inferred types never
-become `any`.
-
-## Collections
+Kyna features bidirectional local type inference. If a type annotation is omitted, the compiler infers the most specific nominal type from the initialization expression.
 
 ```kyna
-var numbers = [1, 2, 3];          # int list
-var labels = ["a", "b"];          # str list
-print(numbers[0]);                # 1
+# Inferred types
+var host = "127.0.0.1"; # Inferred as 'str'
+var port = 8080;        # Inferred as 'int'
+var enabled = true;     # Inferred as 'bool'
+
+# Explicit nominal type annotations
+var timeoutMs: int = 5000;
+const rateLimit: float = 0.75;
 ```
 
-## Legacy aliases
+---
 
-The older spellings still work everywhere: `let` for `var`, `set` for `const`
-as a variable binding, and `func` for `fn`. New code should use `var`, `const`,
-and `fn`.
+## Built-in Primitive & Scalar Types
 
-## Object types
+| Type | Description | Literals / Examples |
+| :--- | :--- | :--- |
+| `int` | 64-bit signed integer | `0`, `42`, `-1024` |
+| `float` | 64-bit IEEE-754 floating-point number | `3.14159`, `-0.5`, `1.0` |
+| `str` | UTF-8 encoded immutable string sequence | `"hello"`, `"service/v1"` |
+| `bool` | Boolean truth value | `true`, `false` |
+| `null` | The unit null value type | `null` |
+| `num` | Supertype compatibility union for numeric values | Accepts either `int` or `float` |
+| `any` | Opt-out escape hatch for dynamic interoperability | Accepts any runtime value |
 
-Classes, fields, methods, and structural interfaces are covered in
-[classes & objects](/docs/reference/classes-and-objects).
+---
+
+## Null Safety & Explicit Nullability (`T?`)
+
+By default, all primitive and object types in Kyna are **non-nullable**. A variable of type `str` cannot be assigned `null`.
+
+To allow `null`, you must explicitly affix a `?` modifier to the type:
+
+```kyna
+# Non-nullable: Cannot be null
+var username: str = "alice";
+# username = null;       # Compile Error: Type 'null' is not assignable to 'str'
+
+# Nullable: Explicitly marked with '?'
+var sessionToken: str? = null;
+
+# Automatic flow-sensitive type narrowing
+if (sessionToken != null) {
+    # Within this guarded branch, 'sessionToken' is narrowed from 'str?' to 'str'
+    print("Active session length:", len(sessionToken));
+}
+```
+
+---
+
+## Union Types (`T1 | T2`)
+
+You can express values that may hold one of several distinct types using union syntax:
+
+```kyna
+fn parseIdentifier(input: str | int): str {
+    # Type inspection and branching
+    if (typeOf(input) == "int") {
+        return "ID_" + input;
+    }
+    return input;
+}
+
+print(parseIdentifier(101));       # "ID_101"
+print(parseIdentifier("custom"));   # "custom"
+```
+
+---
+
+## Collections: Lists & Dictionaries
+
+Collection literals are statically checked for type homogeneity or union unification.
+
+```kyna
+# Homogeneous list: inferred as 'int list'
+var primeNumbers = [2, 3, 5, 7, 11];
+
+# Accessing elements by 0-based index
+print(primeNumbers[0]); # 2
+
+# Heterogeneous list: inferred as '(str | int) list'
+var mixedData = ["status", 200, "OK"];
+
+# Key-value maps
+var headers = {
+    "Content-Type": "application/json",
+    "Accept": "*/*"
+};
+print(headers["Content-Type"]); # "application/json"
+```
+
+---
+
+## Lexical Scope & Shadowing
+
+Bindings are scoped to the block `{ ... }` in which they are declared. Shadowing an outer binding within an inner scope is legal and cleanly isolated:
+
+```kyna
+var limit = 10;
+
+if (limit > 5) {
+    var limit = "ten"; # Inner scope shadowing
+    print(limit);      # Outputs: ten
+}
+
+print(limit);          # Outputs: 10
+```

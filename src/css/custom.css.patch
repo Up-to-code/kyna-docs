@@ -1,0 +1,98 @@
+--- src/css/custom.css
++++ src/css/custom.css
+@@ -642,8 +642,8 @@
+ 
+ .zigzag-row {
+   display: grid;
+-  grid-template-columns: 1fr 1.15fr;
+-  gap: 3.5rem;
++  grid-template-columns: 1fr 1.25fr;
++  gap: 5rem;
+   padding: 4rem 0;
+   border-bottom: 1px solid var(--kyna-border);
+   align-items: center;
+@@ -651,7 +651,7 @@
+ 
+ .zigzag-row--reverse {
+-  grid-template-columns: 1.15fr 1fr;
++  grid-template-columns: 1.25fr 1fr;
+ }
+ 
+ .zigzag-col--text {
+@@ -671,15 +671,15 @@
+ }
+ 
+ .zigzag-title {
+-  font-size: 1.65rem;
+-  font-weight: 650;
+-  letter-spacing: -0.02em;
++  font-size: 2rem;
++  font-weight: 700;
++  letter-spacing: -0.03em;
+   color: var(--kyna-text);
+   margin-bottom: 0.85rem;
++  line-height: 1.2;
+ }
+ 
+ .zigzag-desc {
+-  font-size: 0.95rem;
+-  line-height: 1.68;
++  font-size: 1.05rem;
++  line-height: 1.6;
+   color: var(--kyna-text-muted);
+   margin-bottom: 1.25rem;
+ }
+@@ -687,7 +687,7 @@
+ .zigzag-list {
+   padding-left: 1.25rem;
+   margin: 0;
+-  font-size: 0.9rem;
++  font-size: 0.95rem;
+   line-height: 1.7;
+   color: var(--kyna-text);
+ }
+@@ -699,10 +699,11 @@
+ /* GitHub-Style Code Card */
+ .gh-code-card {
+-  background: var(--kyna-surface);
+-  border: 1px solid var(--kyna-border);
+-  border-radius: 6px;
++  background: var(--kyna-editor-bg);
++  border: 1px solid rgba(128, 128, 128, 0.2);
++  border-radius: 10px;
+   overflow: hidden;
++  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+ }
+ 
+ .gh-code-card__header {
+@@ -710,10 +711,10 @@
+   align-items: center;
+   justify-content: space-between;
+-  padding: 0.5rem 1rem;
+-  background: var(--kyna-surface-raised);
+-  border-bottom: 1px solid var(--kyna-border);
++  padding: 0.75rem 1.25rem;
++  background: transparent;
++  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+   font-family: var(--ifm-font-family-monospace);
+-  font-size: 0.78rem;
++  font-size: 0.8rem;
+   color: var(--kyna-text-muted);
+ }
+ 
+@@ -727,10 +728,10 @@
+   margin: 0 !important;
+   border-radius: 0 !important;
+   border: none !important;
+-  background: var(--kyna-bg) !important;
++  background: transparent !important;
+ }
+ 
+ .gh-code-card .prism-code {
+-  padding: 1.15rem 1.25rem !important;
++  padding: 1.5rem !important;
+   font-size: 0.88rem !important;
+   line-height: 1.65 !important;
+-  background: var(--kyna-bg) !important;
++  background: transparent !important;
+ }

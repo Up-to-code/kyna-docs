@@ -2,68 +2,154 @@
 sidebar_position: 2
 ---
 
-# Control flow
+# Control Flow & Branching Reference
 
-## Conditionals
+Kyna provides structured constructs for branching, iterative loops, pattern matching, and error isolation.
 
-`if` takes a parenthesized condition and braced bodies, and supports `else
-if` chains:
+---
+
+## Conditionals: `if`, `else if`, `else`
+
+Conditionals evaluate boolean expressions. In Kyna, conditional expressions do not require parentheses around the test expression, but braces `{ ... }` around the execution blocks are always mandatory.
 
 ```kyna
-fn grade(score: int): str {
-    if (score >= 90) {
-        return "A";
-    } else if (score >= 80) {
-        return "B";
+fn classifyStatus(code: int): str {
+    if (code >= 200 && code < 300) {
+        return "Success";
+    } else if (code >= 400 && code < 500) {
+        return "Client Error";
+    } else if (code >= 500) {
+        return "Server Error";
     } else {
-        return "F";
+        return "Informational or Redirect";
     }
 }
 ```
 
-`if` is expression-capable, so it can produce a value.
+### Expression-Capable `if`
 
-## `switch`
-
-`switch` selects among constant `case` values. Each arm is
-`case VALUE: { ... }`, an optional `default` must come last, and control does
-**not** fall through between arms:
+In Kyna, `if` can be evaluated as an expression producing a value:
 
 ```kyna
-switch (code) {
-    case 200: { return "ok"; }
-    case 404: { return "missing"; }
-    default:  { return "other"; }
+const maxRetries = if (isProduction) 5 else 1;
+print("Configured retries:", maxRetries);
+```
+
+---
+
+## Switch Statements: `switch` / `case`
+
+`switch` matches an expression against constant scalar values. 
+
+- Each case block must be enclosed in braces `{ ... }`.
+- Execution does **not** fall through between cases (no `break` keyword needed).
+- An optional `default` case handles unmatched values.
+
+```kyna
+fn getMimeType(extension: str): str {
+    switch (extension) {
+        case "json": {
+            return "application/json";
+        }
+        case "html": {
+            return "text/html";
+        }
+        case "png": {
+            return "image/png";
+        }
+        default: {
+            return "application/octet-stream";
+        }
+    }
+}
+
+print(getMimeType("json")); # "application/json"
+```
+
+---
+
+## Pattern Matching: `match`
+
+The `match` expression provides concise, declarative matching with the wildcard operator `_`:
+
+```kyna
+fn describeHttpCode(status: int): str {
+    return match (status) {
+        200 => "OK";
+        201 => "Created";
+        400 => "Bad Request";
+        401 => "Unauthorized";
+        404 => "Not Found";
+        500 => "Internal Server Error";
+        _   => "Unknown Status Code";
+    };
+}
+
+print(describeHttpCode(404)); # "Not Found"
+```
+
+---
+
+## Loops: `while` and `loop`
+
+Kyna supports two loop constructs: condition-driven `while` and 3-clause iterative `loop`.
+
+### `while` Loops
+
+Executes as long as the boolean condition remains `true`:
+
+```kyna
+var cursor = 0;
+while (cursor < 5) {
+    print("Cursor position:", cursor);
+    cursor = cursor + 1;
 }
 ```
 
-## Loops
+### 3-Clause `loop` (C-style For Loop)
 
-`while` and `loop` are statements. `loop` is a three-clause for-loop:
+The `loop (init; condition; step)` construct allows clear index management:
 
 ```kyna
-var i = 0;
-while (i < 3) {
-    i = i + 1;
+var sum = 0;
+loop (var i = 1; i <= 10; i = i + 1) {
+    sum = sum + i;
 }
+print("Sum of 1 to 10:", sum); # 55
+```
 
-var total = 0;
-loop (var j = 0; j < 3; j = j + 1) {
-    total = total + 1;
+---
+
+## Jump Statements: `break` and `continue`
+
+- **`break`**: Immediately terminates the innermost loop.
+- **`continue`**: Skips the remaining statements in the current iteration and evaluates the next loop cycle.
+
+```kyna
+loop (var i = 0; i < 10; i = i + 1) {
+    if (i % 2 == 0) {
+        continue; # Skip even numbers
+    }
+    if (i > 7) {
+        break;    # Stop loop after reaching 7
+    }
+    print("Odd number:", i); # Outputs 1, 3, 5, 7
 }
 ```
 
-- `break` exits the loop; `continue` jumps to the next iteration.
-- Both may name a loop label when loops are nested.
+---
 
-## Matching
+## Labeled Loops
 
-`match` accepts literal and `_` arms. Arms use `=>` and terminate with `;`:
+When working with nested iterations, you can attach labels to loops to break or continue an outer loop directly:
 
 ```kyna
-match (value) {
-    1  => "one";
-    2  => "two";
-    _  => "many";
+outer: loop (var row = 0; row < 5; row = row + 1) {
+    inner: loop (var col = 0; col < 5; col = col + 1) {
+        if (row == 2 && col == 2) {
+            print("Found target at (2, 2). Terminating search.");
+            break outer; # Breaks the outer loop directly
+        }
+    }
 }
 ```

@@ -2,82 +2,70 @@
 sidebar_position: 2
 ---
 
-# Variables
+# Variables & Constants
 
-Variables are how you give a name to a value and keep it for later. In Kyna
-there are two ways to declare one: `var` for values that can change, and
-`const` for values that cannot.
+In Kyna, you give names to values using two declarations: `var` for values that can change, and `const` for values that stay fixed.
 
-## Declaring with `var`
+---
 
-Use `var` when the value may change later:
+## Declaring Mutable Variables with `var`
 
-```kyna
-var player = "Rex";     # player is inferred as str
-print(player);          # Rex
-
-player = "Ada";         # ok — var bindings are mutable
-print(player);          # Ada
-```
-
-You don't have to write the type. Kyna infers it from the value on the right
-of `=`. But you can say it explicitly if you like:
+Use `var` when you plan to reassign the value over time:
 
 ```kyna
-var score: int = 10;
+var count = 1;          # Type inferred as 'int'
+print("Count:", count); # 1
+
+count = count + 1;      # Reassignment
+print("Count:", count); # 2
 ```
 
-## Declaring with `const`
-
-Use `const` when the value should never change. It is a promise the compiler
-enforces — assigning to a `const` is an error:
+You can optionally write explicit nominal type annotations:
 
 ```kyna
-const pi = 3.14159;
-print(pi);              # 3.14159
-
-# pi = 3.0;             # error: cannot assign to const
+var username: str = "Alice";
+var score: int = 100;
+var isActive: bool = true;
 ```
 
-`const` is the default choice for named values that don't change, like
-configuration, magic numbers, or the result of a one-time calculation.
+---
 
-## `var` vs `const` in one picture
+## Declaring Immutable Constants with `const`
+
+Use `const` for values that should never be reassigned after initialization. The compiler statically enforces immutability at build time:
 
 ```kyna
-var counter = 0;           # mutable, will count up
-const message = "hi";      # immutable, never changes
+const maxRetries: int = 3;
+const serverEndpoint = "https://api.kyna.dev";
+
+# Attempting reassignment causes a compile-time error:
+# maxRetries = 5; # Error: cannot assign to const 'maxRetries'
 ```
 
-Use `var` for anything that will be reassigned. Use `const` for everything
-else. It makes your intent obvious to readers and lets the checker help you.
+---
 
-## Naming rules
+## Naming Conventions & Identifiers
 
-- Names start with a letter or underscore.
-- After the first character, they may contain letters, digits, and
-  underscores.
-- They are case-sensitive: `Score` and `score` are different.
+- Identifiers must start with a letter (`a-z`, `A-Z`) or an underscore `_`.
+- Subsequent characters may include letters, digits (`0-9`), and underscores.
+- Identifiers are case-sensitive: `servicePort` and `ServicePort` are distinct bindings.
 
 ```kyna
-var total_count = 5;
-var TotalCount = 6;
-var _private = 7;
+var total_requests = 10;
+var maxBufferCapacity = 1024;
+var _internalState = "READY";
 ```
 
-## Legacy aliases
+---
 
-Older Kyna code used `let` where you'd now write `var`, and `set` where you'd
-write `const` as a binding. Both still work:
+## Type Inference Rules
+
+When you omit a type annotation, Kyna infers the tightest nominal type from the right-hand expression:
 
 ```kyna
-let oldCount = 1;        # alias for var
-set oldCount = 15;       # alias for assigning through let
+var a = 42;             # inferred as int
+var b = 3.14;           # inferred as float
+var c = "hello";        # inferred as str
+var d = true;           # inferred as bool
+var e = [1, 2, 3];      # inferred as int list
 ```
-
-New code should use `var` and `const`.
-
-## Next steps
-
-Read about the [types](/docs/tutorial/types) those variables can hold, or the
-[operators](/docs/tutorial/operators) that combine them.

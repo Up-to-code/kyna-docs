@@ -2,63 +2,119 @@
 sidebar_position: 3
 ---
 
-# Functions
+# Functions & Closures Reference
 
-Functions are declared with `fn`. Parameters always have types and calls always
-use parentheses.
+Functions in Kyna are declared using the `fn` keyword. Functions are first-class citizens: they can be passed as arguments, assigned to variables, returned from other functions, and stored in collections.
+
+---
+
+## Function Declaration & Signatures
+
+Parameters are explicitly typed. Return types can be explicitly annotated after a colon `:` or inferred by the compiler.
 
 ```kyna
-fn double(value: int): int {
-    return value * 2;
+# Explicit return type
+fn calculateTax(subtotal: float, rate: float): float {
+    return subtotal * rate;
 }
 
-print(double(21));   # 42
-```
-
-## Return types
-
-Return annotations are optional for safely inferred functions and mandatory
-when a contract is present:
-
-```kyna
-fn inferred(a: int, b: int) {
+# Inferred return type (inferred as int)
+fn add(a: int, b: int) {
     return a + b;
 }
 
-fn typed(a: int, b: int): int {
-    return a + b;
+const totalTax = calculateTax(100.0, 0.08);
+print("Total Tax:", totalTax); # 8.0
+```
+
+---
+
+## Void & Non-Returning Functions
+
+Functions that do not produce a value can omit the return type or specify `void`. If no return statement is reached, the function implicitly returns `null`.
+
+```kyna
+fn logMessage(level: str, message: str): void {
+    print("[" + level + "] " + message);
 }
+
+logMessage("INFO", "Server cluster initialized on port 8080");
 ```
 
-`void` and `null` are distinct. An omitted return annotation is inferred
-dynamically at call sites; an explicit annotation stays strict.
+---
 
-## First-class functions
+## Default Parameter Values & Optional Arguments
 
-```kyna
-fn add(a: int, b: int): int { return a + b; }
-fn sub(a: int, b: int): int { return a - b; }
-
-print(call(add, 21, 21));   # 42
-print(call(sub, 60, 18));   # 42
-```
-
-## `await` on a call
-
-`await` binds the result of a call before the next line runs:
+You can provide default values for trailing parameters:
 
 ```kyna
-var result = await double(21);   # 42
-```
-
-See [async](/docs/reference/async) for how this pairs with `fetch`.
-
-## Legacy alias
-
-`func` is accepted as an alias for `fn`:
-
-```kyna
-func legacyAdd(a: int, b: int): int {
-    return a + b;
+fn connect(host: str, port: int = 8080, secure: bool = true): str {
+    const protocol = if (secure) "https://" else "http://";
+    return protocol + host + ":" + port;
 }
+
+print(connect("localhost"));              # "https://localhost:8080"
+print(connect("localhost", 3000));        # "https://localhost:3000"
+print(connect("localhost", 3000, false)); # "http://localhost:3000"
+```
+
+---
+
+## First-Class & Higher-Order Functions
+
+Functions can be passed directly as arguments to other functions:
+
+```kyna
+fn transform(items: int list, operation: fn(int): int): int list {
+    var result: int list = [];
+    loop (var i = 0; i < len(items); i = i + 1) {
+        result.push(operation(items[i]));
+    }
+    return result;
+}
+
+fn square(n: int): int {
+    return n * n;
+}
+
+const numbers = [1, 2, 3, 4, 5];
+const squared = transform(numbers, square);
+print(squared); # [1, 4, 9, 16, 25]
+```
+
+---
+
+## Closures & Lexical Scoping
+
+Functions can capture variables from their enclosing lexical environment:
+
+```kyna
+fn createCounter(start: int): fn(): int {
+    var current = start;
+    return fn(): int {
+        current = current + 1;
+        return current;
+    };
+}
+
+const counterA = createCounter(10);
+print(counterA()); # 11
+print(counterA()); # 12
+
+const counterB = createCounter(100);
+print(counterB()); # 101
+```
+
+---
+
+## Anonymous Functions (Lambdas)
+
+Anonymous functions can be declared inline:
+
+```kyna
+const multiply = fn(x: int, y: int): int {
+    return x * y;
+};
+
+print(multiply(6, 7)); # 42
 ```

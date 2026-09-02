@@ -2,30 +2,64 @@
 sidebar_position: 1
 ---
 
-# Text
+# Standard Library: Text & Strings
 
-Text is Unicode-aware. The `text*` helpers operate on whole graphemes, so
-length, slices, and case conversion handle non-Latin scripts correctly.
+The text processing utilities in Kyna provide high-performance UTF-8 string manipulation, character searching, case conversion, and splitting functions.
+
+---
+
+## Global String Utilities
+
+| Function | Signature | Description | Example |
+| :--- | :--- | :--- | :--- |
+| `len` | `len(s: str): int` | Returns character count in string | `len("Kyna") == 4` |
+| `strToUpper` | `strToUpper(s: str): str` | Converts string to uppercase | `strToUpper("hi") == "HI"` |
+| `strToLower` | `strToLower(s: str): str` | Converts string to lowercase | `strToLower("HI") == "hi"` |
+| `strTrim` | `strTrim(s: str): str` | Removes leading and trailing whitespace | `strTrim("  ok  ") == "ok"` |
+| `strContains` | `strContains(s: str, sub: str): bool` | Checks if substring exists | `strContains("hello", "ell") == true` |
+| `strStartsWith` | `strStartsWith(s: str, prefix: str): bool` | Checks if string starts with prefix | `strStartsWith("app.js", "app") == true` |
+| `strEndsWith` | `strEndsWith(s: str, suffix: str): bool` | Checks if string ends with suffix | `strEndsWith("main.kyna", ".kyna") == true` |
+| `strSplit` | `strSplit(s: str, delim: str): str list` | Splits string by delimiter | `strSplit("a,b,c", ",") == ["a", "b", "c"]` |
+| `strJoin` | `strJoin(items: str list, sep: str): str` | Joins list of strings by separator | `strJoin(["a", "b"], ":") == "a:b"` |
+| `strReplace` | `strReplace(s: str, from: str, to: str): str` | Replaces occurrences of substring | `strReplace("foo", "o", "a") == "faa"` |
+
+---
+
+## Examples & Code Snippets
+
+### Parsing CSV Data
 
 ```kyna
-const greeting = "  Héllo 世界  ";
+fn parseCsvLine(line: str): str list {
+    const trimmed = strTrim(line);
+    const tokens = strSplit(trimmed, ",");
+    var result: str list = [];
 
-print(len(greeting));                      # 12
-print(textSlice(greeting, 2, 7));          # Héllo
-print(textFind(greeting, "世界"));          # 8
-print(textContains(greeting, "éll"));      # true
-print(textReplace(textTrim(greeting), "世界", "Kyna"));
-print(textLower("ÄBC"), textUpper("kyna"));   # äbc KYNA
-print(textSplit("one::two::three", "::"));    # 3 items
+    loop (var i = 0; i < len(tokens); i = i + 1) {
+        result.push(strTrim(tokens[i]));
+    }
+    return result;
+}
+
+const line = "  alice , admin , 2026-09-02  ";
+const columns = parseCsvLine(line);
+print(columns); # ["alice", "admin", "2026-09-02"]
 ```
 
-## Functions
+### URL Sanitization
 
-- `len(x)` — length of a string, array, or collection;
-- `textSlice(s, start, end)` — substring by grapheme index;
-- `textFind(haystack, needle)` — index of a needle, or -1;
-- `textContains(s, part)` — does `s` contain `part`?;
-- `textReplace(s, from, to)` — replace every occurrence;
-- `textTrim(s)` — strip surrounding whitespace;
-- `textLower(s)` / `textUpper(s)` — case conversion;
-- `textSplit(s, sep)` — split into an array of parts.
+```kyna
+fn sanitizePath(path: str): str {
+    var clean = strTrim(path);
+    if (!strStartsWith(clean, "/")) {
+        clean = "/" + clean;
+    }
+    if (strEndsWith(clean, "/") && len(clean) > 1) {
+        # Trim trailing slash
+        clean = strSlice(clean, 0, len(clean) - 1);
+    }
+    return strToLower(clean);
+}
+
+print(sanitizePath("  /API/v1/Users/ ")); # "/api/v1/users"
+```

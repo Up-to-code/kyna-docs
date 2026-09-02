@@ -2,107 +2,81 @@
 sidebar_position: 2
 ---
 
-# Collections
+# Standard Library: Collections
 
-Arrays are mutable, ordered lists of values. You create one with square
-brackets, index it with `[n]`, and measure it with `len`.
+Kyna provides built-in lists (dynamic arrays) and maps (hash tables) for data storage, transformation, and retrieval.
 
-## Creating and reading arrays
+---
 
-```kyna
-var scores = [10, 20, 30];
+## List Operations
 
-print(scores[0]);     # 10 — first element
-print(scores[1]);     # 20
-print(len(scores));   # 3
-```
-
-Indexing is zero-based: the first element is at position `0`.
-
-Arrays are mutable — you can push to them, pop from them, and reassign
-elements:
+Lists are dynamic zero-indexed sequences:
 
 ```kyna
-var tags = ["a", "b", "c"];
-tags[1] = "bee";          # reassign by index
-print(tags);              # [a, bee, c]
+var tasks = ["init", "build", "test"];
+
+# Length
+print(len(tasks)); # 3
+
+# Appending elements
+tasks.push("deploy");
+print(len(tasks)); # 4
+
+# Index access
+print(tasks[0]); # "init"
+print(tasks[3]); # "deploy"
 ```
 
-## Adding and removing at the end
+### Common List Methods & Helpers
 
-`push` adds an element to the end; `pop` removes and returns it:
+| Method / Helper | Description | Example |
+| :--- | :--- | :--- |
+| `list.push(item)` | Appends item to the end | `tasks.push("doc")` |
+| `list.pop()` | Removes and returns the last element | `const last = tasks.pop()` |
+| `list.contains(val)` | Checks if item exists in list | `tasks.contains("build")` |
+| `list.clear()` | Removes all elements from list | `tasks.clear()` |
+
+---
+
+## Map / Dictionary Operations
+
+Maps store key-value pairs with fast hashing lookups:
 
 ```kyna
-var items = [1, 2, 3];
+var config = {
+    "env": "production",
+    "port": 8080,
+    "ssl": true
+};
 
-push(items, 4);
-print(len(items));        # 4
+# Reading values
+print(config["env"]); # "production"
 
-var last = pop(items);
-print(last);              # 4
-print(len(items));        # 3
+# Modifying values
+config["port"] = 9000;
+print(config["port"]); # 9000
+
+# Checking key existence
+if (config.hasKey("ssl")) {
+    print("SSL is explicitly configured");
+}
 ```
 
-## Transforming and filtering
+---
 
-`map`, `filter`, and `reduce` let you reshape arrays with predicates and
-functions:
+## Functional Iteration Patterns
 
 ```kyna
-var numbers = [1, 2, 3, 4];
+fn filterPositive(numbers: int list): int list {
+    var filtered: int list = [];
+    loop (var i = 0; i < len(numbers); i = i + 1) {
+        if (numbers[i] > 0) {
+            filtered.push(numbers[i]);
+        }
+    }
+    return filtered;
+}
 
-var doubled = map(numbers, fn (n) { return n * 2; });   # [2, 4, 6, 8]
-var evens   = filter(numbers, fn (n) { return n % 2 == 0; });
-var total   = reduce(numbers, 0, fn (acc, n) { return acc + n; });
-
-print(doubled);    # [2, 4, 6, 8]
-print(evens);      # [2, 4]
-print(total);      # 10
+const data = [-10, 5, 0, 42, -3, 99];
+print(filterPositive(data)); # [5, 42, 99]
 ```
-
-## Finding and testing
-
-- `find(xs, predicate)` returns the first element that matches, or `null`;
-- `any(xs, predicate)` is true if *any* element matches;
-- `all(xs, predicate)` is true if *every* element matches.
-
-```kyna
-var xs = [3, 1, 3, 2];
-print(find(xs, fn (x) { return x == 2; }) != null);   # true
-print(any(xs, fn (x) { return x == 1; }));            # true
-print(all(xs, fn (x) { return x > 0; }));             # true
-```
-
-## Sets and sorting
-
-- `unique(xs)` keeps distinct elements in their first-seen order;
-- `sort(xs)` returns a sorted copy.
-
-```kyna
-print(unique([3, 1, 3, 2]));   # [3, 1, 2]
-print(sort([3, 1, 2]));        # [1, 2, 3]
-```
-
-## Objects and keys
-
-`keys(obj)` lists the keys of an object or map:
-
-```kyna
-var config = { name: "Kyna", version: 1 };
-print(keys(config));           # ["name", "version"]
-```
-
-## The full list
-
-- `len(collection)` — element count;
-- `push(xs, value)` — add to the end;
-- `pop(xs)` — remove and return the last element;
-- `keys(obj)` — keys of an object or map;
-- `unique(xs)` — distinct elements in order;
-- `sort(xs)` — sorted copy;
-- `map(xs, fn)` — transform each element;
-- `filter(xs, fn)` — keep matching elements;
-- `reduce(xs, seed, fn)` — fold into a single value;
-- `find(xs, fn)` — first matching element or `null`;
-- `any(xs, fn)` — does any element match?;
-- `all(xs, fn)` — do all elements match?.

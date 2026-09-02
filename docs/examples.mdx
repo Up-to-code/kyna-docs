@@ -1,46 +1,73 @@
-## Examples
+---
+sidebar_position: 4
+---
 
-The Kyma repository ships a wide set of runnable `.kyna` examples. Each one
-exercises a concrete feature and is verified in CI.
+# Code Examples & Recipes
 
-## Language
+Practical code recipes demonstrating common backend and systems programming tasks in Kyna.
 
-| Example | Shows |
-| --- | --- |
-| `examples/hello.kyna` | bindings, types, and printing |
-| `examples/classes.kyna` | classes, inheritance, and overriding |
-| `examples/match.kyna` | `match` arms |
-| `examples/modules/main.kyna` | multi-module programs |
-| `examples/language/syntax_overview.kyna` | the full syntax tour, including legacy aliases |
-| `examples/language/await_and_network.kyna` | `await` on a computation and on `fetch(...).json()` |
-| `examples/language/closures.kyna` | closures, counters, and nested adders |
-| `examples/language/exceptions.kyna` | try/catch/finally with return values |
-| `examples/language/interfaces_and_inheritance.kyna` | structural interfaces |
-| `examples/language/variadics.kyna` | variadic parameters |
+---
 
-## Networking
+## 1. REST API Client with JSON Processing
 
-`examples/network/` contains deterministic request/response checkpoints plus
-real HTTP helpers:
+```kyna
+async fn fetchUser(userId: int): str? {
+    const url = "https://api.kyna.dev/v1/users/" + userId;
+    try {
+        const res = await fetch(url, { timeout: 3000 });
+        if (res.ok) {
+            const data = res.json();
+            return data["name"];
+        }
+        return null;
+    } catch (err) {
+        print("Failed to fetch user:", err.message);
+        return null;
+    }
+}
+```
 
-- `checkpoints.kyna` — request/response assertions on the mock endpoint;
-- `fetch_result.kyna` — non-throwing `fetchResult` both paths;
-- `http_get.kyna` — public no-key HTTP smoke test;
-- `post_json.kyna` — POST body with headers;
-- `bearer_authorization.kyna`, `api_key_header.kyna`, `cookies_and_csrf.kyna`;
-- `query_parameters.kyna`, `http_status_error.kyna`,
-  `caught_transport_error.kyna`, `response_text.kyna`.
+---
 
-## Standard library
+## 2. File Reading & Line Transformation
 
-- `standard_library/core_values.kyna` — print, log, typeOf, call;
-- `standard_library/mutable_collections.kyna` — push, pop, keys, unique, sort;
-- `standard_library/filesystem.kyna` — file and directory operations;
-- `standard_library/data_formats.kyna` — JSON/TOML/XML codecs;
-- `standard_library/timing.kyna` — clockMs, measure, profileLog;
-- `standard_library/memory_and_color.kyna` — GC stats and colored output.
+```kyna
+import std.fs;
 
-## Learning path
+fn processLogFile(path: str) {
+    if (!fs.exists(path)) {
+        print("Log file not found:", path);
+        return;
+    }
 
-`examples/learning/` is a guided sequence: **01_basics**, **02_control_flow**,
-**03_functions**, **04_data**, **05_errors_and_network**, and **06_system**.
+    const content = fs.readString(path);
+    const lines = strSplit(content, "\n");
+    print("Total log entries:", len(lines));
+
+    loop (var i = 0; i < len(lines); i = i + 1) {
+        if (strContains(lines[i], "ERROR")) {
+            print("ALERT line", i + 1, ":", lines[i]);
+        }
+    }
+}
+```
+
+---
+
+## 3. High-Resolution Benchmarking
+
+```kyna
+import std.time;
+
+fn benchmark(iterations: int) {
+    const start = time.nowNs();
+    var sum = 0;
+    loop (var i = 0; i < iterations; i = i + 1) {
+        sum = sum + (i % 7);
+    }
+    const durationNs = time.nowNs() - start;
+    print("Processed", iterations, "iterations in", durationNs / 1000000, "ms");
+}
+
+benchmark(1000000);
+```

@@ -2,79 +2,72 @@
 sidebar_position: 4
 ---
 
-# Operators
+# Operators & Expressions
 
-Operators combine values. Kyna has arithmetic, comparison, and logic
-operators, and they follow rules you already know from other languages.
+Operators in Kyna allow you to combine, calculate, compare, and transform values.
 
-## Arithmetic
+---
+
+## Arithmetic Operators
+
+| Operator | Name | Example | Result |
+| :--- | :--- | :--- | :--- |
+| `+` | Addition | `10 + 5` | `15` |
+| `-` | Subtraction | `10 - 5` | `5` |
+| `*` | Multiplication | `10 * 5` | `50` |
+| `/` | Division | `10 / 2` | `5` |
+| `%` | Modulo (Remainder) | `10 % 3` | `1` |
 
 ```kyna
-var sum     = 2 + 3;      # 5
-var diff    = 7 - 2;      # 5
-var product = 2 * 21;     # 42
-var quotient = 10 / 2;    # 5
-var remainder = 10 % 3;   # 1
+const subtotal = 100;
+const tax = subtotal * 0.08;
+const total = subtotal + tax;
+print("Total:", total); # 108.0
 ```
 
-The usual precedence applies: multiplication and division bind tighter than
-addition and subtraction, and parentheses override it.
+---
+
+## String Concatenation
+
+Use `+` to concatenate strings and scalars:
 
 ```kyna
-print(2 + 2 * 20);        # 42   (multiplication first)
-print((2 + 2) * 20);      # 80   (parentheses first)
+const service = "auth";
+const version = 1;
+const path = "/api/v" + version + "/" + service;
+print(path); # "/api/v1/auth"
 ```
 
-## String concatenation
+---
 
-Use `+` to join strings:
+## Comparison Operators
 
-```kyna
-var name = "Kyna";
-print("Hello " + name);            # Hello Kyna
-print("v" + 1 + ".0");             # v1.0
-```
+Comparison operators evaluate to a `bool` (`true` or `false`):
 
-## Comparison
+| Operator | Meaning | Example | Result |
+| :--- | :--- | :--- | :--- |
+| `==` | Equal to | `42 == 42` | `true` |
+| `!=` | Not equal to | `42 != 10` | `true` |
+| `<` | Less than | `5 < 10` | `true` |
+| `<=` | Less than or equal | `10 <= 10` | `true` |
+| `>` | Greater than | `15 > 20` | `false` |
+| `>=` | Greater than or equal | `20 >= 20` | `true` |
 
-Comparisons produce a `bool`:
+---
 
-```kyna
-print(10 > 5);          # true
-print(10 >= 10);        # true
-print(3 < 1);           # false
-print("a" == "a");      # true
-print("a" != "b");      # true
-```
+## Logical Operators
 
-## Logic
-
-`&&` means *and*, `||` means *or*, and `!` means *not*:
-
-```kyna
-var warm = true;
-var sunny = true;
-
-print(warm && sunny);   # true — both must be true
-print(warm || false);   # true — at least one is true
-print(!warm);           # false — negates
-```
-
-Comparison operators sit between logic and arithmetic in precedence, and the
-checker evaluates left to right within a level.
-
-## Putting it together
+| Operator | Name | Description |
+| :--- | :--- | :--- |
+| `&&` | Logical AND | Returns `true` only if both operands are `true` |
+| `\|\|` | Logical OR | Returns `true` if at least one operand is `true` |
+| `!` | Logical NOT | Inverts the truth value of the operand |
 
 ```kyna
-fn canDrive(age: int, hasLicense: bool): bool {
-    return age >= 16 && hasLicense;
+fn isEligible(age: int, hasPass: bool): bool {
+    return age >= 18 && hasPass;
 }
 
-print(canDrive(17, true));     # true
-print(canDrive(15, true));     # false
+print(isEligible(20, true));  # true
+print(isEligible(16, true));  # false
 ```
-
-## Next steps
-
-Now you can write expressions. Bring them together in
-[control flow](/docs/tutorial/control-flow) to make decisions and loops.

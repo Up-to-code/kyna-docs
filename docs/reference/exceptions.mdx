@@ -2,52 +2,89 @@
 sidebar_position: 5
 ---
 
-# Exceptions
+# Exceptions & Error Handling Reference
 
-Failures in Kyna are typed `Error` values raised with `throw`. Non-Error values
-thrown become an Error whose `cause` is the original value.
+Kyna features a robust, structured exception model using `try`, `catch`, `finally`, and `throw`. Both runtime errors and user-thrown exceptions flow through this unified mechanism.
 
-## `try` / `catch`
+---
 
-```kyna
-try {
-    const response = fetch("https://api.example.com", { timeout: 10000 });
-    print(response.status);
-} catch (failure) {
-    print(failure.code, failure.message);
-}
-```
+## The `Error` Object Model
 
-`catch (failure)` receives the `Error` and may inspect `failure.code`,
-`failure.message`, and `failure.cause`.
+Every exception caught in Kyna exposes standard diagnostic fields:
 
-## `finally`
+- **`code`**: A machine-readable error code string (e.g., `KVM2301`, `KNET2001`, `K5100`).
+- **`message`**: A human-readable description of the failure.
+- **`cause`**: The underlying exception or value, if chained.
 
-`finally` runs on normal completion, return, caught failure, and rethrow:
+---
+
+## `try` / `catch` Blocks
+
+To protect against errors, wrap risky operations in a `try` block:
 
 ```kyna
 try {
-    work();
-} catch (failure) {
-    handle(failure);
-} finally {
-    cleanup();
+    const response = fetch("https://api.kyna.dev/v1/data", { timeout: 3000 });
+    const payload = jsonParse(response);
+    print("Received payload:", payload);
+} catch (err) {
+    print("Operation failed!");
+    print("Code:", err.code);
+    print("Message:", err.message);
 }
 ```
 
-## Runtime failures are catchable too
+---
 
-VM-generated failures use the same exception path, so they can be caught the
-same way as thrown errors:
+## The `finally` Clause
+
+A `finally` block always executes regardless of whether an exception occurred, was caught, or returned early:
 
 ```kyna
-try {
-    call(notAFunction);
-} catch (failure) {
-    print(failure.code);   # a KVM runtime error code
+fn processTransaction(): bool {
+    var lockAcquired = true;
+    print("Acquiring resource lock...");
+
+    try {
+        # Risky transactional work
+        throw new Error("DB_TIMEOUT", "Database failed to respond within deadline");
+        return true;
+    } catch (err) {
+        print("Caught transaction error:", err.message);
+        return false;
+    } finally {
+        lockAcquired = false;
+        print("Resource lock released.");
+    }
+}
+
+processTransaction();
+```
+
+---
+
+## Throwing Custom Errors
+
+Use `throw` with an `Error` instance or custom message:
+
+```kyna
+fn validateAge(age: int) {
+    if (age < 0) {
+        throw new Error("VAL1001", "Age cannot be negative: " + age);
+    }
+    if (age > 150) {
+        throw new Error("VAL1002", "Age exceeds plausible threshold: " + age);
+    }
 }
 ```
 
-Error codes follow a scheme such as `KVM2301` (runtime), `KNET2001` (network
-transport), and `K5100` (malformed JSON). See [networking](/docs/reference/networking)
-for the network-specific codes.
+---
+
+## Common Compiler & Runtime Error Codes
+
+| Code Prefix | Subsystem | Examples |
+| :--- | :--- | :--- |
+| `K1000`–`K1999` | Compiler & Static Type Checker | `K1001` Unbound variable, `K1002` Const reassignment |
+| `KVM2000`–`KVM2999` | Virtual Machine Execution | `KVM2301` Type cast failure, `KVM2302` Division by zero |
+| `KNET1000`–`KNET2999` | Networking & HTTP | `KNET2001` Connection timeout / DNS failure |
+| `K5100` | JSON / Serialization | `K5100` Malformed JSON parsing error |

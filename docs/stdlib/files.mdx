@@ -2,34 +2,59 @@
 sidebar_position: 4
 ---
 
-# Files
+# Standard Library: Filesystem (`std.fs`)
 
-The filesystem API reads and writes text and JSON, lists directories, and
-removes paths. These operations are fallible and should run inside `try`.
+The `std.fs` module provides synchronous and asynchronous file system operations for reading, writing, inspecting, and deleting files and directories.
+
+---
+
+## File Operations
 
 ```kyna
-try {
-    createDirectory("notes");
-    writeFile("notes/message.txt", "Hello filesystem");
-    writeJsonFile("notes/meta.json", { language: "Kyna", version: 1 });
+import std.fs;
 
-    const message = readFile("notes/message.txt");
-    const meta = readJsonFile("notes/meta.json");
-    print(message, meta.language, fileExists("notes/message.txt"));
+# Reading files
+const content = fs.readString("config.json");
+print("File content length:", len(content));
 
-    removePath("notes/message.txt");
-    removePath("notes/meta.json");
-    removePath("notes");
-} catch (failure) {
-    print(failure.code, failure.message);
-}
+# Writing files
+fs.writeString("output.log", "Log entry at startup\n");
+
+# Appending to files
+fs.appendString("output.log", "Worker #1 ready\n");
 ```
 
-## Functions
+---
 
-- `readFile(path)` / `writeFile(path, text)`;
-- `readJsonFile(path)` / `writeJsonFile(path, value)`;
-- `createDirectory(path)`;
-- `fileExists(path)`;
-- `listDirectory(path)` — entries in a directory;
-- `removePath(path)` — remove a file or directory.
+## Path & Directory Operations
+
+| Function | Signature | Description |
+| :--- | :--- | :--- |
+| `fs.exists` | `fs.exists(path: str): bool` | Checks if a file or directory exists |
+| `fs.isFile` | `fs.isFile(path: str): bool` | Returns true if path is a regular file |
+| `fs.isDir` | `fs.isDir(path: str): bool` | Returns true if path is a directory |
+| `fs.mkdir` | `fs.mkdir(path: str): bool` | Creates directory |
+| `fs.remove` | `fs.remove(path: str): bool` | Deletes file or directory |
+| `fs.readDir` | `fs.readDir(path: str): str list` | Lists all entries in directory |
+
+---
+
+## Safe File Reading with Error Handling
+
+```kyna
+import std.fs;
+
+fn loadSecret(path: str): str? {
+    if (!fs.exists(path)) {
+        print("Warning: Secret file not found at:", path);
+        return null;
+    }
+
+    try {
+        return fs.readString(path);
+    } catch (err) {
+        print("Error reading file:", err.message);
+        return null;
+    }
+}
+```

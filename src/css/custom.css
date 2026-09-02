@@ -1,6 +1,6 @@
 /*
- * Kyna Documentation — GitHub Dark & Light Design System
- * Clean, human, authentic typography and high-contrast styling.
+ * Kyna Documentation — GitHub / Vercel Clean Design System
+ * Crisp typography, subtle micro-borders, and high-contrast styling.
  */
 
 :root {
@@ -10,7 +10,7 @@
   --ifm-heading-font-weight: 600;
   --ifm-line-height-base: 1.6;
 
-  /* GitHub Light Theme */
+  /* Light Theme */
   --kyna-bg: #ffffff;
   --kyna-surface: #f6f8fa;
   --kyna-surface-soft: #f6f8fa;
@@ -47,7 +47,7 @@
 }
 
 [data-theme='dark'] {
-  /* GitHub Dark Theme */
+  /* Dark Theme */
   --kyna-bg: #0d1117;
   --kyna-surface: #161b22;
   --kyna-surface-soft: #161b22;
@@ -62,8 +62,8 @@
   --kyna-brand-hover: #6366f1;
   --kyna-brand-light: #58a6ff;
 
-  --kyna-editor-bg: #161b22;
-  --kyna-editor-header: #0d1117;
+  --kyna-editor-bg: #0d1117;
+  --kyna-editor-header: #161b22;
   --kyna-editor-border: #30363d;
   --kyna-editor-text: #e6edf3;
 
@@ -124,7 +124,7 @@ body,
 }
 
 /* ==========================================================================
-   Navbar (GitHub Clean Style & Search)
+   Navbar
    ========================================================================== */
 
 .navbar,
@@ -165,7 +165,6 @@ body,
   color: var(--kyna-text) !important;
 }
 
-/* Version badge in navbar */
 .kyna-nav-badge {
   display: inline-flex;
   align-items: center;
@@ -180,7 +179,6 @@ body,
   margin-right: 0.5rem;
 }
 
-/* GitHub Icon Link in Navbar */
 .header-github-link::before {
   content: '';
   width: 20px;
@@ -197,7 +195,6 @@ body,
   background-color: var(--kyna-text);
 }
 
-/* Color Mode Toggle Button */
 .clean-btn {
   color: var(--kyna-text-muted);
   transition: color 0.15s ease;
@@ -259,7 +256,6 @@ body,
   padding-left: 0.65rem;
 }
 
-/* Documentation Content Container */
 .mainDocContainer,
 main[class*='docMainContainer'] {
   padding-left: 3rem !important;
@@ -313,7 +309,6 @@ article strong {
   font-weight: 600;
 }
 
-/* Inline Code Pill (GitHub Style) */
 :not(pre) > code {
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.85em;
@@ -325,7 +320,6 @@ article strong {
   white-space: break-spaces;
 }
 
-/* GitHub-Style Tables */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -356,7 +350,6 @@ tr:nth-child(2n) {
   background-color: var(--kyna-surface-soft);
 }
 
-/* GitHub-Style Admonitions / Callouts */
 .alert {
   border-radius: 6px;
   border: 1px solid var(--kyna-border);
@@ -395,7 +388,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Code Blocks & Syntax Highlighting (GitHub Dark Style)
+   Code Blocks & Syntax Highlighting
    ========================================================================== */
 
 .theme-code-block {
@@ -475,7 +468,6 @@ tr:nth-child(2n) {
   color: #79c0ff !important;
 }
 
-/* Table of Contents */
 .table-of-contents {
   border-left: 1px solid var(--kyna-border);
   padding-left: 1rem;
@@ -500,7 +492,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Clean Landing Page & Zig-Zag Split Layout
+   Hero Section
    ========================================================================== */
 
 .gh-landing {
@@ -510,44 +502,73 @@ tr:nth-child(2n) {
 
 .gh-hero {
   border-bottom: 1px solid var(--kyna-border);
-  padding: 4.5rem 1.5rem 4rem;
+  padding: 5rem 1.5rem 4.5rem;
+  text-align: center;
 }
 
 .gh-hero__container {
-  max-width: 980px;
+  max-width: 860px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gh-hero__badge-container {
+  margin-bottom: 1.5rem;
+}
+
+.gh-hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 550;
+  color: var(--kyna-text);
+  background: var(--kyna-surface);
+  border: 1px solid var(--kyna-border);
+  border-radius: 999px;
+}
+
+.gh-hero__pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #3fb950;
 }
 
 .gh-hero__title {
-  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
   color: var(--kyna-text);
   margin-bottom: 1.25rem;
 }
 
 .gh-hero__subtitle {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   line-height: 1.6;
   color: var(--kyna-text-muted);
-  max-width: 760px;
-  margin-bottom: 2rem;
+  max-width: 680px;
+  margin-bottom: 2.25rem;
 }
 
 .gh-hero__actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.85rem;
   flex-wrap: wrap;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.75rem;
 }
 
 .gh-btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.92rem;
   font-weight: 550;
   border-radius: 6px;
   transition: all 0.15s ease;
@@ -576,34 +597,47 @@ tr:nth-child(2n) {
   border-color: var(--kyna-text-muted);
 }
 
-/* Quickstart Terminal Card */
+/* Quickstart Terminal Box */
 .gh-quickstart {
+  width: 100%;
+  max-width: 760px;
   background: var(--kyna-surface);
   border: 1px solid var(--kyna-border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  margin-top: 1.5rem;
+  text-align: left;
 }
 
 .gh-quickstart__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
   background: var(--kyna-surface-raised);
   border-bottom: 1px solid var(--kyna-border);
+  position: relative;
+}
+
+.gh-quickstart__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gh-quickstart__title {
+  margin-left: 1rem;
   font-family: var(--ifm-font-family-monospace);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--kyna-text-muted);
 }
 
 .gh-quickstart__copy {
+  margin-left: auto;
   background: transparent;
   border: 1px solid var(--kyna-border);
   color: var(--kyna-text-muted);
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.12s ease;
@@ -624,6 +658,7 @@ tr:nth-child(2n) {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  background: var(--kyna-editor-bg);
 }
 
 .gh-quickstart__prompt {
@@ -632,111 +667,227 @@ tr:nth-child(2n) {
   user-select: none;
 }
 
+/* Dots */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot--red {
+  background-color: #ff5f56;
+}
+
+.dot--yellow {
+  background-color: #ffbd2e;
+}
+
+.dot--green {
+  background-color: #27c93f;
+}
+
 /* ==========================================================================
-   Alternating Zig-Zag Split Sections
+   Feature Showcase Cards (Linear / Vercel Split Cards)
    ========================================================================== */
 
-.zigzag-container {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 5rem;
-}
-
-.zigzag-row {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 3.5rem;
-  padding: 4rem 0;
+.kyna-showcase {
+  padding: 5rem 1.5rem;
   border-bottom: 1px solid var(--kyna-border);
+}
+
+.kyna-showcase__container {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.kyna-card {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 3rem;
   align-items: center;
+  padding: 2.75rem;
+  background: var(--kyna-surface);
+  border: 1px solid var(--kyna-border);
+  border-radius: 12px;
+  transition: border-color 0.2s ease;
 }
 
-.zigzag-row--reverse {
-  grid-template-columns: 1.1fr 1fr;
+.kyna-card:hover {
+  border-color: rgba(88, 166, 255, 0.4);
 }
 
-.zigzag-col--text {
+.kyna-card--reverse {
+  grid-template-columns: 1.15fr 1fr;
+}
+
+.kyna-card--reverse .kyna-card__code {
+  order: -1;
+}
+
+.kyna-card__content {
   display: flex;
   flex-direction: column;
 }
 
-.zigzag-kicker {
-  font-size: 0.82rem;
+.kyna-card__header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--ifm-color-primary);
-  margin-bottom: 0.5rem;
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  margin-bottom: 1.1rem;
+  width: fit-content;
 }
 
-.zigzag-title {
+.kyna-card__title {
   font-size: 1.65rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
   color: var(--kyna-text);
   margin-bottom: 0.85rem;
 }
 
-.zigzag-desc {
+.kyna-card__desc {
   font-size: 0.95rem;
-  line-height: 1.68;
+  line-height: 1.65;
   color: var(--kyna-text-muted);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.35rem;
 }
 
-.zigzag-list {
-  padding-left: 1.25rem;
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.7;
+.kyna-card__points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.kyna-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: var(--kyna-text);
 }
 
-.zigzag-list li {
-  margin-bottom: 0.35rem;
+.kyna-point__check {
+  color: #3fb950;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.35;
 }
 
-/* GitHub-Style Code Card */
-.gh-code-card {
-  background: var(--kyna-surface);
+/* Embedded Editor Window inside Card */
+.kyna-editor-window {
+  background: var(--kyna-editor-bg);
   border: 1px solid var(--kyna-border);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.gh-code-card__header {
+.kyna-editor-window__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
   background: var(--kyna-surface-raised);
   border-bottom: 1px solid var(--kyna-border);
+}
+
+.kyna-editor-window__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kyna-editor-window__file {
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.78rem;
   color: var(--kyna-text-muted);
 }
 
-.gh-code-card pre {
-  margin: 0;
-  padding: 1rem 1.25rem;
-  background: var(--kyna-bg);
+.kyna-editor-window__badge {
   font-family: var(--ifm-font-family-monospace);
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--kyna-text);
-  overflow-x: auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--kyna-text-sub);
+  letter-spacing: 0.05em;
 }
 
-@media (max-width: 820px) {
-  .zigzag-row,
-  .zigzag-row--reverse {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-    padding: 3rem 0;
+.kyna-editor-window__body .theme-code-block {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: var(--kyna-editor-bg) !important;
+}
+
+.kyna-editor-window__body .prism-code {
+  padding: 1.25rem 1.15rem !important;
+  font-size: 0.85rem !important;
+  line-height: 1.62 !important;
+  background: var(--kyna-editor-bg) !important;
+}
+
+@media (max-width: 960px) {
+  .kyna-card,
+  .kyna-card--reverse {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    padding: 1.75rem;
+  }
+
+  .kyna-card--reverse .kyna-card__code {
+    order: 1 !important;
   }
 }
 
-/* Footer (GitHub Style) */
+/* ==========================================================================
+   Call to Action (CTA) Box
+   ========================================================================== */
+
+.kyna-cta {
+  padding: 5.5rem 1.5rem;
+  text-align: center;
+}
+
+.kyna-cta__container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.kyna-cta__title {
+  font-size: 2.2rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--kyna-text);
+  margin-bottom: 1rem;
+}
+
+.kyna-cta__desc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--kyna-text-muted);
+  margin-bottom: 2rem;
+}
+
+.kyna-cta__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+/* Footer (GitHub / Linear Style) */
 .footer {
   border-top: 1px solid var(--kyna-border);
   background: var(--kyna-surface) !important;
