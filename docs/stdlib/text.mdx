@@ -1,0 +1,31 @@
+---
+sidebar_position: 1
+---
+
+# Text
+
+Text is Unicode-aware. The `text*` helpers operate on whole graphemes, so
+length, slices, and case conversion handle non-Latin scripts correctly.
+
+```kyna
+const greeting = "  Héllo 世界  ";
+
+print(len(greeting));                      # 12
+print(textSlice(greeting, 2, 7));          # Héllo
+print(textFind(greeting, "世界"));          # 8
+print(textContains(greeting, "éll"));      # true
+print(textReplace(textTrim(greeting), "世界", "Kyna"));
+print(textLower("ÄBC"), textUpper("kyna"));   # äbc KYNA
+print(textSplit("one::two::three", "::"));    # 3 items
+```
+
+## Functions
+
+- `len(x)` — length of a string, array, or collection;
+- `textSlice(s, start, end)` — substring by grapheme index;
+- `textFind(haystack, needle)` — index of a needle, or -1;
+- `textContains(s, part)` — does `s` contain `part`?;
+- `textReplace(s, from, to)` — replace every occurrence;
+- `textTrim(s)` — strip surrounding whitespace;
+- `textLower(s)` / `textUpper(s)` — case conversion;
+- `textSplit(s, sep)` — split into an array of parts.

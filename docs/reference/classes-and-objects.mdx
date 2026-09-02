@@ -1,0 +1,64 @@
+---
+sidebar_position: 4
+---
+
+# Classes and objects
+
+`class` declares a type with fields and methods; `init` is the constructor and
+`self` refers to the instance.
+
+```kyna
+class Animal {
+    public name: str;
+
+    public init(name: str) {
+        self.name = name;
+    }
+
+    public fn speak(): str {
+        return self.name;
+    }
+}
+```
+
+## Inheritance and overriding
+
+Use `extends` to inherit, and `override` to replace a base method:
+
+```kyna
+class Dog extends Animal {
+    public override fn speak(): str {
+        return "woof " + self.name;
+    }
+}
+
+var pet = new Dog("Rex");
+print(pet.speak());   # woof Rex
+```
+
+## Interfaces
+
+Interfaces (`intf`) are structural contracts checked at `implements`
+conformance and object-literal assignment:
+
+```kyna
+intf Shape {
+    area(): float;
+}
+
+class Circle implements Shape {
+    public fn area(): float {
+        return 3.14;
+    }
+}
+```
+
+- `extends` merges parent contracts and can specialize generics, e.g.
+  `extends Base<int>`.
+- Optional properties (`name?: T`) are not required of implementers.
+- `implements` requires compatible public fields and methods.
+
+## Type definitions
+
+Ambient type-definition files (`.kyna.d`, `.d.ky`, `.ky.d`) declare interfaces
+used only at compile time and never executed.

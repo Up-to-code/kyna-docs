@@ -1,0 +1,80 @@
+---
+sidebar_position: 4
+---
+
+# Operators
+
+Operators combine values. Kyna has arithmetic, comparison, and logic
+operators, and they follow rules you already know from other languages.
+
+## Arithmetic
+
+```kyna
+var sum     = 2 + 3;      # 5
+var diff    = 7 - 2;      # 5
+var product = 2 * 21;     # 42
+var quotient = 10 / 2;    # 5
+var remainder = 10 % 3;   # 1
+```
+
+The usual precedence applies: multiplication and division bind tighter than
+addition and subtraction, and parentheses override it.
+
+```kyna
+print(2 + 2 * 20);        # 42   (multiplication first)
+print((2 + 2) * 20);      # 80   (parentheses first)
+```
+
+## String concatenation
+
+Use `+` to join strings:
+
+```kyna
+var name = "Kyna";
+print("Hello " + name);            # Hello Kyna
+print("v" + 1 + ".0");             # v1.0
+```
+
+## Comparison
+
+Comparisons produce a `bool`:
+
+```kyna
+print(10 > 5);          # true
+print(10 >= 10);        # true
+print(3 < 1);           # false
+print("a" == "a");      # true
+print("a" != "b");      # true
+```
+
+## Logic
+
+`&&` means *and*, `||` means *or*, and `!` means *not*:
+
+```kyna
+var warm = true;
+var sunny = true;
+
+print(warm && sunny);   # true — both must be true
+print(warm || false);   # true — at least one is true
+print(!warm);           # false — negates
+```
+
+Comparison operators sit between logic and arithmetic in precedence, and the
+checker evaluates left to right within a level.
+
+## Putting it together
+
+```kyna
+fn canDrive(age: int, hasLicense: bool): bool {
+    return age >= 16 && hasLicense;
+}
+
+print(canDrive(17, true));     # true
+print(canDrive(15, true));     # false
+```
+
+## Next steps
+
+Now you can write expressions. Bring them together in
+[control flow](/docs/tutorial/control-flow) to make decisions and loops.

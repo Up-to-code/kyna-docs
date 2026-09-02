@@ -1,0 +1,35 @@
+---
+sidebar_position: 4
+---
+
+# Files
+
+The filesystem API reads and writes text and JSON, lists directories, and
+removes paths. These operations are fallible and should run inside `try`.
+
+```kyna
+try {
+    createDirectory("notes");
+    writeFile("notes/message.txt", "Hello filesystem");
+    writeJsonFile("notes/meta.json", { language: "Kyna", version: 1 });
+
+    const message = readFile("notes/message.txt");
+    const meta = readJsonFile("notes/meta.json");
+    print(message, meta.language, fileExists("notes/message.txt"));
+
+    removePath("notes/message.txt");
+    removePath("notes/meta.json");
+    removePath("notes");
+} catch (failure) {
+    print(failure.code, failure.message);
+}
+```
+
+## Functions
+
+- `readFile(path)` / `writeFile(path, text)`;
+- `readJsonFile(path)` / `writeJsonFile(path, value)`;
+- `createDirectory(path)`;
+- `fileExists(path)`;
+- `listDirectory(path)` — entries in a directory;
+- `removePath(path)` — remove a file or directory.

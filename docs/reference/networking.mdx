@@ -1,0 +1,73 @@
+---
+sidebar_position: 7
+---
+
+# Networking
+
+Kyna provides `httpGet(url)` for a raw response body and `fetch(url, options?)`
+for structured HTTP and HTTPS requests. All network operations are fallible and
+should be protected with `try`/`catch`.
+
+```kyna
+try {
+    const response = fetch("https://api.example.com/v1/items", {
+        method: "POST",
+        body: jsonStringify({ name: "Kyna" }),
+        timeout: 10000,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        }
+    });
+    const result = response.json();
+    print(response.status, result);
+} catch (failure) {
+    print(failure.code, failure.message);
+}
+```
+
+## Options
+
+- `method`: HTTP method string; defaults to `GET` and is upper-cased;
+- `body`: request body string, commonly produced by `jsonStringify`;
+- `timeout`: positive timeout in milliseconds;
+- `headers`: object whose values must be strings. Quoted object keys support
+  names such as `Content-Type`, `X-API-Key`, and `X-CSRF-Token`.
+
+## The response
+
+Responses expose `ok`, `status`, `url`, `method`, `headers`, `text()`, and
+`json()`. `ok` is true for statuses 200–299. HTTP 4xx/5xx remain inspectable
+responses; transport failures throw a catchable `Error`.
+
+## Error codes
+
+| Code | Meaning |
+| --- | --- |
+| `KNET1001` | invalid `fetch` arguments |
+| `KNET1002` | invalid method/body/timeout option |
+| `KNET1003` | invalid header container or non-string header value |
+| `KNET2001` | DNS, connection, TLS, send, receive, timeout, or transfer failure |
+| `KNET2100` | response-only operation used with a non-response value |
+| `K5100` | response or input JSON is malformed |
+
+## Non-throwing requests
+
+When request failure is expected application state, use `http.tryFetch(url,
+options)` (alias `fetchResult`). It always returns an object with `ok`,
+`response`, and `error` fields, so no outer `try`/`catch` is needed.
+
+## Auth and cookies
+
+Load secrets from an injected environment and pass them as headers:
+
+```kyna
+const token = processEnv("KYNA_API_TOKEN");
+const response = fetch("https://api.example.com/v1/profile", {
+    timeout: 10000,
+    headers: { Authorization: "Bearer " + token }
+});
+```
+
+Never commit production credentials in a `.kyna` file; authorization and cookie
+values are redacted from diagnostics and logs.

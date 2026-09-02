@@ -1,0 +1,38 @@
+---
+sidebar_position: 6
+---
+
+# Async with `await`
+
+`await` is a unary prefix operator. When you place it before a call, the
+program waits for that call to finish and then binds its result before moving
+to the next line:
+
+```kyna
+var awaited = await double(21);   # pauses for double(21), then binds 42
+print(awaited);
+```
+
+## The natural network pattern
+
+`await` reads naturally around processing such as `fetch(...).json()`, where a
+response must first arrive and then be decoded before the value is used:
+
+```kyna
+try {
+    const users = await fetch("https://api.example.com/v1/users").json();
+    print(len(users), users[0].name);
+} catch (failure) {
+    print(failure.code, failure.message);
+}
+```
+
+## Current behavior
+
+Today `await` passes synchronous results through, so `await fetch(...)` code
+compiles and runs on both the tree-walk and bytecode runtimes without a
+separate async runtime. An event loop is a planned improvement tracked in the
+project's implementation status — `await` is the syntax you keep either way.
+
+See the full deterministic example at
+`examples/language/await_and_network.kyna` in the repository.

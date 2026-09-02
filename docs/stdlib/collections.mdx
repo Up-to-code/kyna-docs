@@ -1,0 +1,108 @@
+---
+sidebar_position: 2
+---
+
+# Collections
+
+Arrays are mutable, ordered lists of values. You create one with square
+brackets, index it with `[n]`, and measure it with `len`.
+
+## Creating and reading arrays
+
+```kyna
+var scores = [10, 20, 30];
+
+print(scores[0]);     # 10 — first element
+print(scores[1]);     # 20
+print(len(scores));   # 3
+```
+
+Indexing is zero-based: the first element is at position `0`.
+
+Arrays are mutable — you can push to them, pop from them, and reassign
+elements:
+
+```kyna
+var tags = ["a", "b", "c"];
+tags[1] = "bee";          # reassign by index
+print(tags);              # [a, bee, c]
+```
+
+## Adding and removing at the end
+
+`push` adds an element to the end; `pop` removes and returns it:
+
+```kyna
+var items = [1, 2, 3];
+
+push(items, 4);
+print(len(items));        # 4
+
+var last = pop(items);
+print(last);              # 4
+print(len(items));        # 3
+```
+
+## Transforming and filtering
+
+`map`, `filter`, and `reduce` let you reshape arrays with predicates and
+functions:
+
+```kyna
+var numbers = [1, 2, 3, 4];
+
+var doubled = map(numbers, fn (n) { return n * 2; });   # [2, 4, 6, 8]
+var evens   = filter(numbers, fn (n) { return n % 2 == 0; });
+var total   = reduce(numbers, 0, fn (acc, n) { return acc + n; });
+
+print(doubled);    # [2, 4, 6, 8]
+print(evens);      # [2, 4]
+print(total);      # 10
+```
+
+## Finding and testing
+
+- `find(xs, predicate)` returns the first element that matches, or `null`;
+- `any(xs, predicate)` is true if *any* element matches;
+- `all(xs, predicate)` is true if *every* element matches.
+
+```kyna
+var xs = [3, 1, 3, 2];
+print(find(xs, fn (x) { return x == 2; }) != null);   # true
+print(any(xs, fn (x) { return x == 1; }));            # true
+print(all(xs, fn (x) { return x > 0; }));             # true
+```
+
+## Sets and sorting
+
+- `unique(xs)` keeps distinct elements in their first-seen order;
+- `sort(xs)` returns a sorted copy.
+
+```kyna
+print(unique([3, 1, 3, 2]));   # [3, 1, 2]
+print(sort([3, 1, 2]));        # [1, 2, 3]
+```
+
+## Objects and keys
+
+`keys(obj)` lists the keys of an object or map:
+
+```kyna
+var config = { name: "Kyna", version: 1 };
+print(keys(config));           # ["name", "version"]
+```
+
+## The full list
+
+- `len(collection)` — element count;
+- `push(xs, value)` — add to the end;
+- `pop(xs)` — remove and return the last element;
+- `keys(obj)` — keys of an object or map;
+- `unique(xs)` — distinct elements in order;
+- `sort(xs)` — sorted copy;
+- `map(xs, fn)` — transform each element;
+- `filter(xs, fn)` — keep matching elements;
+- `reduce(xs, seed, fn)` — fold into a single value;
+- `find(xs, fn)` — first matching element or `null`;
+- `any(xs, fn)` — does any element match?;
+- `all(xs, fn)` — do all elements match?.

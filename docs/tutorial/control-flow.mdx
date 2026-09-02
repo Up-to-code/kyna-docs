@@ -1,0 +1,130 @@
+---
+sidebar_position: 4
+---
+
+# Control Flow
+
+Control flow statements determine the execution path of your program. In Kyna, all conditions must be parenthesized and all code blocks must use curly braces `{}`.
+
+---
+
+## 1. Branching with `if`, `else if`, and `else`
+
+Conditions evaluate to a boolean expression:
+
+```kyna
+fn evaluateHealth(statusCode: int): str {
+    if (statusCode >= 200 && statusCode < 300) {
+        return "Healthy";
+    } else if (statusCode >= 500) {
+        return "Server Error";
+    } else {
+        return "Degraded";
+    }
+}
+
+print(evaluateHealth(200)); # Healthy
+print(evaluateHealth(503)); # Server Error
+```
+
+---
+
+## 2. Pattern Matching with `switch`
+
+The `switch` statement matches a value against distinct `case` arms. 
+
+Key characteristics:
+- **No Implicit Fall-Through**: Only the matching arm executes.
+- **Braces Required**: Each arm body is scoped within `{}`.
+- **Default Arm**: Catch-all branch when no previous cases match.
+
+```kyna
+fn getMethodDescription(method: str): str {
+    switch (method) {
+        case "GET": {
+            return "Read resource";
+        }
+        case "POST": {
+            return "Create resource";
+        }
+        case "PUT": {
+            return "Replace resource";
+        }
+        case "DELETE": {
+            return "Remove resource";
+        }
+        default: {
+            return "Unsupported HTTP method";
+        }
+    }
+}
+
+print(getMethodDescription("POST")); # Create resource
+```
+
+---
+
+## 3. Iteration: `while` Loops
+
+The `while` loop runs as long as its condition remains `true`:
+
+```kyna
+var retries = 3;
+
+while (retries > 0) {
+    print("Retrying connection... attempts left:", retries);
+    retries = retries - 1;
+}
+
+print("Connection aborted.");
+```
+
+---
+
+## 4. Iteration: Structured `loop`
+
+Kyna's `loop` statement provides a classic three-clause for-loop syntax: `loop (init; condition; increment)`:
+
+```kyna
+var totalSum = 0;
+
+loop (var i = 1; i <= 5; i = i + 1) {
+    totalSum = totalSum + i;
+}
+
+print("Sum 1..5:", totalSum); # 15
+```
+
+---
+
+## 5. Loop Control: `break` and `continue`
+
+- `break`: Immediately exits the loop.
+- `continue`: Skips the remainder of the current iteration and begins the next.
+
+```kyna
+loop (var i = 0; i < 10; i = i + 1) {
+    if (i % 2 == 0) {
+        continue; # Skip even numbers
+    }
+    if (i > 7) {
+        break;    # Stop early
+    }
+    print("Odd number:", i);
+}
+```
+
+**Output:**
+```text
+Odd number: 1
+Odd number: 3
+Odd number: 5
+Odd number: 7
+```
+
+---
+
+## Next Steps
+
+- Learn how to structure reusable logic with **[Functions & Closures](/docs/tutorial/functions)**.
+- Handle exceptions safely with **[Error Handling](/docs/tutorial/errors)**.

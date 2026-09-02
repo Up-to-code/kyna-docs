@@ -1,0 +1,224 @@
+---
+sidebar_position: 2
+---
+
+# The Language Tour
+
+This tour introduces the key concepts and syntax of Kyna through short, focused examples. Each section covers a specific language feature with explanations and outputs.
+
+---
+
+## 1. Variables & Bindings
+
+In Kyna, use `var` for mutable variables, `const` for immutable constants, and `fn` to declare functions. Types can be written explicitly or inferred by the compiler:
+
+```kyna
+# Declare a function with typed parameters and return type
+fn double(value: int): int {
+    return value * 2;
+}
+
+var city: str = "San Francisco";
+const answer = double(21); # Inferred as int (42)
+
+print("City:", city);
+print("Answer:", answer);
+```
+
+**Output:**
+```text
+City: San Francisco
+Answer: 42
+```
+
+---
+
+## 2. Conditionals (`if` / `else if` / `else`)
+
+Condition expressions in Kyna are always enclosed in parentheses, and the block body must be enclosed in braces:
+
+```kyna
+fn grade(score: int): str {
+    if (score >= 90) {
+        return "A";
+    } else if (score >= 80) {
+        return "B";
+    } else if (score >= 70) {
+        return "C";
+    } else {
+        return "F";
+    }
+}
+
+print("Score 85:", grade(85));
+print("Score 62:", grade(62));
+```
+
+**Output:**
+```text
+Score 85: B
+Score 62: F
+```
+
+---
+
+## 3. Pattern Matching with `switch`
+
+Kyna's `switch` statements evaluate arms independently without implicit fall-through. Each arm requires braces:
+
+```kyna
+fn describeStatus(code: int): str {
+    switch (code) {
+        case 200: {
+            return "OK";
+        }
+        case 404: {
+            return "Not Found";
+        }
+        case 500: {
+            return "Internal Server Error";
+        }
+        default: {
+            return "Unknown Status";
+        }
+    }
+}
+
+print("Status 200:", describeStatus(200));
+print("Status 404:", describeStatus(404));
+print("Status 418:", describeStatus(418));
+```
+
+**Output:**
+```text
+Status 200: OK
+Status 404: Not Found
+Status 418: Unknown Status
+```
+
+---
+
+## 4. Loops (`while` and `loop`)
+
+Kyna provides standard `while` loops as well as a three-clause `loop` construct for structured iteration:
+
+```kyna
+# Standard while loop
+var count = 0;
+while (count < 3) {
+    print("While count:", count);
+    count = count + 1;
+}
+
+# Structured three-clause loop: (init; condition; increment)
+var sum = 0;
+loop (var i = 1; i <= 3; i = i + 1) {
+    sum = sum + i;
+}
+print("Sum 1..3:", sum);
+```
+
+**Output:**
+```text
+While count: 0
+While count: 1
+While count: 2
+Sum 1..3: 6
+```
+
+---
+
+## 5. Classes & Object-Oriented Programming
+
+Define classes with constructors (`init`), member fields, and instance methods:
+
+```kyna
+class Task {
+    public init(title: str, priority: int) {
+        self.title = title;
+        self.priority = priority;
+        self.completed = false;
+    }
+
+    fn complete() {
+        self.completed = true;
+    }
+
+    fn describe(): str {
+        var status = "pending";
+        if (self.completed) {
+            status = "done";
+        }
+        return self.title + " (" + status + ")";
+    }
+}
+
+const task = Task("Write Documentation", 1);
+task.complete();
+print("Task status:", task.describe());
+```
+
+**Output:**
+```text
+Task status: Write Documentation (done)
+```
+
+---
+
+## 6. Null Safety & Fallible Values
+
+Kyna distinguishes between non-nullable types (`str`) and nullable types (`str?`). When a function might return `null`, declare it explicitly:
+
+```kyna
+fn findPort(service: str): int? {
+    if (service == "http") {
+        return 80;
+    } else if (service == "https") {
+        return 443;
+    }
+    return null; # Explicit null
+}
+
+var port = findPort("https");
+if (port != null) {
+    print("Port is:", port);
+} else {
+    print("Unknown service port");
+}
+```
+
+**Output:**
+```text
+Port is: 443
+```
+
+---
+
+## 7. Asynchronous Operations (`async` / `await`)
+
+Asynchronous functions return promises and can be awaited without blocking the execution thread:
+
+```kyna
+async fn fetchServerTime(): str {
+    try {
+        const response = await fetch("https://api.kyna.dev/time");
+        return response;
+    } catch (err) {
+        return "Fallback time";
+    }
+}
+
+const time = await fetchServerTime();
+print("Server time:", time);
+```
+
+---
+
+## Key Takeaways
+
+- **Explicit Signatures**: Function parameters and return values carry clear type annotations.
+- **No Ambiguous Syntax**: Braces are required for block bodies; `switch` arms never fall through accidentally.
+- **Strict Null Safety**: Nullable values are explicit (`T?`) and type-narrowed safely.
+- **Inspectable Runtime**: Every stage of code compilation can be viewed using the `ky` CLI.
+
+Explore the deep dives in the [Tutorial](/docs/tutorial/getting-started) and [Reference](/docs/reference/bindings) sections to learn more.

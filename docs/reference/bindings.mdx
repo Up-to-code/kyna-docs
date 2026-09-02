@@ -1,0 +1,61 @@
+---
+sidebar_position: 1
+---
+
+# Bindings & types
+
+## Mutability: `var` and `const`
+
+`var` declares a mutable binding; `const` declares an immutable one. Assigning
+to a `const` is a compile-time error.
+
+```kyna
+var count = 1;          # type inferred as int
+count = 2;              # ok
+
+const name: str = "Kyna";
+# name = "other";       # error: cannot assign to const
+```
+
+## Explicit types
+
+Mark a binding's type with colon-annotation:
+
+```kyna
+var city: str = "Paris";
+const pi: float = 3.14159;
+var maybe: str? = null;   # nullable string
+```
+
+## The type system at a glance
+
+| Concept | Example | Notes |
+| --- | --- | --- |
+| Literal types | `int`, `float`, `str`, `bool`, `null` | nominal names |
+| Numeric fit | `float` fits `num` | signatures may use `num` |
+| Nullable | `str?`, `int? list` | `null` fits nullable types |
+| Unions | `str \| int` | a value fits if it fits one arm |
+| `any` | `any` | only bypasses checks where written |
+
+Directional compatibility is checked before execution: `int` and `float` fit
+`num`; `any` is not widened from inferred types; unrelated inferred types never
+become `any`.
+
+## Collections
+
+```kyna
+var numbers = [1, 2, 3];          # int list
+var labels = ["a", "b"];          # str list
+print(numbers[0]);                # 1
+```
+
+## Legacy aliases
+
+The older spellings still work everywhere: `let` for `var`, `set` for `const`
+as a variable binding, and `func` for `fn`. New code should use `var`, `const`,
+and `fn`.
+
+## Object types
+
+Classes, fields, methods, and structural interfaces are covered in
+[classes & objects](/docs/reference/classes-and-objects).

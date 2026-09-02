@@ -1,0 +1,95 @@
+---
+sidebar_position: 8
+---
+
+# Async & Network Fetch
+
+Kyna includes a built-in asynchronous runtime that enables non-blocking HTTP networking, concurrent task execution, and streaming I/O without heavy thread overhead.
+
+---
+
+## 1. Asynchronous Functions (`async`)
+
+Mark any function with the `async` keyword to designate it as asynchronous:
+
+```kyna
+async fn fetchServiceHealth(endpoint: str): str {
+    const url = "https://api.kyna.dev/health/" + endpoint;
+    const response = await fetch(url);
+    return response;
+}
+```
+
+---
+
+## 2. Awaiting Promises (`await`)
+
+Use `await` to yield control until an asynchronous operation finishes:
+
+```kyna
+async fn runHealthCheck() {
+    print("Initiating health check...");
+    
+    try {
+        const result = await fetchServiceHealth("db-primary");
+        const parsed = jsonParse(result);
+        
+        print("Status:", parsed["status"]);
+        print("Latency:", parsed["latency_ms"], "ms");
+    } catch (err) {
+        print("Health check failed:", err);
+    }
+}
+
+await runHealthCheck();
+```
+
+---
+
+## 3. Parsing JSON Responses
+
+The standard library includes fast native JSON decoding and encoding functions:
+
+```kyna
+# JSON string to typed Map / Object
+const rawJson = "{\"service\": \"payment-gw\", \"active\": true, \"workers\": 4}";
+const data = jsonParse(rawJson);
+
+print("Service:", data["service"]);
+print("Workers:", data["workers"]);
+
+# Typed Map / Object to JSON string
+const outboundPayload = {
+    "event": "HEARTBEAT",
+    "timestamp": 1725250000
+};
+
+const jsonString = jsonStringify(outboundPayload);
+print("Serialized JSON:", jsonString);
+```
+
+---
+
+## 4. Concurrent Requests
+
+Execute multiple independent network calls concurrently:
+
+```kyna
+async fn checkAllClusters(): str {
+    const authTask = fetchServiceHealth("auth");
+    const billingTask = fetchServiceHealth("billing");
+    
+    # Await results concurrently
+    const authStatus = await authTask;
+    const billingStatus = await billingTask;
+    
+    return "Auth: " + authStatus + " | Billing: " + billingStatus;
+}
+```
+
+---
+
+## Next Steps
+
+- Explore full end-to-end sample programs in **[Code Examples](/docs/examples)**.
+- Review standard library modules in the **[Standard Library Reference](/docs/stdlib/text)**.

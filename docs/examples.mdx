@@ -1,0 +1,46 @@
+## Examples
+
+The Kyma repository ships a wide set of runnable `.kyna` examples. Each one
+exercises a concrete feature and is verified in CI.
+
+## Language
+
+| Example | Shows |
+| --- | --- |
+| `examples/hello.kyna` | bindings, types, and printing |
+| `examples/classes.kyna` | classes, inheritance, and overriding |
+| `examples/match.kyna` | `match` arms |
+| `examples/modules/main.kyna` | multi-module programs |
+| `examples/language/syntax_overview.kyna` | the full syntax tour, including legacy aliases |
+| `examples/language/await_and_network.kyna` | `await` on a computation and on `fetch(...).json()` |
+| `examples/language/closures.kyna` | closures, counters, and nested adders |
+| `examples/language/exceptions.kyna` | try/catch/finally with return values |
+| `examples/language/interfaces_and_inheritance.kyna` | structural interfaces |
+| `examples/language/variadics.kyna` | variadic parameters |
+
+## Networking
+
+`examples/network/` contains deterministic request/response checkpoints plus
+real HTTP helpers:
+
+- `checkpoints.kyna` — request/response assertions on the mock endpoint;
+- `fetch_result.kyna` — non-throwing `fetchResult` both paths;
+- `http_get.kyna` — public no-key HTTP smoke test;
+- `post_json.kyna` — POST body with headers;
+- `bearer_authorization.kyna`, `api_key_header.kyna`, `cookies_and_csrf.kyna`;
+- `query_parameters.kyna`, `http_status_error.kyna`,
+  `caught_transport_error.kyna`, `response_text.kyna`.
+
+## Standard library
+
+- `standard_library/core_values.kyna` — print, log, typeOf, call;
+- `standard_library/mutable_collections.kyna` — push, pop, keys, unique, sort;
+- `standard_library/filesystem.kyna` — file and directory operations;
+- `standard_library/data_formats.kyna` — JSON/TOML/XML codecs;
+- `standard_library/timing.kyna` — clockMs, measure, profileLog;
+- `standard_library/memory_and_color.kyna` — GC stats and colored output.
+
+## Learning path
+
+`examples/learning/` is a guided sequence: **01_basics**, **02_control_flow**,
+**03_functions**, **04_data**, **05_errors_and_network**, and **06_system**.

@@ -1,0 +1,76 @@
+---
+sidebar_position: 7
+---
+
+# Error Handling
+
+Kyna provides structured exception handling using `try`, `catch`, and `throw`. The compiler warns you when fallible operations (such as network I/O or file parsing) are not enclosed within an error boundary.
+
+---
+
+## 1. Catching Exceptions (`try` / `catch`)
+
+Wrap potentially failing operations inside a `try` block:
+
+```kyna
+fn parsePort(portStr: str): int {
+    try {
+        const port = intParse(portStr);
+        if (port <= 0 || port > 65535) {
+            throw "Port out of range: " + portStr;
+        }
+        return port;
+    } catch (err) {
+        print("Warning: failed to parse port:", err);
+        return 8080; # Default fallback
+    }
+}
+
+print("Configured port:", parsePort("9000"));  # 9000
+print("Configured port:", parsePort("99999")); # Default fallback 8080
+```
+
+---
+
+## 2. Throwing Errors (`throw`)
+
+Use `throw` with an error message string or an error object to interrupt execution and propagate the failure:
+
+```kyna
+fn validateApiKey(key: str) {
+    if (len(key) < 16) {
+        throw "InvalidApiKey: Key length must be at least 16 characters";
+    }
+}
+
+try {
+    validateApiKey("short_secret");
+} catch (e) {
+    print("Caught validation error:", e);
+}
+```
+
+---
+
+## 3. Fallible Operations & Compile-Time Checks
+
+The Kyna compiler analyzes call graphs for fallible functions (such as `fetch` or file system access) and emits diagnostics if they are called without an error boundary:
+
+```kyna
+# ky check will emit a diagnostic warning if fetch is unhandled:
+async fn loadData() {
+    try {
+        const raw = await fetch("https://api.kyna.dev/status");
+        print("Received payload:", raw);
+    } catch (networkError) {
+        print("Network request failed:", networkError);
+    }
+}
+```
+
+---
+
+## Next Steps
+
+- Explore non-blocking operations in **[Async & Network Fetch](/docs/tutorial/async)**.
+- See full end-to-end applications in **[Examples](/docs/examples)**.

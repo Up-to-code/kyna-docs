@@ -1,0 +1,103 @@
+---
+sidebar_position: 6
+---
+
+# Classes & Object-Oriented Programming
+
+Classes in Kyna encapsulate data fields with behavior, providing structured data modeling for services, database models, and domain entities.
+
+---
+
+## 1. Defining a Class
+
+Classes are declared with `class` and initialized with a constructor method named `init`:
+
+```kyna
+class DatabaseConfig {
+    public init(host: str, port: int, database: str) {
+        self.host = host;
+        self.port = port;
+        self.database = database;
+        self.maxConnections = 10;
+    }
+
+    fn getConnectionString(): str {
+        return "postgres://" + self.host + ":" + self.port + "/" + self.database;
+    }
+}
+
+const config = DatabaseConfig("db.internal", 5432, "production");
+print(config.getConnectionString());
+# Output: postgres://db.internal:5432/production
+```
+
+---
+
+## 2. Methods and Member Fields
+
+Inside class methods, use `self` to access member variables and call sibling methods:
+
+```kyna
+class RateLimiter {
+    public init(maxTokens: int) {
+        self.maxTokens = maxTokens;
+        self.currentTokens = maxTokens;
+    }
+
+    fn allowRequest(): bool {
+        if (self.currentTokens > 0) {
+            self.currentTokens = self.currentTokens - 1;
+            return true;
+        }
+        return false;
+    }
+
+    fn refill(tokens: int) {
+        self.currentTokens = self.currentTokens + tokens;
+        if (self.currentTokens > self.maxTokens) {
+            self.currentTokens = self.maxTokens;
+        }
+    }
+}
+
+var limiter = RateLimiter(2);
+print("Req 1:", limiter.allowRequest()); # true
+print("Req 2:", limiter.allowRequest()); # true
+print("Req 3:", limiter.allowRequest()); # false (Rate limit exceeded)
+
+limiter.refill(1);
+print("Req 4 after refill:", limiter.allowRequest()); # true
+```
+
+---
+
+## 3. Interfaces & Contracts
+
+Define interfaces to enforce consistent contracts across different class implementations:
+
+```kyna
+interface Serializer {
+    fn serialize(): str;
+}
+
+class UserRecord implements Serializer {
+    public init(id: int, username: str) {
+        self.id = id;
+        self.username = username;
+    }
+
+    fn serialize(): str {
+        return jsonStringify({
+            "id": self.id,
+            "username": self.username
+        });
+    }
+}
+```
+
+---
+
+## Next Steps
+
+- Learn robust failure handling in **[Error Handling](/docs/tutorial/errors)**.
+- Connect to backend services in **[Async & Network Fetch](/docs/tutorial/async)**.

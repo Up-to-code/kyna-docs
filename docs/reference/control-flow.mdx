@@ -1,0 +1,69 @@
+---
+sidebar_position: 2
+---
+
+# Control flow
+
+## Conditionals
+
+`if` takes a parenthesized condition and braced bodies, and supports `else
+if` chains:
+
+```kyna
+fn grade(score: int): str {
+    if (score >= 90) {
+        return "A";
+    } else if (score >= 80) {
+        return "B";
+    } else {
+        return "F";
+    }
+}
+```
+
+`if` is expression-capable, so it can produce a value.
+
+## `switch`
+
+`switch` selects among constant `case` values. Each arm is
+`case VALUE: { ... }`, an optional `default` must come last, and control does
+**not** fall through between arms:
+
+```kyna
+switch (code) {
+    case 200: { return "ok"; }
+    case 404: { return "missing"; }
+    default:  { return "other"; }
+}
+```
+
+## Loops
+
+`while` and `loop` are statements. `loop` is a three-clause for-loop:
+
+```kyna
+var i = 0;
+while (i < 3) {
+    i = i + 1;
+}
+
+var total = 0;
+loop (var j = 0; j < 3; j = j + 1) {
+    total = total + 1;
+}
+```
+
+- `break` exits the loop; `continue` jumps to the next iteration.
+- Both may name a loop label when loops are nested.
+
+## Matching
+
+`match` accepts literal and `_` arms. Arms use `=>` and terminate with `;`:
+
+```kyna
+match (value) {
+    1  => "one";
+    2  => "two";
+    _  => "many";
+}
+```

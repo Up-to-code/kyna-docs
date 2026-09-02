@@ -1,0 +1,28 @@
+---
+sidebar_position: 5
+---
+
+# System
+
+Environment, process, and platform helpers.
+
+```kyna
+const path = processEnv("PATH");          # an environment variable
+print(osName());                          # e.g. "macos"
+print(osArchitecture());                  # e.g. "arm64"
+print(osWorkingDirectory());
+```
+
+## Process
+
+- `processRun(command)` — run an external command;
+- `build(command)` — build hook for manifests;
+- `processEnv(name)` — read an environment variable.
+
+## Platform
+
+- `osName()` — operating system name;
+- `osArchitecture()` — machine architecture;
+- `osWorkingDirectory()` — current directory;
+- `terminalIsInteractive()` — whether the terminal supports interaction;
+- `terminalSupportsColor()` — whether the terminal supports color.

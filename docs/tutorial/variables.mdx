@@ -1,0 +1,83 @@
+---
+sidebar_position: 2
+---
+
+# Variables
+
+Variables are how you give a name to a value and keep it for later. In Kyna
+there are two ways to declare one: `var` for values that can change, and
+`const` for values that cannot.
+
+## Declaring with `var`
+
+Use `var` when the value may change later:
+
+```kyna
+var player = "Rex";     # player is inferred as str
+print(player);          # Rex
+
+player = "Ada";         # ok — var bindings are mutable
+print(player);          # Ada
+```
+
+You don't have to write the type. Kyna infers it from the value on the right
+of `=`. But you can say it explicitly if you like:
+
+```kyna
+var score: int = 10;
+```
+
+## Declaring with `const`
+
+Use `const` when the value should never change. It is a promise the compiler
+enforces — assigning to a `const` is an error:
+
+```kyna
+const pi = 3.14159;
+print(pi);              # 3.14159
+
+# pi = 3.0;             # error: cannot assign to const
+```
+
+`const` is the default choice for named values that don't change, like
+configuration, magic numbers, or the result of a one-time calculation.
+
+## `var` vs `const` in one picture
+
+```kyna
+var counter = 0;           # mutable, will count up
+const message = "hi";      # immutable, never changes
+```
+
+Use `var` for anything that will be reassigned. Use `const` for everything
+else. It makes your intent obvious to readers and lets the checker help you.
+
+## Naming rules
+
+- Names start with a letter or underscore.
+- After the first character, they may contain letters, digits, and
+  underscores.
+- They are case-sensitive: `Score` and `score` are different.
+
+```kyna
+var total_count = 5;
+var TotalCount = 6;
+var _private = 7;
+```
+
+## Legacy aliases
+
+Older Kyna code used `let` where you'd now write `var`, and `set` where you'd
+write `const` as a binding. Both still work:
+
+```kyna
+let oldCount = 1;        # alias for var
+set oldCount = 15;       # alias for assigning through let
+```
+
+New code should use `var` and `const`.
+
+## Next steps
+
+Read about the [types](/docs/tutorial/types) those variables can hold, or the
+[operators](/docs/tutorial/operators) that combine them.

@@ -1,0 +1,64 @@
+---
+sidebar_position: 3
+---
+
+# Functions
+
+Functions are declared with `fn`. Parameters always have types and calls always
+use parentheses.
+
+```kyna
+fn double(value: int): int {
+    return value * 2;
+}
+
+print(double(21));   # 42
+```
+
+## Return types
+
+Return annotations are optional for safely inferred functions and mandatory
+when a contract is present:
+
+```kyna
+fn inferred(a: int, b: int) {
+    return a + b;
+}
+
+fn typed(a: int, b: int): int {
+    return a + b;
+}
+```
+
+`void` and `null` are distinct. An omitted return annotation is inferred
+dynamically at call sites; an explicit annotation stays strict.
+
+## First-class functions
+
+```kyna
+fn add(a: int, b: int): int { return a + b; }
+fn sub(a: int, b: int): int { return a - b; }
+
+print(call(add, 21, 21));   # 42
+print(call(sub, 60, 18));   # 42
+```
+
+## `await` on a call
+
+`await` binds the result of a call before the next line runs:
+
+```kyna
+var result = await double(21);   # 42
+```
+
+See [async](/docs/reference/async) for how this pairs with `fetch`.
+
+## Legacy alias
+
+`func` is accepted as an alias for `fn`:
+
+```kyna
+func legacyAdd(a: int, b: int): int {
+    return a + b;
+}
+```

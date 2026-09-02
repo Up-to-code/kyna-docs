@@ -1,0 +1,53 @@
+---
+sidebar_position: 5
+---
+
+# Exceptions
+
+Failures in Kyna are typed `Error` values raised with `throw`. Non-Error values
+thrown become an Error whose `cause` is the original value.
+
+## `try` / `catch`
+
+```kyna
+try {
+    const response = fetch("https://api.example.com", { timeout: 10000 });
+    print(response.status);
+} catch (failure) {
+    print(failure.code, failure.message);
+}
+```
+
+`catch (failure)` receives the `Error` and may inspect `failure.code`,
+`failure.message`, and `failure.cause`.
+
+## `finally`
+
+`finally` runs on normal completion, return, caught failure, and rethrow:
+
+```kyna
+try {
+    work();
+} catch (failure) {
+    handle(failure);
+} finally {
+    cleanup();
+}
+```
+
+## Runtime failures are catchable too
+
+VM-generated failures use the same exception path, so they can be caught the
+same way as thrown errors:
+
+```kyna
+try {
+    call(notAFunction);
+} catch (failure) {
+    print(failure.code);   # a KVM runtime error code
+}
+```
+
+Error codes follow a scheme such as `KVM2301` (runtime), `KNET2001` (network
+transport), and `K5100` (malformed JSON). See [networking](/docs/reference/networking)
+for the network-specific codes.

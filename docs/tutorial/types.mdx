@@ -1,0 +1,130 @@
+---
+sidebar_position: 3
+---
+
+# Types & Safety
+
+A type defines the structure of data and the operations permitted on it. Kyna validates types at compile time so type errors are caught early.
+
+---
+
+## Primitive Types
+
+Kyna provides five core primitive types:
+
+| Type | Description | Example Literal |
+| :--- | :--- | :--- |
+| `int` | Signed 64-bit integers | `42`, `-10`, `0x2A` |
+| `float` | Double-precision 64-bit floating point numbers | `3.14159`, `-0.5` |
+| `str` | UTF-8 encoded Unicode strings | `"Hello, world"`, `"Kyna"` |
+| `bool` | Boolean logical values | `true`, `false` |
+| `null` | Absence of a value | `null` |
+
+```kyna
+var count: int = 100;
+var price: float = 19.99;
+var name: str = "Production Server";
+var isRunning: bool = true;
+```
+
+---
+
+## Type Inference
+
+Writing explicit type annotations is optional for initialized variables. Kyna infers the tightest possible static type automatically:
+
+```kyna
+var port = 8080;         # Inferred as 'int'
+var active = true;       # Inferred as 'bool'
+var host = "127.0.0.1";  # Inferred as 'str'
+
+# port = "8080";         # Compile error: cannot assign 'str' to 'int'
+```
+
+---
+
+## Explicit Null Safety (`T?`)
+
+In Kyna, standard types cannot hold `null`. To allow a variable or return value to be `null`, mark its type with `?`:
+
+```kyna
+# Non-nullable: guaranteed never to be null
+var name: str = "Alice";
+# name = null; # Compile error: cannot assign null to non-nullable type 'str'
+
+# Nullable: can hold either a string or null
+var alias: str? = null;
+alias = "Alicia"; # Valid
+```
+
+### Safe Type Narrowing
+When you perform a null check with `if (val != null)`, the compiler automatically narrows the type from `T?` to `T` inside the conditional block:
+
+```kyna
+fn greet(nickname: str?) {
+    if (nickname != null) {
+        # 'nickname' is narrowed to 'str' (non-nullable) here
+        print("Hello, " + nickname);
+    } else {
+        print("Hello, anonymous guest");
+    }
+}
+```
+
+---
+
+## Collections (`list` and `map`)
+
+Kyna provides built-in typed collections for sequential arrays and associative dictionaries:
+
+```kyna
+# Lists (homogeneous sequences)
+var endpoints = ["/health", "/metrics", "/v1/users"];
+print("Primary endpoint:", endpoints[0]);
+print("Total count:", len(endpoints));
+
+# Maps (key-value dictionaries)
+var config = {
+    "host": "localhost",
+    "port": "5432",
+    "ssl": "enabled"
+};
+
+print("Connecting to:", config["host"]);
+```
+
+---
+
+## Numeric Polymorphism (`num`)
+
+When writing generic mathematical functions that should accept either `int` or `float`, use the `num` supertype:
+
+```kyna
+fn multiply(a: num, b: num): num {
+    return a * b;
+}
+
+print(multiply(4, 5));       # 20 (int)
+print(multiply(2.5, 4.0));   # 10.0 (float)
+```
+
+---
+
+## The `any` Escape Hatch
+
+For dynamic interoperability or deserialization of arbitrary JSON payloads, Kyna provides the `any` type:
+
+```kyna
+var dynamicPayload: any = jsonParse("{\"status\": 200}");
+```
+
+:::info
+Kyna never silently widens variables to `any`. You must explicitly declare `any` to disable static type checks.
+:::
+
+---
+
+## Next Steps
+
+- Explore **[Operators & Expressions](/docs/tutorial/operators)**.
+- Master **[Control Flow & Pattern Matching](/docs/tutorial/control-flow)**.

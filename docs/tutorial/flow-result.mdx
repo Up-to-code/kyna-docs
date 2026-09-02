@@ -1,0 +1,98 @@
+---
+sidebar_position: 10
+---
+
+# Flow: a complete script
+
+This page ties everything together — variables, types, functions, errors, and
+`await` — in one realistic script. It is a "flow result": start, do work,
+protect against failure, wait where needed, and finish cleanly.
+
+## A weather-style helper
+
+First, a helper that turns an HTTP status code into a description using
+`switch`:
+
+```kyna
+fn describeStatus(code: int): str {
+    switch (code) {
+        case 200: { return "ok"; }
+        case 404: { return "missing"; }
+        default:  { return "other"; }
+    }
+}
+```
+
+## A non-throwing request
+
+When the network result is safer as data than as an exception, use
+`http.tryFetch` (alias `fetchResult`). It always returns an object with `ok`,
+`response`, and `error` fields — no outer `try` needed:
+
+```kyna
+const attempt = fetchResult("https://api.example.com/status", { timeout: 1000 });
+
+if (attempt.ok) {
+    print("status", attempt.response.status, describeStatus(attempt.response.status));
+} else {
+    print("unreachable", attempt.error.code, attempt.error.message);
+}
+```
+
+## Awaiting in a protected block
+
+For the case where failure *should* abort the flow, `try`/`catch` plus `await`
+reads naturally:
+
+```kyna
+try {
+    const body = await fetch("https://api.example.com/v1/items").json();
+    print("items", len(body));
+} catch (failure) {
+    print("request failed", failure.code);
+} finally {
+    print("cleaned up");
+}
+```
+
+## When to use which
+
+- Use **`fetch` + `try`/`catch`** when failure should be handled explicitly or
+  abort the current block.
+- Use **`fetchResult`** when failure is normal application state you'd rather
+  test with `if`.
+- Use **`await`** whenever you want the program to wait for the call before
+  continuing.
+
+## A complete example
+
+```kyna
+fn double(value: int): int {
+    return value * 2;
+}
+
+var awaited = await double(21);
+print("awaited int", awaited);                       # awaited int 42
+
+try {
+    const users = await fetch("mock://kyna/users", { timeout: 1000 }).json();
+    print("awaited fetch", len(users), users[0].name);
+} catch (failure) {
+    print("awaited failure", failure.code, failure.message);
+}
+```
+
+That exact example lives in the repository as
+`examples/language/await_and_network.kyna`, and running it prints:
+
+```text
+awaited int 42
+awaited fetch 3 Ada
+```
+
+## What you've learned
+
+You now know the whole beginner path: variables, types, operators, control
+flow, functions, classes, errors, and async. Head to the
+[language reference](/docs/reference/bindings) or the
+[standard library](/docs/stdlib/text) to go deeper.

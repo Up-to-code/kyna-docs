@@ -1,0 +1,120 @@
+---
+sidebar_position: 1
+---
+
+# Getting Started
+
+This guide walks you through building the Kyna compiler, writing your first program, and running it with the CLI tools.
+
+---
+
+## 1. Prerequisites & Build
+
+Kyna builds from source using CMake and any standard C++20 compiler (Clang, GCC, or MSVC).
+
+Clone the repository and build the debug binaries:
+
+```bash
+# Clone the compiler repository
+git clone https://github.com/Up-to-code/Kyma
+cd Kyma
+
+# Build the compiler and runtime
+cmake --build build-debug
+```
+
+Once compilation completes, the main executable `ky` will be located at `build-debug/bin/ky`.
+
+---
+
+## 2. Compiler CLI Commands
+
+The `ky` CLI provides tools for executing programs, static type-checking, and inspecting intermediate compiler stages:
+
+| Command | Description | Example |
+| :--- | :--- | :--- |
+| `ky run <file>` | Compiles and executes code on the bytecode VM | `ky run main.kyna` |
+| `ky check <file>` | Runs static type checks and diagnostics without executing | `ky check main.kyna` |
+| `ky tokens <file>` | Dumps the lexical token stream from the lexer | `ky tokens main.kyna` |
+| `ky ast <file>` | Prints the Abstract Syntax Tree representation | `ky ast main.kyna` |
+| `ky hir <file>` | Emits High-Level Intermediate Representation | `ky hir main.kyna` |
+| `ky mir <file>` | Emits Mid-Level Intermediate Representation | `ky mir main.kyna` |
+| `ky bytecode <file>` | Dumps compiled bytecode opcodes | `ky bytecode main.kyna` |
+
+---
+
+## 3. Write Your First Program
+
+Create a file named `hello.kyna` in your workspace:
+
+```kyna
+# hello.kyna
+fn calculateQps(requests: int, seconds: int): int {
+    if (seconds <= 0) {
+        return 0;
+    }
+    return requests / seconds;
+}
+
+const service = "auth-gateway";
+const totalRequests = 12000;
+const duration = 60;
+
+const qps = calculateQps(totalRequests, duration);
+
+print("Service:", service);
+print("Throughput:", qps, "req/s");
+```
+
+---
+
+## 4. Run the Program
+
+Execute your script using `ky run`:
+
+```bash
+ky run hello.kyna
+```
+
+You should see the following console output:
+
+```text
+Service: auth-gateway
+Throughput: 200 req/s
+```
+
+---
+
+## 5. Validate with Static Type Checking
+
+Before running code, you can run static verification with `ky check`:
+
+```bash
+ky check hello.kyna
+```
+
+If your code contains a type mismatch or invalid binding:
+
+```kyna
+# Example error
+const id: int = "invalid_id"; # Type error: expected 'int', got 'str'
+```
+
+The compiler outputs clear diagnostics pointing to the exact file, line, and column:
+
+```text
+error[TypeMismatch]: cannot assign expression of type 'str' to binding of type 'int'
+  --> hello.kyna:1:17
+   |
+ 1 | const id: int = "invalid_id";
+   |                 ^^^^^^^^^^^^ expected 'int', found 'str'
+```
+
+---
+
+## Next Steps
+
+Now that your environment is working:
+- Take **[The Language Tour](/docs/tutorial/tour)** to explore all language features.
+- Learn about **[Variables & Scoping](/docs/tutorial/variables)**.
+- Read about **[Static Types & Null Safety](/docs/tutorial/types)**.

@@ -1,0 +1,84 @@
+---
+sidebar_position: 5
+---
+
+# Functions & Closures
+
+Functions are the primary unit of code reuse in Kyna. They support typed parameters, return annotations, default values, and lexical closures.
+
+---
+
+## 1. Declaring Functions
+
+Use the `fn` keyword to declare a function:
+
+```kyna
+fn calculateTax(amount: float, rate: float): float {
+    return amount * rate;
+}
+
+const tax = calculateTax(150.0, 0.08);
+print("Sales tax:", tax); # 12.0
+```
+
+---
+
+## 2. Functions Without Return Values
+
+When a function performs side effects and returns nothing, omit the return type annotation:
+
+```kyna
+fn logEvent(channel: str, message: str) {
+    print("[" + channel + "]: " + message);
+}
+
+logEvent("AUTH", "User signed in successfully");
+```
+
+---
+
+## 3. First-Class Functions & Closures
+
+Functions in Kyna are first-class values. You can assign them to variables, pass them as arguments to other functions, and return them:
+
+```kyna
+fn createCounter(step: int) {
+    var count = 0;
+    
+    # Inner closure capturing 'step' and 'count'
+    return fn(): int {
+        count = count + step;
+        return count;
+    };
+}
+
+const incrementByFive = createCounter(5);
+print(incrementByFive()); # 5
+print(incrementByFive()); # 10
+print(incrementByFive()); # 15
+```
+
+---
+
+## 4. Higher-Order Functions
+
+Functions that accept other functions enable expressive data transformations:
+
+```kyna
+fn transform(val: int, op: fn(int): int): int {
+    return op(val);
+}
+
+fn square(x: int): int {
+    return x * x;
+}
+
+print("Transformed:", transform(7, square)); # 49
+```
+
+---
+
+## Next Steps
+
+- Structure object state with **[Classes & OOP](/docs/tutorial/classes)**.
+- Handle runtime failures with **[Error Handling](/docs/tutorial/errors)**.

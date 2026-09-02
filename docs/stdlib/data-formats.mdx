@@ -1,0 +1,34 @@
+---
+sidebar_position: 3
+---
+
+# Data formats
+
+Kyna encodes and decodes JSON, TOML, and XML.
+
+## JSON
+
+```kyna
+const data = jsonParse("{\"items\":[20,22],\"ready\":true}");
+print(data.ready);                    # true
+
+const text = jsonStringify({ items: [20, 22], ready: true });
+print(text);                          # {"items":[20,22],"ready":true}
+```
+
+JSON object keys become accessible fields on the decoded object.
+
+## TOML
+
+```kyna
+const config = tomlParse("name = \"Kyna\"\nport = 8080");
+print(config.name);                   # Kyna
+print(tomlStringify(config));
+```
+
+## XML
+
+```kyna
+const doc = xmlParse("<project name=\"Kyna\" />");
+print(xmlStringify(doc));
+```

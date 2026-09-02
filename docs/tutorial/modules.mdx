@@ -1,0 +1,71 @@
+---
+sidebar_position: 8
+---
+
+# Modules
+
+As your program grows you'll want to split it across files. In Kyna, a
+*module* is a `.kyna` file that its neighbours import. Code you want to expose
+uses `export`; everything else stays private to the file.
+
+## Exporting
+
+Mark the functions (or other declarations) you want to share with `export`:
+
+```kyna
+# file: math.kyna
+export fn add(left: int, right: int): int {
+    return left + right;
+}
+
+const internalName = "not exported";
+```
+
+`add` is exported and available to importers. `internalName` and any un-exported
+code stay private to `math.kyna`.
+
+## Importing
+
+Use `import` with the file's path followed by `as`, and pick an alias:
+
+```kyna
+# file: main.kyna
+import "./math.kyna" as math;
+
+print(math.add(20, 22));    # 42
+```
+
+Import paths are relative to the importing file. The alias is how you refer to
+the module's exported members: `math.add(...)`.
+
+## A working example
+
+Two files, one program:
+
+**`math.kyna`**
+```kyna
+export fn add(left: int, right: int): int {
+    return left + right;
+}
+```
+
+**`main.kyna`**
+```kyna
+import "./math.kyna" as math;
+print(math.add(20, 22));    # 42
+```
+
+Run the entry file with:
+
+```bash
+ky run main.kyna
+```
+
+## Tips
+
+- **One thing per module.** Splitting by domain (e.g. `math`, `net`,
+  `storage`) keeps imports readable and files focused.
+- **Export the public surface.** Only `export` what callers actually need;
+  implementation details stay private.
+- This matches the repository pattern in
+  `examples/modules/` if you want a complete example to open.
