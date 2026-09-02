@@ -72,11 +72,6 @@ export default function Home() {
         <section className="kyna-hero">
           <div className="kyna-hero__container">
             
-            <div className="kyna-hero__badge">
-              <span className="kyna-hero__badge-dot"></span>
-              <span>Fast, Statically Typed Bytecode Language</span>
-            </div>
-
             <h1 className="kyna-hero__title">
               Engineered for safe, <br />
               high-performance systems.

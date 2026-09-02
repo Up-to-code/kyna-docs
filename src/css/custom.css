@@ -24,10 +24,10 @@
   --kyna-brand-hover: #4f46e5;
   --kyna-brand-light: #818cf8;
 
-  --kyna-editor-bg: #0b0f19;
-  --kyna-editor-header: #111726;
-  --kyna-editor-border: #1e293b;
-  --kyna-editor-text: #f8fafc;
+  --kyna-editor-bg: #f8fafc;
+  --kyna-editor-header: #f1f5f9;
+  --kyna-editor-border: #e2e8f0;
+  --kyna-editor-text: #0f172a;
 
   --ifm-color-primary: #6366f1;
   --ifm-color-primary-dark: #4f46e5;
@@ -38,7 +38,7 @@
 
   --ifm-background-color: var(--kyna-bg);
   --ifm-background-surface-color: var(--kyna-surface);
-  --ifm-navbar-background-color: #ffffff;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.85);
   --ifm-footer-background-color: #ffffff;
 
   --scrollbar-thumb: #cbd5e1;
@@ -75,7 +75,7 @@
 
   --ifm-background-color: #07090e;
   --ifm-background-surface-color: #0e131f;
-  --ifm-navbar-background-color: #07090e;
+  --ifm-navbar-background-color: rgba(7, 9, 14, 0.82);
   --ifm-footer-background-color: #0a0d16;
 
   --scrollbar-thumb: #1e293b;
@@ -83,12 +83,16 @@
 }
 
 /* ==========================================================================
-   Global Reset & Background Stability Across Scroll
+   Global Reset & Smooth Screen Navigation
    ========================================================================== */
 
 * {
   box-sizing: border-box;
   box-shadow: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -101,6 +105,22 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: var(--ifm-line-height-base);
+}
+
+/* Smooth Screen Navigation Fade-In */
+@keyframes kynaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-wrapper {
+  animation: kynaFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Custom Minimalist Scrollbar */
@@ -123,45 +143,124 @@ body,
 }
 
 /* ==========================================================================
-   Navbar
+   Header / Navbar & Glassmorphism
    ========================================================================== */
 
 .navbar,
 .navbar--fixed-top {
-  height: 64px;
+  height: 66px;
   border-bottom: 1px solid var(--kyna-border) !important;
   background-color: var(--ifm-navbar-background-color) !important;
-  padding: 0 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0 1.75rem;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .navbar__brand {
-  margin-right: 1.5rem;
+  margin-right: 1.75rem;
 }
 
 .navbar__title {
-  font-weight: 750;
-  font-size: 1.1rem;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.025em;
   color: var(--kyna-text) !important;
 }
 
 .navbar__logo {
-  height: 26px;
-  width: 26px;
-  margin-right: 0.5rem;
+  height: 28px;
+  width: 28px;
+  margin-right: 0.6rem;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar__logo:hover {
+  transform: scale(1.06);
 }
 
 .navbar__link {
   color: var(--kyna-text-muted);
   font-weight: 550;
   font-size: 0.9rem;
-  transition: color 0.12s ease;
-  padding: 0.35rem 0.65rem;
+  transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
 }
 
-.navbar__link:hover,
-.navbar__link--active {
+.navbar__link:hover {
   color: var(--kyna-text) !important;
+  background-color: var(--kyna-surface-soft);
+}
+
+.navbar__link--active {
+  color: var(--ifm-color-primary) !important;
+  font-weight: 650;
+}
+
+/* ==========================================================================
+   Smooth Animated Dropdown Menus
+   ========================================================================== */
+
+.dropdown__menu {
+  border-radius: 10px !important;
+  border: 1px solid var(--kyna-border) !important;
+  background-color: var(--kyna-surface) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0.45rem !important;
+  min-width: 210px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18) !important;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: block !important;
+}
+
+.dropdown--show .dropdown__menu,
+.dropdown:hover .dropdown__menu {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+.dropdown__link {
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  color: var(--kyna-text-muted) !important;
+  border-radius: 6px !important;
+  padding: 0.45rem 0.75rem !important;
+  transition: all 0.12s ease !important;
+}
+
+.dropdown__link:hover,
+.dropdown__link--active {
+  background-color: var(--kyna-surface-soft) !important;
+  color: var(--ifm-color-primary) !important;
+  transform: translateX(2px);
+}
+
+/* ==========================================================================
+   Redesigned Search Bar
+   ========================================================================== */
+
+.navbar__search-input {
+  background-color: var(--kyna-surface-soft) !important;
+  color: var(--kyna-text) !important;
+  border: 1px solid var(--kyna-border) !important;
+  border-radius: 8px !important;
+  padding: 0.4rem 0.85rem 0.4rem 2rem !important;
+  font-size: 0.84rem !important;
+  font-family: var(--ifm-font-family-base) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.navbar__search-input:focus {
+  border-color: var(--ifm-color-primary) !important;
+  background-color: var(--kyna-surface) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+  width: 220px !important;
 }
 
 .header-github-link::before {
@@ -373,7 +472,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Code Blocks & Highlighting (Obsidian + Electric Violet)
+   Code Blocks & Highlighting (Light & Dark Themes)
    ========================================================================== */
 
 .theme-code-block {
@@ -388,7 +487,7 @@ tr:nth-child(2n) {
   font-family: var(--ifm-font-family-monospace);
   font-size: 0.875rem;
   line-height: 1.62;
-  padding: 1rem 1.25rem;
+  padding: 1.15rem 1.25rem;
   background: var(--kyna-editor-bg) !important;
   color: var(--kyna-editor-text);
 }
@@ -401,55 +500,87 @@ tr:nth-child(2n) {
   border-left: 3px solid #818cf8;
 }
 
-/* Kyna High-Contrast Syntax Highlighting */
-.token.keyword {
-  color: #f472b6 !important;
+/* Syntax Highlighting Tokens (High Contrast in Light & Dark Mode) */
+:root .token.keyword {
+  color: #9333ea !important;
   font-weight: 650;
 }
-
-.token.type,
-.token.class-name {
-  color: #fbbf24 !important;
+:root .token.type,
+:root .token.class-name {
+  color: #b45309 !important;
   font-weight: 650;
 }
-
-.token.function {
-  color: #a78bfa !important;
+:root .token.function {
+  color: #4f46e5 !important;
   font-weight: 600;
 }
-
-.token.builtin {
-  color: #38bdf8 !important;
+:root .token.builtin {
+  color: #0284c7 !important;
   font-weight: 550;
 }
-
-.token.string {
-  color: #6ee7b7 !important;
+:root .token.string {
+  color: #059669 !important;
 }
-
-.token.number,
-.token.boolean {
-  color: #38bdf8 !important;
+:root .token.number,
+:root .token.boolean {
+  color: #0284c7 !important;
 }
-
-.token.comment {
+:root .token.comment {
   color: #64748b !important;
   font-style: italic;
 }
+:root .token.operator {
+  color: #9333ea !important;
+}
+:root .token.punctuation {
+  color: #475569 !important;
+}
+:root .token.variable {
+  color: #0f172a !important;
+}
+:root .token.property {
+  color: #0284c7 !important;
+}
 
-.token.operator {
+/* Dark Mode Syntax Tokens */
+[data-theme='dark'] .token.keyword {
+  color: #f472b6 !important;
+  font-weight: 650;
+}
+[data-theme='dark'] .token.type,
+[data-theme='dark'] .token.class-name {
+  color: #fbbf24 !important;
+  font-weight: 650;
+}
+[data-theme='dark'] .token.function {
+  color: #a78bfa !important;
+  font-weight: 600;
+}
+[data-theme='dark'] .token.builtin {
+  color: #38bdf8 !important;
+  font-weight: 550;
+}
+[data-theme='dark'] .token.string {
+  color: #6ee7b7 !important;
+}
+[data-theme='dark'] .token.number,
+[data-theme='dark'] .token.boolean {
+  color: #38bdf8 !important;
+}
+[data-theme='dark'] .token.comment {
+  color: #64748b !important;
+  font-style: italic;
+}
+[data-theme='dark'] .token.operator {
   color: #f472b6 !important;
 }
-
-.token.punctuation {
+[data-theme='dark'] .token.punctuation {
   color: #cbd5e1 !important;
 }
-
-.token.variable {
+[data-theme='dark'] .token.variable {
   color: #f8fafc !important;
 }
-
-.token.property {
+[data-theme='dark'] .token.property {
   color: #38bdf8 !important;
 }
 
@@ -477,7 +608,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Left-Aligned Premium Hero Section
+   Left-Aligned Clean Hero Section
    ========================================================================== */
 
 .kyna-landing {
@@ -497,28 +628,6 @@ tr:nth-child(2n) {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-}
-
-.kyna-hero__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.35rem 0.85rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #a5b4fc;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.28);
-  border-radius: 999px;
-  margin-bottom: 1.75rem;
-}
-
-.kyna-hero__badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #818cf8;
-  box-shadow: 0 0 10px #818cf8 !important;
 }
 
 .kyna-hero__title {
@@ -553,7 +662,7 @@ tr:nth-child(2n) {
   font-size: 0.92rem;
   font-weight: 600;
   border-radius: 8px;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none !important;
   cursor: pointer;
 }
@@ -566,6 +675,7 @@ tr:nth-child(2n) {
 
 .kyna-btn--primary:hover {
   background: linear-gradient(135deg, #818cf8, #6366f1);
+  transform: translateY(-1px);
 }
 
 .kyna-btn--secondary {
@@ -577,6 +687,7 @@ tr:nth-child(2n) {
 .kyna-btn--secondary:hover {
   background: var(--kyna-surface-soft);
   border-color: #818cf8;
+  transform: translateY(-1px);
 }
 
 .kyna-btn--ghost {
@@ -624,7 +735,7 @@ tr:nth-child(2n) {
   background: rgba(99, 102, 241, 0.12);
   border: 1px solid rgba(99, 102, 241, 0.28);
   border-radius: 6px;
-  color: #a5b4fc;
+  color: var(--ifm-color-primary);
   font-family: var(--ifm-font-family-base);
   font-size: 0.8rem;
   font-weight: 600;
@@ -635,16 +746,15 @@ tr:nth-child(2n) {
 
 .kyna-copybar__btn:hover {
   background: rgba(99, 102, 241, 0.24);
-  color: #ffffff;
 }
 
 .kyna-copybar__copied {
   display: inline-flex;
   align-items: center;
-  color: #6ee7b7;
+  color: #10b981;
 }
 
-/* Dots */
+/* Window Dots */
 .dot {
   width: 10px;
   height: 10px;
@@ -690,7 +800,7 @@ tr:nth-child(2n) {
   background: var(--kyna-surface);
   border: 1px solid var(--kyna-border);
   border-radius: 12px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .kyna-card:hover {
