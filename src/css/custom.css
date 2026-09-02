@@ -107,7 +107,6 @@ body,
   line-height: var(--ifm-line-height-base);
 }
 
-/* Smooth Screen Navigation Fade-In */
 @keyframes kynaFadeIn {
   from {
     opacity: 0;
@@ -123,7 +122,6 @@ body,
   animation: kynaFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Custom Minimalist Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -143,7 +141,7 @@ body,
 }
 
 /* ==========================================================================
-   Header / Navbar & Glassmorphism
+   Navbar & Dropdowns
    ========================================================================== */
 
 .navbar,
@@ -198,10 +196,6 @@ body,
   font-weight: 650;
 }
 
-/* ==========================================================================
-   Smooth Animated Dropdown Menus
-   ========================================================================== */
-
 .dropdown__menu {
   border-radius: 10px !important;
   border: 1px solid var(--kyna-border) !important;
@@ -240,10 +234,6 @@ body,
   color: var(--ifm-color-primary) !important;
   transform: translateX(2px);
 }
-
-/* ==========================================================================
-   Redesigned Search Bar
-   ========================================================================== */
 
 .navbar__search-input {
   background-color: var(--kyna-surface-soft) !important;
@@ -289,7 +279,7 @@ body,
 }
 
 /* ==========================================================================
-   Documentation Sidebar & Layout Spacing
+   Documentation Styles & Typography
    ========================================================================== */
 
 .theme-doc-sidebar-container {
@@ -472,7 +462,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Code Blocks & Highlighting (Light & Dark Themes)
+   Code Blocks & Highlighting
    ========================================================================== */
 
 .theme-code-block {
@@ -500,7 +490,6 @@ tr:nth-child(2n) {
   border-left: 3px solid #818cf8;
 }
 
-/* Syntax Highlighting Tokens (High Contrast in Light & Dark Mode) */
 :root .token.keyword {
   color: #9333ea !important;
   font-weight: 650;
@@ -542,7 +531,6 @@ tr:nth-child(2n) {
   color: #0284c7 !important;
 }
 
-/* Dark Mode Syntax Tokens */
 [data-theme='dark'] .token.keyword {
   color: #f472b6 !important;
   font-weight: 650;
@@ -608,7 +596,7 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Left-Aligned Clean Hero Section
+   Hero Section
    ========================================================================== */
 
 .kyna-landing {
@@ -701,7 +689,6 @@ tr:nth-child(2n) {
   color: var(--kyna-text) !important;
 }
 
-/* Minimalist Inline Copy Bar */
 .kyna-copybar {
   display: inline-flex;
   align-items: center;
@@ -754,7 +741,7 @@ tr:nth-child(2n) {
   color: #10b981;
 }
 
-/* Window Dots */
+/* Dots */
 .dot {
   width: 10px;
   height: 10px;
@@ -775,166 +762,378 @@ tr:nth-child(2n) {
 }
 
 /* ==========================================================================
-   Feature Showcase Cards (Linear / Vercel Split Cards)
+   Section Headers (Shared)
    ========================================================================== */
 
-.kyna-showcase {
-  padding: 5.5rem 1.5rem;
+.kyna-section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem;
+}
+
+.kyna-section-kicker {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.kyna-section-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  color: var(--kyna-text);
+  margin-bottom: 1rem;
+}
+
+.kyna-section-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--kyna-text-muted);
+}
+
+/* ==========================================================================
+   Section 1: Interactive Language Playground & Tabs
+   ========================================================================== */
+
+.kyna-playground-section {
+  padding: 6rem 1.5rem;
   border-bottom: 1px solid var(--kyna-border);
 }
 
-.kyna-showcase__container {
+.kyna-playground__container {
   max-width: 1140px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3.5rem;
 }
 
-.kyna-card {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 3.25rem;
-  align-items: center;
-  padding: 2.75rem;
+.kyna-interactive-card {
   background: var(--kyna-surface);
   border: 1px solid var(--kyna-border);
   border-radius: 12px;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
 }
 
-.kyna-card:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-}
-
-.kyna-card--reverse {
-  grid-template-columns: 1.15fr 1fr;
-}
-
-.kyna-card--reverse .kyna-card__code {
-  order: -1;
-}
-
-.kyna-card__content {
+.kyna-tab-bar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  background: var(--kyna-editor-header);
+  border-bottom: 1px solid var(--kyna-editor-border);
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+  overflow-x: auto;
 }
 
-.kyna-card__header-tag {
+.kyna-tab-bar__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 0.5rem;
+}
+
+.kyna-tab-bar__items {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kyna-tab-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--ifm-font-family-monospace);
   font-size: 0.8rem;
-  font-weight: 650;
-  color: var(--ifm-color-primary);
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  margin-bottom: 1.1rem;
-  width: fit-content;
+  font-weight: 550;
+  color: var(--kyna-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.kyna-card__title {
-  font-size: 1.65rem;
-  font-weight: 750;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
+.kyna-tab-btn:hover {
   color: var(--kyna-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.kyna-tab-btn--active {
+  color: var(--ifm-color-primary) !important;
+  background: var(--kyna-surface) !important;
+  border-color: var(--kyna-border) !important;
+}
+
+.kyna-tab-bar__badge {
+  margin-left: auto;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #818cf8;
+  letter-spacing: 0.06em;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  white-space: nowrap;
+}
+
+.kyna-interactive-card__body {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: stretch;
+}
+
+.kyna-interactive-card__editor {
+  background: var(--kyna-editor-bg);
+  border-right: 1px solid var(--kyna-editor-border);
+}
+
+.kyna-interactive-card__editor .theme-code-block {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.kyna-interactive-card__editor .prism-code {
+  padding: 1.75rem 1.5rem !important;
+  font-size: 0.88rem !important;
+  line-height: 1.65 !important;
+  background: transparent !important;
+}
+
+.kyna-interactive-card__sidebar {
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--kyna-surface);
+}
+
+.kyna-interactive-card__pill {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ifm-color-primary);
   margin-bottom: 0.85rem;
 }
 
-.kyna-card__desc {
-  font-size: 0.96rem;
-  line-height: 1.65;
-  color: var(--kyna-text-muted);
-  margin-bottom: 1.35rem;
+.kyna-interactive-card__heading {
+  font-size: 1.5rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--kyna-text);
+  margin-bottom: 0.85rem;
+  line-height: 1.25;
 }
 
-.kyna-card__points {
+.kyna-interactive-card__text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--kyna-text-muted);
+  margin-bottom: 1.75rem;
+}
+
+.kyna-interactive-card__meta {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
 }
 
-.kyna-point {
+.kyna-meta-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.6rem;
   font-size: 0.88rem;
-  line-height: 1.5;
   color: var(--kyna-text);
 }
 
-.kyna-point__check {
+.kyna-meta-check {
   color: #10b981;
-  font-weight: 750;
+  font-weight: 800;
   font-size: 0.9rem;
-  line-height: 1.35;
-}
-
-/* Embedded Editor Window inside Card */
-.kyna-editor-window {
-  background: var(--kyna-editor-bg);
-  border: 1px solid var(--kyna-editor-border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.kyna-editor-window__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 1rem;
-  background: var(--kyna-editor-header);
-  border-bottom: 1px solid var(--kyna-editor-border);
-}
-
-.kyna-editor-window__dots {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.kyna-editor-window__file {
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.78rem;
-  color: var(--kyna-text-muted);
-}
-
-.kyna-editor-window__badge {
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: #818cf8;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-.kyna-editor-window__body .theme-code-block {
-  margin: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: var(--kyna-editor-bg) !important;
-}
-
-.kyna-editor-window__body .prism-code {
-  padding: 1.25rem 1.15rem !important;
-  font-size: 0.85rem !important;
-  line-height: 1.62 !important;
-  background: var(--kyna-editor-bg) !important;
 }
 
 @media (max-width: 960px) {
-  .kyna-card,
-  .kyna-card--reverse {
-    grid-template-columns: 1fr !important;
-    gap: 2rem;
-    padding: 1.75rem;
+  .kyna-interactive-card__body {
+    grid-template-columns: 1fr;
   }
+  .kyna-interactive-card__editor {
+    border-right: none;
+    border-bottom: 1px solid var(--kyna-editor-border);
+  }
+}
 
-  .kyna-card--reverse .kyna-card__code {
-    order: 1 !important;
+/* ==========================================================================
+   Section 2: Bento Grid Showcase
+   ========================================================================== */
+
+.kyna-bento-section {
+  padding: 6rem 1.5rem;
+  border-bottom: 1px solid var(--kyna-border);
+}
+
+.kyna-bento__container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.kyna-bento-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1.75rem;
+}
+
+.kyna-bento-card {
+  background: var(--kyna-surface);
+  border: 1px solid var(--kyna-border);
+  border-radius: 12px;
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kyna-bento-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.kyna-bento-card--featured {
+  grid-column: span 1;
+}
+
+.kyna-bento-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--ifm-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.35rem;
+}
+
+.kyna-bento-card__title {
+  font-size: 1.35rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--kyna-text);
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+.kyna-bento-card__desc {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--kyna-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.kyna-bento-card__mini-code {
+  margin-top: auto;
+  background: var(--kyna-editor-bg);
+  border: 1px solid var(--kyna-editor-border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--kyna-editor-text);
+}
+
+.k-kw { color: #f472b6; font-weight: 650; }
+.k-type { color: #fbbf24; font-weight: 650; }
+.k-fn { color: #a78bfa; font-weight: 600; }
+.k-str { color: #6ee7b7; }
+.k-num { color: #38bdf8; }
+.k-comment { color: #64748b; font-style: italic; }
+
+.kyna-bento-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.kyna-chip {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+}
+
+@media (max-width: 860px) {
+  .kyna-bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Section 3: Pillars & Architectural Values
+   ========================================================================== */
+
+.kyna-pillars-section {
+  padding: 6rem 1.5rem;
+  border-bottom: 1px solid var(--kyna-border);
+}
+
+.kyna-pillars__container {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+}
+
+.kyna-pillar-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 0;
+}
+
+.kyna-pillar-num {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.75rem;
+  opacity: 0.85;
+}
+
+.kyna-pillar-title {
+  font-size: 1.25rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--kyna-text);
+  margin-bottom: 0.65rem;
+  line-height: 1.3;
+}
+
+.kyna-pillar-desc {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--kyna-text-muted);
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .kyna-pillars__container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -943,7 +1142,7 @@ tr:nth-child(2n) {
    ========================================================================== */
 
 .kyna-cta {
-  padding: 6rem 1.5rem;
+  padding: 6.5rem 1.5rem;
   text-align: center;
 }
 
