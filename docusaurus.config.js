@@ -5,7 +5,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'Kyna',
   tagline: 'A fast, statically typed language for backend services',
-  favicon: 'img/favicon.png',
+  favicon: 'img/logo.svg',
 
   url: 'https://up-to-code.github.io',
   baseUrl: '/kyna-docs/',
@@ -33,7 +33,7 @@ const config = {
       tagName: 'link',
       attributes: {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap',
       },
     },
   ],
@@ -92,9 +92,9 @@ const config = {
       title: 'Kyna',
       logo: {
         alt: 'Kyna Logo',
-        src: 'img/favicon.png',
-        width: 24,
-        height: 24,
+        src: 'img/logo.svg',
+        width: 26,
+        height: 26,
       },
       items: [
         {
@@ -151,11 +151,6 @@ const config = {
           position: 'right',
         },
         {
-          type: 'html',
-          position: 'right',
-          value: '<span class="kyna-nav-badge">v0.5.0</span>',
-        },
-        {
           href: 'https://github.com/Up-to-code/Kyma',
           position: 'right',
           className: 'header-github-link',
@@ -167,66 +162,41 @@ const config = {
       style: 'dark',
       links: [
         {
-          title: 'Tutorial',
+          title: 'Learn',
           items: [
-            {label: 'Getting started', to: '/docs/tutorial/getting-started'},
-            {label: 'Language tour', to: '/docs/tutorial/tour'},
-            {label: 'Variables', to: '/docs/tutorial/variables'},
-            {label: 'Types & safety', to: '/docs/tutorial/types'},
-            {label: 'Functions', to: '/docs/tutorial/functions'},
-            {label: 'Classes & OOP', to: '/docs/tutorial/classes'},
-            {label: 'Async & network', to: '/docs/tutorial/async'},
+            {label: 'Introduction', to: '/docs/intro'},
+            {label: 'Language Tour', to: '/docs/tutorial/tour'},
+            {label: 'Getting Started', to: '/docs/tutorial/getting-started'},
           ],
         },
         {
           title: 'Reference',
           items: [
-            {label: 'Bindings & types', to: '/docs/reference/bindings'},
-            {label: 'Control flow', to: '/docs/reference/control-flow'},
-            {label: 'Functions', to: '/docs/reference/functions'},
-            {label: 'Classes & objects', to: '/docs/reference/classes-and-objects'},
-            {label: 'Exceptions & errors', to: '/docs/reference/exceptions'},
-            {label: 'Networking', to: '/docs/reference/networking'},
-            {label: 'Async runtime', to: '/docs/reference/async'},
+            {label: 'Bindings & Types', to: '/docs/reference/bindings'},
+            {label: 'Standard Library', to: '/docs/stdlib/text'},
+            {label: 'Networking API', to: '/docs/reference/networking'},
           ],
         },
         {
-          title: 'Project',
+          title: 'Community & Code',
           items: [
-            {label: 'Introduction', to: '/docs/intro'},
-            {label: 'Code examples', to: '/docs/examples'},
-            {label: 'GitHub repository', href: 'https://github.com/Up-to-code/Kyma'},
+            {
+              label: 'GitHub Repository',
+              href: 'https://github.com/Up-to-code/Kyma',
+            },
+            {
+              label: 'Issue Tracker',
+              href: 'https://github.com/Up-to-code/Kyma/issues',
+            },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kyna Language. Open source under the MIT License.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kyna Language Contributors. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.oneDark,
-      darkTheme: prismThemes.oneDark,
-      additionalLanguages: [
-        'bash',
-        'json',
-        'toml',
-        'yaml',
-        'javascript',
-        'typescript',
-        'python',
-        'rust',
-        'go',
-        'markdown',
-        'css',
-        'c',
-        'cpp',
-        'sql',
-        'diff',
-        'docker',
-      ],
-      magicComments: [
-        {className: 'theme-code-block-highlighted-line', line: 'highlight-next-line'},
-        {className: 'theme-code-block-highlighted-line', line: 'highlight-start'},
-        {className: 'theme-code-block-highlighted-line', line: 'highlight-end'},
-      ],
+      theme: prismThemes.github,
+      darkTheme: prismThemes.vsDark,
+      additionalLanguages: ['bash', 'json', 'toml'],
     },
   },
 };

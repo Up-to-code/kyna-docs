@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="kyna-grad" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="kyna-accent" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Subtle backdrop container -->
+  <rect width="120" height="120" rx="28" fill="#0c101d"/>
+  <rect width="120" height="120" rx="28" stroke="url(#kyna-grad)" stroke-width="2" stroke-opacity="0.3"/>
+
+  <!-- Left vertical pillar -->
+  <path d="M 32 26 L 46 26 L 46 94 L 32 94 Z" fill="url(#kyna-grad)" rx="4"/>
+  
+  <!-- Upper diagonal arm -->
+  <path d="M 46 64 L 76 28 L 92 28 L 56 70 Z" fill="url(#kyna-accent)" rx="3"/>
+  
+  <!-- Lower diagonal arm -->
+  <path d="M 52 58 L 88 94 L 72 94 L 42 66 Z" fill="url(#kyna-grad)" rx="3"/>
+
+  <!-- Core compiler node -->
+  <circle cx="50" cy="62" r="5" fill="#ffffff" filter="url(#glow)"/>
+</svg>
