@@ -86,6 +86,17 @@ async fn createDeployment(appName: str, version: str): bool {
 
 ---
 
+## IP addresses
+
+`parseIP(text)` returns a canonical IPv4 string, or `null` when the text is not a valid address. Use it for request tracking, allow-lists, and log fields.
+
+```kyna
+print(parseIP("127.0.0.1"), parseIP("999.1.1.1"), parseIP("10.0.0.2"));
+# "127.0.0.1"  null  "10.0.0.2"
+```
+
+---
+
 ## Network Error Diagnostic Codes
 
 | Error Code | Category | Meaning |

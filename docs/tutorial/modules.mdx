@@ -2,50 +2,100 @@
 sidebar_position: 7
 ---
 
-# Modules & Code Organization
+# Modules & Packages
 
-As your codebase grows, you can split functionality across multiple files and import them using Kyna's module system.
-
----
-
-## Importing Standard Modules
-
-Kyna provides standard library modules under the `std` namespace:
-
-```kyna
-import std.fs;
-import std.time;
-
-const start = time.nowNs();
-const exists = fs.exists("config.toml");
-print("Config exists:", exists);
-```
+Kyna splits code across files with explicit `export` / `import`. A **directory** is a package: every `*.kyna` file in that folder shares one namespace. Underneath, the compiler still type-checks a DAG of modules, like Go's package model without Go's syntax.
 
 ---
 
-## Importing Local Project Modules
+## Exporting
 
-You can import functions, classes, and constants from other `.kyna` files in your workspace:
-
-```kyna
-# Importing from a local file 'utils/crypto.kyna'
-import utils.crypto;
-
-const hash = crypto.sha256("payload");
-print("Hash:", hash);
-```
-
----
-
-## Exporting Members
-
-All top-level `public` functions, classes, and constants in a module are available to importing files:
+Mark top-level declarations with `export`. Unexported names stay private to the module (or package). `export default` marks the default export; `export { a, b }` re-exports named declarations.
 
 ```kyna
-# math_helpers.kyna
-public fn add(a: int, b: int): int {
+# math.kyna
+export fn add(a: int, b: int): int {
     return a + b;
 }
 
-public const PI: float = 3.14159265;
+export default fn greet(name: str): str {
+    return "hi " + name;
+}
+
+fn hidden(): int {
+    return 9;
+}
 ```
+
+Imports must appear before other top-level declarations. Only named top-level declarations can be exported.
+
+---
+
+## Importing
+
+Namespace import (still the most common form):
+
+```kyna
+import "./math.kyna" as math;
+
+var answer: int = math.add(20, 22);
+```
+
+JavaScript-style named, default, and star imports also work:
+
+```kyna
+import { add, sub } from "./math.kyna";
+import greet from "./math.kyna";
+import * as math from "./math.kyna";
+```
+
+- Namespace reads are live; namespace writes are forbidden.
+- A missing or non-exported member is a compile error (`K4004`).
+- Resolution tries the importer's directory first, then `--module-path` roots.
+- Import cycles report the full filename chain (`K4002`).
+- Modules initialize once, in postorder.
+
+There is no `import std.fs` today. Filesystem, JSON, HTTP, and logging are **global builtins** (`readFile`, `jsonParse`, `fetch`, `slogInfo`, …).
+
+---
+
+## Directory packages
+
+Pass a folder to `ky check` or `ky run`. Every `*.kyna` file in that directory (except `*_test.kyna`) is merged into **one** package scope. Sibling files share types and functions without importing each other.
+
+```text
+app/
+  helpers.kyna    # fn add(a: int, b: int): int { ... }
+  main.kyna       # uses add directly
+```
+
+```bash
+ky check ./app
+ky run ./app
+```
+
+Ambient type-definition files (`.kyna.d`, `.d.ky`, `.ky.d`) contribute compile-time interfaces only and are never executed.
+
+---
+
+## `internal/` shielding
+
+A package under a directory named `internal` may only be imported from the tree **above** that `internal` folder (Go's rule). Cross-tree imports fail with `KSEM1042`.
+
+```text
+# allowed:  service/app.kyna  →  service/internal/secret.kyna
+# rejected: other/app.kyna    →  service/internal/secret.kyna
+```
+
+---
+
+## Export cache (`.kyc`)
+
+After a dependency type-checks successfully, the compiler writes a stamp file next to the source (`math.kyna.kyc`). The next compile still **parses** that file, but skips re-checking its body when size and mtime still match.
+
+- The **entry** module is always analyzed.
+- A failed check deletes the stamp.
+- Class shapes still come from the parsed AST.
+- Set `KYNA_DISABLE_EXPORT_CACHE` to disable.
+
+`.kyc` files are build artifacts; do not commit them.

@@ -11,9 +11,6 @@ This tutorial walks through building a complete, production-ready backend script
 ## Complete Application Code
 
 ```kyna
-import std.fs;
-import std.time;
-
 class ServiceClient {
     private baseUrl: str;
     private apiKey: str;
@@ -24,7 +21,7 @@ class ServiceClient {
     }
 
     public async fn checkHealth(serviceName: str): str {
-        const start = time.nowNs();
+        const start = timeNow();
         const url = self.baseUrl + "/health/" + serviceName;
 
         try {
@@ -37,7 +34,7 @@ class ServiceClient {
                 timeout: 5000
             });
 
-            const elapsedMs = (time.nowNs() - start) / 1000000;
+            const elapsedMs = (timeNow() - start) / 1000000;
 
             if (res.ok) {
                 const data = res.json();
@@ -52,13 +49,13 @@ class ServiceClient {
 }
 
 async fn main() {
-    print("Initializing Service Client...");
+    slogInfo("initializing");
     const client = new ServiceClient("https://api.kyna.dev", "kyna_live_key_992");
 
     const services = ["auth", "database", "analytics"];
     loop (var i = 0; i < len(services); i = i + 1) {
         const result = await client.checkHealth(services[i]);
-        print(result);
+        slogInfo(result);
     }
 }
 
@@ -69,9 +66,9 @@ await main();
 
 ## Expected Output
 
-```
-Initializing Service Client...
-[OK 42ms] auth -> Status: healthy
-[OK 18ms] database -> Status: healthy
-[OK 35ms] analytics -> Status: healthy
+JSON lines on stdout, for example:
+
+```text
+{"level":"info","msg":"initializing"}
+{"level":"info","msg":"[OK 42ms] auth -> Status: healthy"}
 ```

@@ -2,51 +2,61 @@
 sidebar_position: 5
 ---
 
-# Standard Library: System & Process
+# Standard Library: System, Process & Logging
 
-The system module provides access to environment variables, command-line arguments, operating system metadata, and process controls.
+Host process APIs are globals (and `process` / `os` / `terminal` object aliases). Prefer **structured logging** for services.
 
 ---
 
-## Environment Variables
+## Structured logging (`slog`)
 
-Access host environment variables using `processEnv()`:
+JSON-line logs for backends. Prefer these over `print` / `console.log` in production code. `print` still exists for scripts and examples.
+
+```kyna
+slogInfo("ready", { service: "kyna" });
+slogWarn("slow");
+slogError("failed", { code: "KNET" });
+
+# equivalent object form:
+slog.info("ready", { service: "kyna" });
+slog.warn("slow");
+slog.error("failed", { code: "KNET" });
+```
+
+| Function | Description |
+| :--- | :--- |
+| `slogInfo(message, fields?)` | Info line |
+| `slogWarn(message, fields?)` | Warning line |
+| `slogError(message, fields?)` | Error line |
+
+The optional second argument is a closed object of extra fields.
+
+---
+
+## Environment
+
+`processEnv(name)` and `process.env(name)` return `str?`: the value, or `null` if unset.
 
 ```kyna
 const port = processEnv("PORT");
-const envMode = processEnv("NODE_ENV");
-
-print("Configured port:", if (port != null) port else "8080");
-print("Running in mode:", if (envMode != null) envMode else "development");
+print(if (port != null) port else "8080");
 ```
 
 ---
 
-## Command-Line Arguments
+## Process, OS, crypto
 
-Read arguments passed to the script via `processArgs()`:
-
-```kyna
-const args = processArgs();
-
-# args[0] is the interpreter / executable path
-# args[1] is the script path
-# args[2+] are user-supplied arguments
-
-if (len(args) > 2) {
-    print("First argument:", args[2]);
-}
-```
+| Function | Description |
+| :--- | :--- |
+| `processRun(command)` / `process.run` | Run a host command (trusted capability) |
+| `os.name()` / `osName()` | Operating system name |
+| `os.architecture()` | CPU architecture |
+| `os.cwd()` | Working directory |
+| `terminal.interactive()` | TTY check |
+| `cryptoSha256(data)` | Lowercase hex SHA-256 digest |
 
 ---
 
-## Process Control & Exits
+## Host information
 
-```kyna
-# Exit the current process with a status code
-if (errorEncountered) {
-    processExit(1); # Exit with failure
-} else {
-    processExit(0); # Normal clean exit
-}
-```
+`os` and `terminal` are injected capabilities. Embedders can replace every host adapter for deterministic tests.

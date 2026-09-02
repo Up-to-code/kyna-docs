@@ -10,24 +10,17 @@ Kyna provides structured exception handling using `try`, `catch`, and `throw`. T
 
 ## 1. Catching Exceptions (`try` / `catch`)
 
-Wrap potentially failing operations inside a `try` block:
+Wrap potentially failing operations inside a `try` block. Catch bindings have type `Error` (`code` and `message`).
 
 ```kyna
-fn parsePort(portStr: str): int {
+fn loadConfig(path: str): str {
     try {
-        const port = intParse(portStr);
-        if (port <= 0 || port > 65535) {
-            throw "Port out of range: " + portStr;
-        }
-        return port;
+        return readFile(path);
     } catch (err) {
-        print("Warning: failed to parse port:", err);
-        return 8080; # Default fallback
+        slogWarn("config missing", { path: path, code: err.code });
+        return "{}";
     }
 }
-
-print("Configured port:", parsePort("9000"));  # 9000
-print("Configured port:", parsePort("99999")); # Default fallback 8080
 ```
 
 ---

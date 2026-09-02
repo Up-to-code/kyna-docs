@@ -2,46 +2,47 @@
 sidebar_position: 6
 ---
 
-# Standard Library: Timing & Performance
+# Standard Library: Timing & Memory
 
-The `std.time` module provides high-resolution timers, epoch timestamps, and sleep utilities for benchmarking, timeouts, and metrics.
+Timing builtins are globals. There is no `import std.time`.
 
 ---
 
-## High-Resolution Benchmarking
+## Clocks and sleep
+
+| Function | Description |
+| :--- | :--- |
+| `clockMs()` | Monotonic milliseconds |
+| `timeNow()` | Monotonic nanoseconds |
+| `sleep(ms)` / `wait(ms)` / `timeSleep(ms)` | Suspend the current thread |
 
 ```kyna
-import std.time;
-
-# Measure nanoseconds
-const startNs = time.nowNs();
-
-# Perform intensive calculation
-var total = 0;
-loop (var i = 0; i < 100000; i = i + 1) {
-    total = total + i;
-}
-
-const elapsedNs = time.nowNs() - startNs;
-const elapsedMs = elapsedNs / 1000000;
-
-print("Execution time:", elapsedMs, "ms (", elapsedNs, "ns)");
+const start = timeNow();
+sleep(10);
+print(timeNow() - start);
 ```
 
 ---
 
-## Standard Timestamps & Sleep
+## Measuring work
 
-| Function | Signature | Description |
-| :--- | :--- | :--- |
-| `time.nowMs` | `time.nowMs(): int` | Milliseconds since Unix epoch |
-| `time.nowNs` | `time.nowNs(): int` | Nanoseconds for precision benchmarks |
-| `time.sleep` | `time.sleep(ms: int): void` | Pauses execution for `ms` milliseconds |
+`measure(fn)` runs a thunk and returns elapsed time. `profileLog(label, value)` emits a timing record when profiling is enabled. Keep timing off hot paths unless you are profiling.
 
 ```kyna
-import std.time;
-
-print("Starting task...");
-time.sleep(1000); # Pause for 1 second
-print("1 second elapsed.");
+const elapsed = measure(fn (): void {
+    var total = 0;
+    loop (var i = 0; i < 100000; i = i + 1) {
+        total = total + i;
+    }
+});
+profileLog("sum", elapsed);
 ```
+
+---
+
+## Garbage collection diagnostics
+
+| Function | Description |
+| :--- | :--- |
+| `collectGarbage()` | Request a collection |
+| `gcStats()` | Heap diagnostic string |

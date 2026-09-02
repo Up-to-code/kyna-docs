@@ -4,79 +4,65 @@ sidebar_position: 2
 
 # Standard Library: Collections
 
-Kyna provides built-in lists (dynamic arrays) and maps (hash tables) for data storage, transformation, and retrieval.
+Arrays and closed objects are ordinary values. Helpers are **global functions**, not methods: `push(values, 2)`, not `values.push(2)`.
 
 ---
 
-## List Operations
-
-Lists are dynamic zero-indexed sequences:
+## Arrays
 
 ```kyna
-var tasks = ["init", "build", "test"];
-
-# Length
-print(len(tasks)); # 3
-
-# Appending elements
-tasks.push("deploy");
-print(len(tasks)); # 4
-
-# Index access
-print(tasks[0]); # "init"
-print(tasks[3]); # "deploy"
+var values = [1];
+push(values, 2);
+const last = pop(values);
+print(len(values), last, keys({ a: 1 }));
 ```
 
-### Common List Methods & Helpers
+| Function | Description |
+| :--- | :--- |
+| `len(array)` | Element count |
+| `push(array, value)` | Append |
+| `pop(array)` | Remove and return the last element |
+| `keys(object)` | Field names of a closed object |
+| `unique(array)` | Deduplicated copy |
+| `sort(array)` | New sorted copy, O(n log n) introsort |
+| `bubbleSort(array)` | In-place educational sort |
+| `filter` / `map` / `reduce` / `find` / `any` / `all` | Higher-order helpers |
 
-| Method / Helper | Description | Example |
-| :--- | :--- | :--- |
-| `list.push(item)` | Appends item to the end | `tasks.push("doc")` |
-| `list.pop()` | Removes and returns the last element | `const last = tasks.pop()` |
-| `list.contains(val)` | Checks if item exists in list | `tasks.contains("build")` |
-| `list.clear()` | Removes all elements from list | `tasks.clear()` |
+`sort` uses median-of-three pivoting, an insertion-sort cutoff, and a heapsort fallback so worst-case inputs stay fast.
 
 ---
 
-## Map / Dictionary Operations
+## Queues
 
-Maps store key-value pairs with fast hashing lookups:
+FIFO helpers wrap an array: enqueue at the back, dequeue from the front.
+
+```kyna
+const pending = createQueue();
+enqueue(pending, "one");
+enqueue(pending, "two");
+const first = dequeue(pending);
+print(queueIsEmpty(pending), peekQueue(pending), first);
+```
+
+| Function | Description |
+| :--- | :--- |
+| `createQueue()` | Empty queue |
+| `enqueue(queue, value)` | Push to the back |
+| `dequeue(queue)` | Pop from the front |
+| `peekQueue(queue)` | Front element without removing |
+| `queueIsEmpty(queue)` | `true` when empty |
+
+---
+
+## Objects / maps
+
+Closed object literals use string keys:
 
 ```kyna
 var config = {
-    "env": "production",
-    "port": 8080,
-    "ssl": true
+    env: "production",
+    port: 8080
 };
-
-# Reading values
-print(config["env"]); # "production"
-
-# Modifying values
+print(config["env"]);
 config["port"] = 9000;
-print(config["port"]); # 9000
-
-# Checking key existence
-if (config.hasKey("ssl")) {
-    print("SSL is explicitly configured");
-}
-```
-
----
-
-## Functional Iteration Patterns
-
-```kyna
-fn filterPositive(numbers: int list): int list {
-    var filtered: int list = [];
-    loop (var i = 0; i < len(numbers); i = i + 1) {
-        if (numbers[i] > 0) {
-            filtered.push(numbers[i]);
-        }
-    }
-    return filtered;
-}
-
-const data = [-10, 5, 0, 42, -3, 99];
-print(filterPositive(data)); # [5, 42, 99]
 ```

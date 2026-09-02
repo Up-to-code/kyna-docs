@@ -55,21 +55,15 @@ if (user != null) {
     badge: 'Standard Library',
     title: 'Zero-Dependency Native Standard Library',
     desc: 'High-resolution nanosecond timers, file I/O, and data format parsing built directly into the language runtime.',
-    code: `import std.fs;
-import std.time;
+    code: `const start = timeNow();
 
-# Measure nanosecond execution
-const start = time.nowNs();
-
-# Safe filesystem read and JSON parsing
-if (fs.exists("config.json")) {
-    const raw = fs.readString("config.json");
-    const config = jsonParse(raw);
-    print("Database Host:", config["database"]["host"]);
+if (fileExists("config.json")) {
+    const config = readJsonFile("config.json");
+    slogInfo("loaded", { host: config["database"]["host"] });
 }
 
-const elapsedMs = (time.nowNs() - start) / 1000000;
-print("Config loaded in:", elapsedMs, "ms");`
+const elapsedNs = timeNow() - start;
+slogInfo("config ready", { ns: elapsedNs });`
   },
   {
     id: 'cli',
@@ -78,11 +72,13 @@ print("Config loaded in:", elapsedMs, "ms");`
     badge: 'Developer Tooling',
     title: 'Unified CLI & Compiler Diagnostics',
     desc: 'Run instant type checks, inspect compiler intermediate representations, and execute scripts on the Bytecode VM.',
-    code: `# Run static type checks and diagnostics
+    code: `# Type-check a file or a package directory
 $ ky check server.kyna
+$ ky check ./app
 
 # Execute on the Bytecode Virtual Machine
 $ ky run server.kyna
+$ ky run ./app
 
 # Inspect compiler intermediate representations
 $ ky hir server.kyna
@@ -320,13 +316,13 @@ export default function Home() {
                 </div>
                 <h3 className="kyna-bento-card__title">Zero-Dependency Standard Library</h3>
                 <p className="kyna-bento-card__desc">
-                  Everything you need without heavy external package managers. Includes native modules for file operations (<code>std.fs</code>), precision timers (<code>std.time</code>), JSON (<code>jsonParse</code>), and TOML.
+                  Everything you need without a package manager. Globals cover files (<code>readFile</code>, <code>copyFile</code>), clocks (<code>timeNow</code>), queues, JSON, TOML, HTTP (<code>fetch</code>), and structured logs (<code>slogInfo</code>).
                 </p>
                 <div className="kyna-bento-card__chips">
-                  <span className="kyna-chip">std.fs</span>
-                  <span className="kyna-chip">std.time</span>
-                  <span className="kyna-chip">std.collections</span>
-                  <span className="kyna-chip">JSON & TOML</span>
+                  <span className="kyna-chip">copyFile</span>
+                  <span className="kyna-chip">timeNow</span>
+                  <span className="kyna-chip">createQueue</span>
+                  <span className="kyna-chip">slog / JSON</span>
                 </div>
               </div>
 

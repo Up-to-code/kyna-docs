@@ -4,70 +4,78 @@ sidebar_position: 4
 
 # Code Examples & Recipes
 
-Practical code recipes demonstrating common backend and systems programming tasks in Kyna.
+These snippets match the compiler's `examples/` folder in [Kyma](https://github.com/Up-to-code/Kyma). Standard-library functions are globals — no `import std.*`.
 
 ---
 
-## 1. REST API Client with JSON Processing
+## 1. Structured logging
+
+Prefer `slog*` over `print` in services:
 
 ```kyna
-async fn fetchUser(userId: int): str? {
-    const url = "https://api.kyna.dev/v1/users/" + userId;
-    try {
-        const res = await fetch(url, { timeout: 3000 });
-        if (res.ok) {
-            const data = res.json();
-            return data["name"];
-        }
-        return null;
-    } catch (err) {
-        print("Failed to fetch user:", err.message);
-        return null;
-    }
+slogInfo("ready", { service: "kyna" });
+slogWarn("slow");
+slogError("failed", { code: "KNET" });
+```
+
+---
+
+## 2. Queue + JSON
+
+```kyna
+const pending = createQueue();
+enqueue(pending, "one");
+enqueue(pending, "two");
+const first = dequeue(pending);
+const payload = jsonStringify({ first: first, empty: queueIsEmpty(pending) });
+```
+
+---
+
+## 3. Stream a file copy
+
+```kyna
+try {
+    createDirectory("scratch");
+    writeFile("scratch/source.txt", "streamed");
+    const copied = copyFile("scratch/source.txt", "scratch/dest.txt");
+    slogInfo("copied", { bytes: copied });
+} catch (failure) {
+    slogError("copy failure", { code: failure.code, message: failure.message });
 }
 ```
 
 ---
 
-## 2. File Reading & Line Transformation
+## 4. HTTP + parse IP
 
 ```kyna
-import std.fs;
-
-fn processLogFile(path: str) {
-    if (!fs.exists(path)) {
-        print("Log file not found:", path);
-        return;
+try {
+    const res = await fetch("https://api.kyna.dev/v1/users/1");
+    if (res.ok) {
+        const data = res.json();
+        slogInfo("user", { name: data["name"], ip: parseIP("10.0.0.2") });
     }
-
-    const content = fs.readString(path);
-    const lines = strSplit(content, "\n");
-    print("Total log entries:", len(lines));
-
-    loop (var i = 0; i < len(lines); i = i + 1) {
-        if (strContains(lines[i], "ERROR")) {
-            print("ALERT line", i + 1, ":", lines[i]);
-        }
-    }
+} catch (err) {
+    slogError("fetch failed", { code: err.code, message: err.message });
 }
 ```
 
 ---
 
-## 3. High-Resolution Benchmarking
+## 5. Package layout
 
-```kyna
-import std.time;
-
-fn benchmark(iterations: int) {
-    const start = time.nowNs();
-    var sum = 0;
-    loop (var i = 0; i < iterations; i = i + 1) {
-        sum = sum + (i % 7);
-    }
-    const durationNs = time.nowNs() - start;
-    print("Processed", iterations, "iterations in", durationNs / 1000000, "ms");
-}
-
-benchmark(1000000);
+```text
+app/
+  helpers.kyna
+  main.kyna
 ```
+
+```bash
+ky check ./app
+ky run ./app
+```
+
+Sibling files share one namespace. Put unstable helpers under `app/internal/` so other packages cannot import them (`KSEM1042`).
+
+More runnable programs live in the compiler repo under `examples/standard_library/`, `examples/network/`, and `examples/learning/`.

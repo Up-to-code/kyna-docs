@@ -46,11 +46,12 @@ npm run deploy
 
 Documentation lives in `docs/`:
 
-- `tutorial/` — getting started and the language tour;
+- `tutorial/` — getting started, language tour, **modules & packages**;
 - `reference/` — bindings & types, control flow, functions, classes, exceptions,
-  async, and networking;
-- `stdlib/` — text, collections, data formats, files, system, timing & memory;
-- `examples.mdx` — pointers into the `Kyma` repo's `examples/` folder.
+  async, and networking (`fetch`, `parseIP`);
+- `stdlib/` — text, collections (including queues), data formats, files (`copyFile`),
+  system (**slog**), timing & memory;
+- `examples.mdx` — recipes that match the `Kyma` repo's `examples/` folder.
 
 The site pulls no content from the compiler repo at build time; everything is
 authored directly here so the docs are simple, self-contained, and fast.

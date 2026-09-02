@@ -55,7 +55,7 @@ Kyna doesn't treat compilation as a black box. You can inspect the intermediate 
 | :--- | :--- | :--- |
 | **Tokens** | `ky tokens app.kyna` | Scans source text into structured lexical tokens |
 | **AST** | `ky ast app.kyna` | Builds and validates the Abstract Syntax Tree |
-| **Type Check** | `ky check app.kyna` | Validates types, bindings, and control flow |
+| **Type Check** | `ky check app.kyna` (or a directory) | Validates types, bindings, and control flow |
 | **HIR** | `ky hir app.kyna` | High-Level Intermediate Representation |
 | **MIR** | `ky mir app.kyna` | Mid-Level IR with control flow optimizations |
 | **Bytecode** | `ky bytecode app.kyna` | Emits compact bytecode instructions |
@@ -85,4 +85,5 @@ Follow these guides to get up to speed with Kyna:
 2. **[Language Tour](/docs/tutorial/tour)** — A step-by-step walkthrough covering the core syntax and patterns.
 3. **[Variables & Bindings](/docs/tutorial/variables)** — Learn about `var`, `const`, type annotations, and scoping.
 4. **[Type System & Safety](/docs/tutorial/types)** — Explore primitive types, collections, and null safety.
-5. **[Language Reference](/docs/reference/bindings)** — Detailed specifications of language semantics and standard library APIs.
+5. **[Modules & Packages](/docs/tutorial/modules)** — `export` / `import`, directory packages, `internal/`, and `.kyc` cache.
+6. **[Language Reference](/docs/reference/bindings)** — Detailed specifications of language semantics and standard library APIs.

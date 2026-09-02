@@ -4,62 +4,33 @@ sidebar_position: 1
 
 # Standard Library: Text & Strings
 
-The text processing utilities in Kyna provide high-performance UTF-8 string manipulation, character searching, case conversion, and splitting functions.
+Text helpers are UTF-8 aware: `len(string)` and indices count **Unicode code points**, not bytes.
 
 ---
 
-## Global String Utilities
+## Functions
 
-| Function | Signature | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `len` | `len(s: str): int` | Returns character count in string | `len("Kyna") == 4` |
-| `strToUpper` | `strToUpper(s: str): str` | Converts string to uppercase | `strToUpper("hi") == "HI"` |
-| `strToLower` | `strToLower(s: str): str` | Converts string to lowercase | `strToLower("HI") == "hi"` |
-| `strTrim` | `strTrim(s: str): str` | Removes leading and trailing whitespace | `strTrim("  ok  ") == "ok"` |
-| `strContains` | `strContains(s: str, sub: str): bool` | Checks if substring exists | `strContains("hello", "ell") == true` |
-| `strStartsWith` | `strStartsWith(s: str, prefix: str): bool` | Checks if string starts with prefix | `strStartsWith("app.js", "app") == true` |
-| `strEndsWith` | `strEndsWith(s: str, suffix: str): bool` | Checks if string ends with suffix | `strEndsWith("main.kyna", ".kyna") == true` |
-| `strSplit` | `strSplit(s: str, delim: str): str list` | Splits string by delimiter | `strSplit("a,b,c", ",") == ["a", "b", "c"]` |
-| `strJoin` | `strJoin(items: str list, sep: str): str` | Joins list of strings by separator | `strJoin(["a", "b"], ":") == "a:b"` |
-| `strReplace` | `strReplace(s: str, from: str, to: str): str` | Replaces occurrences of substring | `strReplace("foo", "o", "a") == "faa"` |
+| Function | Signature | Description |
+| :--- | :--- | :--- |
+| `len` | `len(s: str): int` | Code-point count |
+| `textUpper` | `textUpper(s: str): str` | Uppercase |
+| `textLower` | `textLower(s: str): str` | Lowercase |
+| `textTrim` | `textTrim(s: str): str` | Strip leading/trailing whitespace |
+| `textContains` | `textContains(s: str, sub: str): bool` | Substring test |
+| `textFind` | `textFind(s: str, sub: str): int?` | First index, or `null` |
+| `textSlice` | `textSlice(s: str, start: int, end?: int): str` | Slice by code points |
+| `textSplit` | `textSplit(s: str, delim: str): array` | Split on delimiter |
+| `textReplace` | `textReplace(s: str, from: str, to: str): str` | Replace occurrences |
+
+There is no `import std.text`. Call these as globals.
 
 ---
 
-## Examples & Code Snippets
-
-### Parsing CSV Data
+## Examples
 
 ```kyna
-fn parseCsvLine(line: str): str list {
-    const trimmed = strTrim(line);
-    const tokens = strSplit(trimmed, ",");
-    var result: str list = [];
-
-    loop (var i = 0; i < len(tokens); i = i + 1) {
-        result.push(strTrim(tokens[i]));
-    }
-    return result;
-}
-
-const line = "  alice , admin , 2026-09-02  ";
-const columns = parseCsvLine(line);
-print(columns); # ["alice", "admin", "2026-09-02"]
-```
-
-### URL Sanitization
-
-```kyna
-fn sanitizePath(path: str): str {
-    var clean = strTrim(path);
-    if (!strStartsWith(clean, "/")) {
-        clean = "/" + clean;
-    }
-    if (strEndsWith(clean, "/") && len(clean) > 1) {
-        # Trim trailing slash
-        clean = strSlice(clean, 0, len(clean) - 1);
-    }
-    return strToLower(clean);
-}
-
-print(sanitizePath("  /API/v1/Users/ ")); # "/api/v1/users"
+const pieces = textSplit("one::two::three", "::");
+const line = textTrim("  alice , admin  ");
+const columns = textSplit(line, ",");
+print(textContains("hello", "ell"), pieces[0], textLower("API"));
 ```

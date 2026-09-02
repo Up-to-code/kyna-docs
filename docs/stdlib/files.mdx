@@ -2,59 +2,45 @@
 sidebar_position: 4
 ---
 
-# Standard Library: Filesystem (`std.fs`)
+# Standard Library: Filesystem
 
-The `std.fs` module provides synchronous and asynchronous file system operations for reading, writing, inspecting, and deleting files and directories.
+File I/O is a set of **global builtins**, plus the `fs` object as an alias (`fs.read` / `fs.write` / `fs.exists`, …). There is no `import std.fs`.
 
 ---
 
-## File Operations
+## Text and JSON files
 
 ```kyna
-import std.fs;
-
-# Reading files
-const content = fs.readString("config.json");
-print("File content length:", len(content));
-
-# Writing files
-fs.writeString("output.log", "Log entry at startup\n");
-
-# Appending to files
-fs.appendString("output.log", "Worker #1 ready\n");
+writeFile("output.log", "startup\n");
+const content = readFile("output.log");
+writeJsonFile("settings.json", { env: "dev" });
+const settings = readJsonFile("settings.json");
 ```
 
+| Function | Description |
+| :--- | :--- |
+| `readFile(path)` / `fs.read` | Read UTF-8 text |
+| `writeFile(path, content)` / `fs.write` | Replace the whole file |
+| `readJsonFile` / `fs.readJson` | Parse a JSON file |
+| `writeJsonFile` / `fs.writeJson` | Serialize JSON and replace the file |
+| `createDirectory(path)` / `fs.createDirectory` | Create a directory |
+| `fileExists(path)` / `fs.exists` | Existence check |
+| `removePath(path)` / `fs.remove` | Delete a file or directory |
+| `listDirectory(path)` / `fs.list` | Directory entries |
+
+Writes replace the complete contents. Edit with an explicit read–modify–write cycle.
+
 ---
 
-## Path & Directory Operations
+## Streaming copy
 
-| Function | Signature | Description |
-| :--- | :--- | :--- |
-| `fs.exists` | `fs.exists(path: str): bool` | Checks if a file or directory exists |
-| `fs.isFile` | `fs.isFile(path: str): bool` | Returns true if path is a regular file |
-| `fs.isDir` | `fs.isDir(path: str): bool` | Returns true if path is a directory |
-| `fs.mkdir` | `fs.mkdir(path: str): bool` | Creates directory |
-| `fs.remove` | `fs.remove(path: str): bool` | Deletes file or directory |
-| `fs.readDir` | `fs.readDir(path: str): str list` | Lists all entries in directory |
-
----
-
-## Safe File Reading with Error Handling
+`copyFile(source, destination)` copies bytes in 64KiB chunks and returns the byte count. It does not load the whole file into memory (Go `io.Copy` style).
 
 ```kyna
-import std.fs;
-
-fn loadSecret(path: str): str? {
-    if (!fs.exists(path)) {
-        print("Warning: Secret file not found at:", path);
-        return null;
-    }
-
-    try {
-        return fs.readString(path);
-    } catch (err) {
-        print("Error reading file:", err.message);
-        return null;
-    }
-}
+createDirectory("scratch");
+writeFile("scratch/source.txt", "streamed");
+const copied = copyFile("scratch/source.txt", "scratch/dest.txt");
+print(copied, readFile("scratch/dest.txt"));
 ```
+
+Wrap filesystem work in `try` / `catch`. Errors carry `code` and `message`.

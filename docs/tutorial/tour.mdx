@@ -214,6 +214,19 @@ print("Server time:", time);
 
 ---
 
+## 8. Modules & packages
+
+`export` publishes a name. `import "./math.kyna" as math` loads that file and exposes only exports. A directory passed to `ky check` / `ky run` is one package — sibling files share a namespace. Packages under `internal/` cannot be imported from outside their parent tree.
+
+```kyna
+import "./math.kyna" as math;
+var total: int = math.add(20, 22);
+```
+
+See **[Modules & Packages](/docs/tutorial/modules)** for named/default imports, `.kyc` export cache, and `KSEM1042`.
+
+---
+
 ## Key Takeaways
 
 - **Explicit Signatures**: Function parameters and return values carry clear type annotations.

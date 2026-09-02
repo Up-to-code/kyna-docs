@@ -59,7 +59,7 @@ try {
 
 ## TOML Support
 
-Kyna includes `tomlParse()` for reading configuration files:
+Kyna includes `tomlParse()` / `toml.stringify` and `xmlParse()` / `xml.stringify` for configuration and markup. Each XML element is `{ name, attributes, text, children }`.
 
 ```kyna
 const tomlConfig = """

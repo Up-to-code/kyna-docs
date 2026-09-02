@@ -33,8 +33,8 @@ The `ky` CLI provides tools for executing programs, static type-checking, and in
 
 | Command | Description | Example |
 | :--- | :--- | :--- |
-| `ky run <file>` | Compiles and executes code on the bytecode VM | `ky run main.kyna` |
-| `ky check <file>` | Runs static type checks and diagnostics without executing | `ky check main.kyna` |
+| `ky run <file-or-dir>` | Compiles and executes on the bytecode VM | `ky run main.kyna` or `ky run ./app` |
+| `ky check <file-or-dir>` | Static type checks without executing | `ky check main.kyna` or `ky check ./app` |
 | `ky tokens <file>` | Dumps the lexical token stream from the lexer | `ky tokens main.kyna` |
 | `ky ast <file>` | Prints the Abstract Syntax Tree representation | `ky ast main.kyna` |
 | `ky hir <file>` | Emits High-Level Intermediate Representation | `ky hir main.kyna` |
@@ -112,9 +112,14 @@ error[TypeMismatch]: cannot assign expression of type 'str' to binding of type '
 
 ---
 
+A directory is a **package**: every `*.kyna` file in that folder (except `*_test.kyna`) shares one namespace. See **[Modules & Packages](/docs/tutorial/modules)**.
+
+---
+
 ## Next Steps
 
 Now that your environment is working:
 - Take **[The Language Tour](/docs/tutorial/tour)** to explore all language features.
 - Learn about **[Variables & Scoping](/docs/tutorial/variables)**.
 - Read about **[Static Types & Null Safety](/docs/tutorial/types)**.
+- Split code with **[Modules & Packages](/docs/tutorial/modules)**.
