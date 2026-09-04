@@ -8,19 +8,7 @@ These snippets match the compiler's `examples/` folder in [Kyna](https://github.
 
 ---
 
-## 1. Structured logging
-
-Prefer `slog*` over `print` in services:
-
-```kyna
-slogInfo("ready", { service: "kyna" });
-slogWarn("slow");
-slogError("failed", { code: "KNET" });
-```
-
----
-
-## 2. Queue + JSON
+## 1. Queue + JSON
 
 ```kyna
 const pending = createQueue();
@@ -32,38 +20,39 @@ const payload = jsonStringify({ first: first, empty: queueIsEmpty(pending) });
 
 ---
 
-## 3. Stream a file copy
+## 2. Stream a file copy
 
 ```kyna
 try {
     createDirectory("scratch");
     writeFile("scratch/source.txt", "streamed");
     const copied = copyFile("scratch/source.txt", "scratch/dest.txt");
-    slogInfo("copied", { bytes: copied });
+    print(copied);
 } catch (failure) {
-    slogError("copy failure", { code: failure.code, message: failure.message });
+    print(failure.message);
 }
 ```
 
 ---
 
-## 4. HTTP + parse IP
+## 3. HTTP + parse IP
 
 ```kyna
 try {
     const res = await fetch("https://api.kyna.dev/v1/users/1");
     if (res.ok) {
         const data = res.json();
-        slogInfo("user", { name: data["name"], ip: parseIP("10.0.0.2") });
+        print(data["name"]);
+        print(parseIP("10.0.0.2"));
     }
 } catch (err) {
-    slogError("fetch failed", { code: err.code, message: err.message });
+    print(err.message);
 }
 ```
 
 ---
 
-## 5. Package layout
+## 4. Package layout
 
 ```text
 app/
