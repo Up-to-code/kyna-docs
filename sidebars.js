@@ -3,14 +3,22 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
   docs: [
-    'intro',
     {
       type: 'category',
-      label: 'Tutorial',
+      label: 'Start here',
       collapsed: false,
       items: [
+        'intro',
         'tutorial/getting-started',
         'tutorial/tour',
+        'examples',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Language guide',
+      collapsed: false,
+      items: [
         'tutorial/variables',
         'tutorial/types',
         'tutorial/operators',
@@ -50,7 +58,6 @@ const sidebars = {
         'stdlib/timing-and-memory',
       ],
     },
-    'examples',
   ],
 };
 
