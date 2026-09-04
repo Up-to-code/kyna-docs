@@ -3,87 +3,98 @@ sidebar_position: 1
 slug: /intro
 ---
 
-# Introduction to Kyna
+# Kyna documentation
 
-Kyna is a modern, statically typed programming language engineered for building backend services, command-line tools, and high-performance scripts.
+Kyna is a statically typed programming language with a native CLI, an
+inspectable compiler pipeline, and two execution paths: bytecode and a
+tree-walk compatibility engine.
 
-It combines clean, readable syntax with compile-time safety guarantees, a transparent 6-stage compiler pipeline, and an optimized bytecode virtual machine.
+:::note Preview status
+Kyna is under active development. Check the
+[implementation status](https://github.com/Up-to-code/Kyna/blob/main/docs/implementation-status.md)
+before using it in production.
+:::
+
+## Install
+
+Install the current preview from the official npm organization:
+
+```sh
+npm install --global @kyna-language/cli@preview
+ky --version
+```
+
+The installer supports macOS and Linux on x64/ARM64, and Windows on x64.
+
+## First program
+
+Create `hello.kyna`:
 
 ```kyna
-# A complete Kyna script
 fn greet(name: str): str {
-    return "Hello, " + name + "!";
+    return "Hello, " + name;
 }
 
-const user: str = "Developer";
-print(greet(user));
+const language = "Kyna";
+print(greet(language));
 ```
 
----
+Run it:
 
-## Why Kyna?
+```sh
+ky run hello.kyna
+```
 
-When building backend services and scripts, developers frequently have to choose between two extremes: the rapid prototyping velocity of dynamic languages, or the strict safety and execution performance of compiled languages. 
+Check it without executing:
 
-Kyna is designed to eliminate this tradeoff:
+```sh
+ky check hello.kyna
+```
 
-### 1. Compile-Time Safety Without Boilerplate
-Kyna's static type checker verifies variable bindings, function signatures, and nullability before a single line executes. You get instant diagnostics in your terminal or editor rather than debugging unhandled runtime crashes in production.
+## Core ideas
 
-### 2. Explicit Null Safety
-Null reference exceptions are eliminated through explicit nullable types (`str?` vs `str`). The compiler forces you to handle missing values safely, with automatic type narrowing after null checks:
+### Types are explicit when they matter
+
+Kyna can infer simple types, while annotations document and enforce public
+contracts. Types are non-nullable by default; add `?` when a value may be
+`null`.
 
 ```kyna
-fn findUser(id: int): str? {
-    if (id <= 0) {
-        return null;
-    }
-    return "User_" + id;
-}
-
-var result = findUser(42);
-if (result != null) {
-    # 'result' is automatically narrowed to 'str' here
-    print("Found:", result);
-}
+var nickname: str? = null;
 ```
 
-### 3. Transparent 6-Stage Compilation Pipeline
-Kyna doesn't treat compilation as a black box. You can inspect the intermediate representations at every stage of compilation using dedicated CLI flags:
+### Mutability is visible
 
-| Stage | Command | Purpose |
-| :--- | :--- | :--- |
-| **Tokens** | `ky tokens app.kyna` | Scans source text into structured lexical tokens |
-| **AST** | `ky ast app.kyna` | Builds and validates the Abstract Syntax Tree |
-| **Type Check** | `ky check app.kyna` (or a directory) | Validates types, bindings, and control flow |
-| **HIR** | `ky hir app.kyna` | High-Level Intermediate Representation |
-| **MIR** | `ky mir app.kyna` | Mid-Level IR with control flow optimizations |
-| **Bytecode** | `ky bytecode app.kyna` | Emits compact bytecode instructions |
-| **VM Run** | `ky run app.kyna` | Executes bytecode on the lightweight VM |
-
-### 4. Native Async Runtime & HTTP Networking
-Asynchronous programming is a first-class language feature. You can perform non-blocking HTTP requests and JSON serialization with simple, intuitive syntax:
+Use `var` for a binding that can change and `const` for one that cannot.
 
 ```kyna
-async fn fetchStatus(service: str): str {
-    try {
-        const response = await fetch("https://api.kyna.dev/health/" + service);
-        return jsonParse(response)["status"];
-    } catch (err) {
-        return "Offline: " + err;
-    }
-}
+var attempts = 0;
+attempts = attempts + 1;
+
+const limit = 3;
 ```
 
----
+### Compiler stages are inspectable
 
-## Recommended Learning Path
+The `ky` CLI exposes the compilation pipeline instead of hiding it:
 
-Follow these guides to get up to speed with Kyna:
+| Stage | Command |
+| --- | --- |
+| Tokens | `ky tokens app.kyna` |
+| Syntax tree | `ky ast app.kyna` |
+| Type checking | `ky check app.kyna` |
+| HIR | `ky hir app.kyna` |
+| MIR | `ky mir app.kyna` |
+| Bytecode | `ky bytecode app.kyna` |
+| Execution | `ky run app.kyna` |
 
-1. **[Getting Started](/docs/tutorial/getting-started)** — Build the compiler and run your first program in under two minutes.
-2. **[Language Tour](/docs/tutorial/tour)** — A step-by-step walkthrough covering the core syntax and patterns.
-3. **[Variables & Bindings](/docs/tutorial/variables)** — Learn about `var`, `const`, type annotations, and scoping.
-4. **[Type System & Safety](/docs/tutorial/types)** — Explore primitive types, collections, and null safety.
-5. **[Modules & Packages](/docs/tutorial/modules)** — `export` / `import`, directory packages, `internal/`, and `.kyc` cache.
-6. **[Language Reference](/docs/reference/bindings)** — Detailed specifications of language semantics and standard library APIs.
+## Choose your next step
+
+| Goal | Read |
+| --- | --- |
+| Install Kyna and create a project | [Getting started](/docs/tutorial/getting-started) |
+| Learn the language in order | [Language tour](/docs/tutorial/tour) |
+| Understand bindings and types | [Variables](/docs/tutorial/variables) and [types](/docs/tutorial/types) |
+| Organize multiple files | [Modules and packages](/docs/tutorial/modules) |
+| Find exact language behavior | [Language reference](/docs/reference/bindings) |
+| Copy a complete pattern | [Examples](/docs/examples) |

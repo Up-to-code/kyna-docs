@@ -4,7 +4,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Kyna',
-  tagline: 'A fast, statically typed language for backend services',
+  tagline: 'A statically typed language with an inspectable compiler',
   favicon: 'img/logo.svg',
 
   url: 'https://up-to-code.github.io',
@@ -72,7 +72,7 @@ const config = {
         docs: {
           sidebarPath: './sidebars.js',
           routeBasePath: 'docs',
-          editUrl: 'https://github.com/Up-to-code/Kyma/tree/main/docs/',
+          editUrl: 'https://github.com/Up-to-code/kyna-docs/edit/main/',
         },
         blog: false,
         theme: {
@@ -105,21 +105,12 @@ const config = {
         },
         {
           type: 'dropdown',
-          label: 'Tutorial',
+          label: 'Learn',
           position: 'left',
           items: [
             {label: 'Getting started', to: '/docs/tutorial/getting-started'},
             {label: 'Language tour', to: '/docs/tutorial/tour'},
-            {label: 'Variables & constants', to: '/docs/tutorial/variables'},
-            {label: 'Types & safety', to: '/docs/tutorial/types'},
-            {label: 'Operators', to: '/docs/tutorial/operators'},
-            {label: 'Control flow', to: '/docs/tutorial/control-flow'},
-            {label: 'Functions & closures', to: '/docs/tutorial/functions'},
             {label: 'Modules & imports', to: '/docs/tutorial/modules'},
-            {label: 'Classes & OOP', to: '/docs/tutorial/classes'},
-            {label: 'Error handling', to: '/docs/tutorial/errors'},
-            {label: 'Async & fetch', to: '/docs/tutorial/async'},
-            {label: 'Full application flow', to: '/docs/tutorial/flow-result'},
           ],
         },
         {
@@ -134,11 +125,19 @@ const config = {
             {label: 'Exceptions & errors', to: '/docs/reference/exceptions'},
             {label: 'Async & concurrency', to: '/docs/reference/async'},
             {label: 'Networking & HTTP', to: '/docs/reference/networking'},
-            {label: 'Standard library: Text', to: '/docs/stdlib/text'},
-            {label: 'Standard library: Collections', to: '/docs/stdlib/collections'},
-            {label: 'Standard library: Files', to: '/docs/stdlib/files'},
-            {label: 'Standard library: System', to: '/docs/stdlib/system'},
-            {label: 'Standard library: Data formats', to: '/docs/stdlib/data-formats'},
+          ],
+        },
+        {
+          type: 'dropdown',
+          label: 'Library',
+          position: 'left',
+          items: [
+            {label: 'Text', to: '/docs/stdlib/text'},
+            {label: 'Collections', to: '/docs/stdlib/collections'},
+            {label: 'Files', to: '/docs/stdlib/files'},
+            {label: 'System', to: '/docs/stdlib/system'},
+            {label: 'Data formats', to: '/docs/stdlib/data-formats'},
+            {label: 'Timing & memory', to: '/docs/stdlib/timing-and-memory'},
           ],
         },
         {
@@ -151,10 +150,15 @@ const config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/Up-to-code/Kyma',
+          href: 'https://github.com/Up-to-code/Kyna',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
+        },
+        {
+          href: 'https://www.npmjs.com/package/@kyna-language/cli',
+          label: 'npm',
+          position: 'right',
         },
       ],
     },
@@ -182,11 +186,11 @@ const config = {
           items: [
             {
               label: 'GitHub Repository',
-              href: 'https://github.com/Up-to-code/Kyma',
+              href: 'https://github.com/Up-to-code/Kyna',
             },
             {
               label: 'Issue Tracker',
-              href: 'https://github.com/Up-to-code/Kyma/issues',
+              href: 'https://github.com/Up-to-code/Kyna/issues',
             },
           ],
         },

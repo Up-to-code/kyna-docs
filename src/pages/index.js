@@ -1,385 +1,205 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
 
-const SNIPPETS = [
-  {
-    id: 'async',
-    file: 'fetch.kyna',
-    lang: 'kyna',
-    badge: 'Async & Fetch',
-    title: 'Native Asynchronous Networking',
-    desc: 'Perform non-blocking HTTP requests, parse JSON payloads, and handle errors cleanly with first-class async and await.',
-    code: `async fn fetchTelemetry(service: str): str {
-    try {
-        const res = await fetch("https://api.kyna.dev/health/" + service, {
-            timeout: 5000,
-            headers: { "Accept": "application/json" }
-        });
-        const data = jsonParse(res);
-        return "Status: " + data["status"] + " | QPS: " + data["qps"];
-    } catch (err) {
-        return "Network Error [" + err.code + "]: " + err.message;
-    }
+const INSTALL_COMMAND = 'npm install --global @kyna-language/cli@preview';
+
+const FIRST_PROGRAM = `fn greet(name: str): str {
+    return "Hello, " + name;
 }
 
-const status = await fetchTelemetry("auth");
-print(status);`
+const language = "Kyna";
+print(greet(language));`;
+
+const LEARNING_PATHS = [
+  {
+    title: 'Install and run',
+    description: 'Install the CLI, create a project, and run your first Kyna program.',
+    label: 'Getting started',
+    to: '/docs/tutorial/getting-started',
   },
   {
-    id: 'safety',
-    file: 'safety.kyna',
-    lang: 'kyna',
-    badge: 'Type Safety',
-    title: 'Compile-Time Safety & Null Narrowing',
-    desc: 'Eliminate null dereference crashes. Types are non-nullable by default, with automatic flow-sensitive type narrowing.',
-    code: `fn findUser(id: int): str? {
-    if (id <= 0) {
-        return null; # Explicit nullability with T?
-    }
-    return "User_" + id;
-}
-
-var user: str? = findUser(42);
-if (user != null) {
-    # Type automatically narrows from 'str?' to 'str'
-    print("Active profile:", user);
-    print("Name length:", len(user));
-}`
+    title: 'Learn the language',
+    description: 'Work through bindings, types, functions, modules, classes, and errors.',
+    label: 'Language tour',
+    to: '/docs/tutorial/tour',
   },
   {
-    id: 'stdlib',
-    file: 'benchmark.kyna',
-    lang: 'kyna',
-    badge: 'Standard Library',
-    title: 'Zero-Dependency Native Standard Library',
-    desc: 'High-resolution nanosecond timers, file I/O, and data format parsing built directly into the language runtime.',
-    code: `const start = timeNow();
-
-if (fileExists("config.json")) {
-    const config = readJsonFile("config.json");
-    slogInfo("loaded", { host: config["database"]["host"] });
-}
-
-const elapsedNs = timeNow() - start;
-slogInfo("config ready", { ns: elapsedNs });`
+    title: 'Find exact behavior',
+    description: 'Use the reference for syntax, semantics, networking, and async behavior.',
+    label: 'Language reference',
+    to: '/docs/reference/bindings',
   },
   {
-    id: 'cli',
-    file: 'terminal',
-    lang: 'bash',
-    badge: 'Developer Tooling',
-    title: 'Unified CLI & Compiler Diagnostics',
-    desc: 'Run instant type checks, inspect compiler intermediate representations, and execute scripts on the Bytecode VM.',
-    code: `# Type-check a file or a package directory
-$ ky check server.kyna
-$ ky check ./app
-
-# Execute on the Bytecode Virtual Machine
-$ ky run server.kyna
-$ ky run ./app
-
-# Inspect compiler intermediate representations
-$ ky hir server.kyna
-$ ky bytecode server.kyna`
-  }
+    title: 'Build with the library',
+    description: 'Explore text, collections, files, formats, system tools, and timing APIs.',
+    label: 'Standard library',
+    to: '/docs/stdlib/text',
+  },
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState(0);
   const [copied, setCopied] = useState(false);
-  const quickstartCmd = 'git clone https://github.com/Up-to-code/Kyma && cmake --build build-debug';
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(quickstartCmd);
+  const copyInstallCommand = async () => {
+    await navigator.clipboard.writeText(INSTALL_COMMAND);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 2000);
   };
-
-  const activeSnippet = SNIPPETS[activeTab];
 
   return (
     <Layout
-      title="Kyna — A fast, statically typed language"
-      description="Kyna is a modern, statically typed language compiled to bytecode, engineered for backend services and safe scripting."
+      title="Kyna programming language"
+      description="Learn Kyna, a statically typed language with an inspectable compiler and native CLI."
     >
       <div className="kyna-landing">
-        
-        {/* Left-Aligned Premium Hero Section */}
         <section className="kyna-hero">
           <div className="kyna-hero__container">
-            
-            <h1 className="kyna-hero__title">
-              Engineered for safe, <br />
-              high-performance systems.
-            </h1>
-
+            <span className="kyna-section-kicker">Kyna programming language</span>
+            <h1 className="kyna-hero__title">Readable code. Explicit types. One practical CLI.</h1>
             <p className="kyna-hero__subtitle">
-              Kyna delivers modern type safety, zero runtime null crashes, native non-blocking async I/O, 
-              and transparent multi-stage compiler diagnostics running on an optimized bytecode VM.
+              Learn the language, run examples, and inspect every compiler stage—from source
+              tokens to HIR, MIR, bytecode, and the virtual machine.
             </p>
 
             <div className="kyna-hero__actions">
-              <Link to="/docs/intro" className="kyna-btn kyna-btn--primary">
-                Read Documentation
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '6px' }}>
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+              <Link to="/docs/tutorial/getting-started" className="kyna-btn kyna-btn--primary">
+                Get started
               </Link>
-              <Link to="/docs/tutorial/getting-started" className="kyna-btn kyna-btn--secondary">
-                Quickstart Tutorial
+              <Link to="/docs/tutorial/tour" className="kyna-btn kyna-btn--secondary">
+                Language tour
               </Link>
               <a
-                href="https://github.com/Up-to-code/Kyma"
+                href="https://github.com/Up-to-code/Kyna"
                 target="_blank"
                 rel="noreferrer"
                 className="kyna-btn kyna-btn--ghost"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '6px' }}>
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                </svg>
-                <span>GitHub</span>
+                GitHub
               </a>
             </div>
 
-            {/* Minimalist Copy Bar */}
             <div className="kyna-copybar">
               <span className="kyna-copybar__prefix">$</span>
-              <span className="kyna-copybar__cmd">{quickstartCmd}</span>
-              <button type="button" className="kyna-copybar__btn" onClick={handleCopy}>
-                {copied ? (
-                  <span className="kyna-copybar__copied">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    Copied
-                  </span>
-                ) : (
-                  <span>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    Copy
-                  </span>
-                )}
+              <span className="kyna-copybar__cmd">{INSTALL_COMMAND}</span>
+              <button
+                type="button"
+                className="kyna-copybar__btn"
+                onClick={copyInstallCommand}
+                aria-label="Copy npm installation command"
+              >
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
-
           </div>
         </section>
 
-        {/* Section 1: Interactive Language Playground & Tabs */}
-        <section className="kyna-playground-section">
-          <div className="kyna-playground__container">
-            
-            <div className="kyna-section-header">
-              <span className="kyna-section-kicker">Language in Action</span>
-              <h2 className="kyna-section-title">Simple to write. Safe by construction.</h2>
-              <p className="kyna-section-desc">
-                Explore real Kyna patterns: robust asynchronous networking, compile-time null safety, 
-                high-resolution performance timing, and transparent compiler diagnostics.
-              </p>
-            </div>
-
-            <div className="kyna-interactive-card">
-              {/* Tab Navigation Bar */}
-              <div className="kyna-tab-bar">
-                <div className="kyna-tab-bar__dots">
-                  <span className="dot dot--red"></span>
-                  <span className="dot dot--yellow"></span>
-                  <span className="dot dot--green"></span>
-                </div>
-                
-                <div className="kyna-tab-bar__items">
-                  {SNIPPETS.map((item, idx) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`kyna-tab-btn ${activeTab === idx ? 'kyna-tab-btn--active' : ''}`}
-                      onClick={() => setActiveTab(idx)}
-                    >
-                      <span className="kyna-tab-btn__name">{item.file}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="kyna-tab-bar__badge">
-                  {activeSnippet.badge}
-                </div>
-              </div>
-
-              {/* Code & Explanation Body */}
-              <div className="kyna-interactive-card__body">
-                <div className="kyna-interactive-card__editor">
-                  <CodeBlock language={activeSnippet.lang} key={activeSnippet.id}>
-                    {activeSnippet.code}
-                  </CodeBlock>
-                </div>
-                
-                <div className="kyna-interactive-card__sidebar">
-                  <span className="kyna-interactive-card__pill">{activeSnippet.badge}</span>
-                  <h3 className="kyna-interactive-card__heading">{activeSnippet.title}</h3>
-                  <p className="kyna-interactive-card__text">{activeSnippet.desc}</p>
-                  
-                  <div className="kyna-interactive-card__meta">
-                    <div className="kyna-meta-item">
-                      <span className="kyna-meta-check">✓</span>
-                      <span>Static verification before execution</span>
-                    </div>
-                    <div className="kyna-meta-item">
-                      <span className="kyna-meta-check">✓</span>
-                      <span>Optimized Bytecode VM runtime</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* Section 2: Bento Grid Showcase */}
         <section className="kyna-bento-section">
           <div className="kyna-bento__container">
-            
             <div className="kyna-section-header">
-              <span className="kyna-section-kicker">Core Capabilities</span>
-              <h2 className="kyna-section-title">Designed for backend reliability</h2>
+              <span className="kyna-section-kicker">Documentation</span>
+              <h2 className="kyna-section-title">Choose a clear path</h2>
               <p className="kyna-section-desc">
-                Everything you need to build fast, robust command-line tools, microservices, and server scripts.
+                Start with a guided lesson, or go directly to the reference you need.
               </p>
             </div>
 
             <div className="kyna-bento-grid">
-              
-              {/* Bento 1: Large Card */}
-              <div className="kyna-bento-card kyna-bento-card--featured">
-                <div className="kyna-bento-card__icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                </div>
-                <h3 className="kyna-bento-card__title">Compile-Time Verification & Flow Typing</h3>
-                <p className="kyna-bento-card__desc">
-                  Eliminate runtime type errors. Types in Kyna cannot hold <code>null</code> unless explicitly marked with <code>T?</code>. Guard conditions automatically narrow nullable types into safe non-nullable references.
-                </p>
-                <div className="kyna-bento-card__mini-code">
-                  <div className="kyna-mini-terminal">
-                    <code>
-                      <span className="k-kw">var</span> token: <span className="k-type">str?</span> = <span className="k-fn">auth</span>();<br />
-                      <span className="k-kw">if</span> (token != <span className="k-num">null</span>) &#123; <span className="k-comment"># Narrowed to 'str'</span><br />
-                      &nbsp;&nbsp;<span className="k-fn">print</span>(<span className="k-str">"Valid:"</span>, token);<br />
-                      &#125;
-                    </code>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bento 2 */}
-              <div className="kyna-bento-card">
-                <div className="kyna-bento-card__icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                  </svg>
-                </div>
-                <h3 className="kyna-bento-card__title">Native Async I/O</h3>
-                <p className="kyna-bento-card__desc">
-                  Built-in event loop execution and non-blocking <code>fetch()</code> API with custom headers and timeout handling.
-                </p>
-              </div>
-
-              {/* Bento 3 */}
-              <div className="kyna-bento-card">
-                <div className="kyna-bento-card__icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="4 17 10 11 4 5"></polyline>
-                    <line x1="12" y1="19" x2="20" y2="19"></line>
-                  </svg>
-                </div>
-                <h3 className="kyna-bento-card__title">Multi-Stage Diagnostics</h3>
-                <p className="kyna-bento-card__desc">
-                  Inspect compiler internals from AST to HIR, MIR, and Bytecode with instant compiler flags.
-                </p>
-              </div>
-
-              {/* Bento 4: Large Card */}
-              <div className="kyna-bento-card kyna-bento-card--featured">
-                <div className="kyna-bento-card__icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                  </svg>
-                </div>
-                <h3 className="kyna-bento-card__title">Zero-Dependency Standard Library</h3>
-                <p className="kyna-bento-card__desc">
-                  Everything you need without a package manager. Globals cover files (<code>readFile</code>, <code>copyFile</code>), clocks (<code>timeNow</code>), queues, JSON, TOML, HTTP (<code>fetch</code>), and structured logs (<code>slogInfo</code>).
-                </p>
-                <div className="kyna-bento-card__chips">
-                  <span className="kyna-chip">copyFile</span>
-                  <span className="kyna-chip">timeNow</span>
-                  <span className="kyna-chip">createQueue</span>
-                  <span className="kyna-chip">slog / JSON</span>
-                </div>
-              </div>
-
+              {LEARNING_PATHS.map((path) => (
+                <article className="kyna-bento-card" key={path.to}>
+                  <h3 className="kyna-bento-card__title">{path.title}</h3>
+                  <p className="kyna-bento-card__desc">{path.description}</p>
+                  <Link to={path.to}>{path.label} →</Link>
+                </article>
+              ))}
             </div>
-
           </div>
         </section>
 
-        {/* Section 3: Pillars / Architectural Values */}
+        <section className="kyna-playground-section">
+          <div className="kyna-playground__container">
+            <div className="kyna-section-header">
+              <span className="kyna-section-kicker">Language</span>
+              <h2 className="kyna-section-title">Small syntax, visible behavior</h2>
+              <p className="kyna-section-desc">
+                Types can be inferred or written explicitly. State is mutable only when declared
+                with <code>var</code>; <code>const</code> bindings stay immutable.
+              </p>
+            </div>
+
+            <div className="kyna-interactive-card">
+              <div className="kyna-tab-bar">
+                <div className="kyna-tab-bar__dots" aria-hidden="true">
+                  <span className="dot dot--red" />
+                  <span className="dot dot--yellow" />
+                  <span className="dot dot--green" />
+                </div>
+                <span className="kyna-tab-btn kyna-tab-btn--active">hello.kyna</span>
+                <span className="kyna-tab-bar__badge">Kyna</span>
+              </div>
+
+              <div className="kyna-interactive-card__body">
+                <div className="kyna-interactive-card__editor">
+                  <CodeBlock language="kyna">{FIRST_PROGRAM}</CodeBlock>
+                </div>
+                <div className="kyna-interactive-card__sidebar">
+                  <span className="kyna-interactive-card__pill">First program</span>
+                  <h3 className="kyna-interactive-card__heading">Run it with one command</h3>
+                  <p className="kyna-interactive-card__text">
+                    Save the example as <code>hello.kyna</code>, then run
+                    <code> ky run hello.kyna</code>. Use <code>ky check</code> to type-check
+                    without executing.
+                  </p>
+                  <Link to="/docs/tutorial/getting-started">Follow the tutorial →</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="kyna-pillars-section">
           <div className="kyna-pillars__container">
-            
-            <div className="kyna-pillar-item">
+            <article className="kyna-pillar-item">
               <div className="kyna-pillar-num">01</div>
-              <h4 className="kyna-pillar-title">Fast Startup & Low Footprint</h4>
+              <h3 className="kyna-pillar-title">Check</h3>
               <p className="kyna-pillar-desc">
-                Runs on a lightweight, optimized Bytecode Virtual Machine with immediate execution and minimal memory overhead.
+                Validate bindings, types, nullability, calls, and control flow before execution.
               </p>
-            </div>
-
-            <div className="kyna-pillar-item">
+            </article>
+            <article className="kyna-pillar-item">
               <div className="kyna-pillar-num">02</div>
-              <h4 className="kyna-pillar-title">Expressive & Readable Syntax</h4>
+              <h3 className="kyna-pillar-title">Inspect</h3>
               <p className="kyna-pillar-desc">
-                Combines clean, human-friendly scripting syntax with the compile-time safety and guarantees of modern statically typed languages.
+                Print tokens, syntax trees, HIR, MIR, and bytecode directly from the CLI.
               </p>
-            </div>
-
-            <div className="kyna-pillar-item">
+            </article>
+            <article className="kyna-pillar-item">
               <div className="kyna-pillar-num">03</div>
-              <h4 className="kyna-pillar-title">Deterministic Error Handling</h4>
+              <h3 className="kyna-pillar-title">Run</h3>
               <p className="kyna-pillar-desc">
-                Unified exception propagation with structured diagnostic codes across both user code and runtime VM operations.
+                Execute scripts and projects through Kyna’s compiler and runtime pipeline.
               </p>
-            </div>
-
+            </article>
           </div>
         </section>
 
-        {/* Ready to Build Callout Section */}
         <section className="kyna-cta">
           <div className="kyna-cta__container">
-            <h2 className="kyna-cta__title">Start building with Kyna today</h2>
+            <h2 className="kyna-cta__title">Start with the first program</h2>
             <p className="kyna-cta__desc">
-              Explore the language tour, read the documentation, or clone the compiler repository to get started.
+              Install the preview CLI, create a project, and learn each language feature in order.
             </p>
             <div className="kyna-cta__actions">
-              <Link to="/docs/intro" className="kyna-btn kyna-btn--primary">
-                Explore the Docs
+              <Link to="/docs/tutorial/getting-started" className="kyna-btn kyna-btn--primary">
+                Open getting started
               </Link>
-              <Link to="/docs/tutorial/tour" className="kyna-btn kyna-btn--secondary">
-                Take the Language Tour
+              <Link to="/docs/examples" className="kyna-btn kyna-btn--secondary">
+                Browse examples
               </Link>
             </div>
           </div>
         </section>
-
       </div>
     </Layout>
   );

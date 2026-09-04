@@ -1,57 +1,58 @@
-# Kyna documentation site
+# Kyna documentation
 
-Modern, dark-minimal documentation for the
-[Kyna](https://github.com/Up-to-code/Kyma) programming language, built with
-[Docusaurus](https://docusaurus.io/).
+The source for the [Kyna documentation website](https://up-to-code.github.io/kyna-docs/),
+built with [Docusaurus](https://docusaurus.io/).
 
-It is deployed to GitHub Pages at
-**https://up-to-code.github.io/kyna-docs/** .
+## Work locally
 
-Highlights:
+Requires Node.js 20 or newer.
 
-- **Dark-first** theme with a subtle blue accent (no clutter, no purple).
-- **Real Kyna syntax highlighting** in every code block — a custom Prism
-  grammar that colors keywords, types, strings, numbers, comments, operators
-  and builtins like a visual editor (VS Code Dark token palette).
-- **Custom code viewer** — VS-style window chrome and themed scrollbars.
-- Landing page with a **split hero**: the language name and pitch on the left,
-  a colorful live Kyna syntax preview on the right.
-
-## Local development
-
-```bash
+```sh
 npm install
-npm start          # dev server with live reload at http://localhost:3000
+npm start
 ```
 
-## Build the static site
+The development server opens at `http://localhost:3000` and reloads when a page
+changes.
 
-```bash
-npm run build      # outputs the static site into build/
-npm run serve      # preview the production build
+## Verify a change
+
+```sh
+npm run build
+npm run serve
 ```
 
-## Deploy to GitHub Pages
+`npm run build` checks routes and produces the static site in `build/`.
 
-The repository includes `.github/workflows/docs.yml`, which builds and deploys
-automatically on every push to `main`.
+## Content structure
 
-Manual deploy (requires GitHub `gh` auth):
+```text
+docs/
+  intro.mdx       overview and learning paths
+  tutorial/       guided lessons
+  reference/      language behavior and APIs
+  stdlib/         standard-library modules
+  examples.mdx    practical recipes
+src/
+  pages/          landing page
+  components/     shared React components
+  css/            site theme and responsive layout
+```
 
-```bash
+Keep tutorials task-focused and explain one concept at a time. Put precise
+language behavior in `reference/`, and standard-library APIs in `stdlib/`.
+
+## Deployment
+
+Every push to `main` is built and deployed to GitHub Pages by
+`.github/workflows/docs.yml`.
+
+```sh
 npm run deploy
 ```
 
-## Content
+Manual deployment requires authenticated GitHub access.
 
-Documentation lives in `docs/`:
-
-- `tutorial/` — getting started, language tour, **modules & packages**;
-- `reference/` — bindings & types, control flow, functions, classes, exceptions,
-  async, and networking (`fetch`, `parseIP`);
-- `stdlib/` — text, collections (including queues), data formats, files (`copyFile`),
-  system (**slog**), timing & memory;
-- `examples.mdx` — recipes that match the `Kyma` repo's `examples/` folder.
-
-The site pulls no content from the compiler repo at build time; everything is
-authored directly here so the docs are simple, self-contained, and fast.
+The compiler and language implementation live in
+[Up-to-code/Kyna](https://github.com/Up-to-code/Kyna). The npm installer is
+[`@kyna-language/cli`](https://www.npmjs.com/package/@kyna-language/cli).

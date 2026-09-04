@@ -2,124 +2,94 @@
 sidebar_position: 1
 ---
 
-# Getting Started
+# Getting started
 
-This guide walks you through building the Kyna compiler, writing your first program, and running it with the CLI tools.
+Install Kyna, create a project, and run your first program.
 
----
+## 1. Install the CLI
 
-## 1. Prerequisites & Build
+Kyna is currently distributed through the official npm preview package. Node.js
+18 or newer is required for the installer and command shim.
 
-Kyna builds from source using CMake and any standard C++20 compiler (Clang, GCC, or MSVC).
-
-Clone the repository and build the debug binaries:
-
-```bash
-# Clone the compiler repository
-git clone https://github.com/Up-to-code/Kyma
-cd Kyma
-
-# Build the compiler and runtime
-cmake --build build-debug
+```sh
+npm install --global @kyna-language/cli@preview
+ky --version
 ```
 
-Once compilation completes, the main executable `ky` will be located at `build-debug/bin/ky`.
+The package installs the native compiler for your platform and exposes both
+`ky` and `kyna` commands.
 
----
+## 2. Create a project
 
-## 2. Compiler CLI Commands
+```sh
+ky new hello --template minimal
+cd hello
+```
 
-The `ky` CLI provides tools for executing programs, static type-checking, and inspecting intermediate compiler stages:
-
-| Command | Description | Example |
-| :--- | :--- | :--- |
-| `ky run <file-or-dir>` | Compiles and executes on the bytecode VM | `ky run main.kyna` or `ky run ./app` |
-| `ky check <file-or-dir>` | Static type checks without executing | `ky check main.kyna` or `ky check ./app` |
-| `ky tokens <file>` | Dumps the lexical token stream from the lexer | `ky tokens main.kyna` |
-| `ky ast <file>` | Prints the Abstract Syntax Tree representation | `ky ast main.kyna` |
-| `ky hir <file>` | Emits High-Level Intermediate Representation | `ky hir main.kyna` |
-| `ky mir <file>` | Emits Mid-Level Intermediate Representation | `ky mir main.kyna` |
-| `ky bytecode <file>` | Dumps compiled bytecode opcodes | `ky bytecode main.kyna` |
-
----
-
-## 3. Write Your First Program
-
-Create a file named `hello.kyna` in your workspace:
+You can also create a single file named `hello.kyna`:
 
 ```kyna
-# hello.kyna
-fn calculateQps(requests: int, seconds: int): int {
+fn calculateRate(total: int, seconds: int): int {
     if (seconds <= 0) {
         return 0;
     }
-    return requests / seconds;
+
+    return total / seconds;
 }
 
-const service = "auth-gateway";
-const totalRequests = 12000;
+const requests = 12000;
 const duration = 60;
-
-const qps = calculateQps(totalRequests, duration);
-
-print("Service:", service);
-print("Throughput:", qps, "req/s");
+print("Rate:", calculateRate(requests, duration), "req/s");
 ```
 
----
+## 3. Check and run
 
-## 4. Run the Program
-
-Execute your script using `ky run`:
-
-```bash
+```sh
+ky check hello.kyna
 ky run hello.kyna
 ```
 
-You should see the following console output:
+Expected output:
 
 ```text
-Service: auth-gateway
-Throughput: 200 req/s
+Rate: 200 req/s
 ```
 
----
+`ky check` reports type, binding, and control-flow problems without running the
+program. `ky run` checks and executes it.
 
-## 5. Validate with Static Type Checking
+## Essential commands
 
-Before running code, you can run static verification with `ky check`:
+| Command | Purpose |
+| --- | --- |
+| `ky new <name>` | Create a project |
+| `ky run <file-or-dir>` | Run a file or package |
+| `ky check <file-or-dir>` | Type-check without running |
+| `ky fmt <file-or-dir>` | Format source code |
+| `ky repl` | Open the interactive shell |
+| `ky doctor` | Check the installation |
+| `ky tokens`, `ast`, `hir`, `mir`, `bytecode` | Inspect compiler stages |
 
-```bash
-ky check hello.kyna
+A directory is a package. Its `*.kyna` files share one namespace, except files
+ending in `*_test.kyna`. Read [Modules and packages](/docs/tutorial/modules) for
+imports, exports, and package boundaries.
+
+## Build from source
+
+Use this path only when changing the compiler itself. It requires CMake 3.25+,
+Python 3.10+, a C++23 compiler, and libcurl.
+
+```sh
+git clone https://github.com/Up-to-code/Kyna.git
+cd Kyna
+cmake --preset debug
+cmake --build --preset debug
+ctest --preset debug
 ```
 
-If your code contains a type mismatch or invalid binding:
+## Continue learning
 
-```kyna
-# Example error
-const id: int = "invalid_id"; # Type error: expected 'int', got 'str'
-```
-
-The compiler outputs clear diagnostics pointing to the exact file, line, and column:
-
-```text
-error[TypeMismatch]: cannot assign expression of type 'str' to binding of type 'int'
-  --> hello.kyna:1:17
-   |
- 1 | const id: int = "invalid_id";
-   |                 ^^^^^^^^^^^^ expected 'int', found 'str'
-```
-
----
-
-A directory is a **package**: every `*.kyna` file in that folder (except `*_test.kyna`) shares one namespace. See **[Modules & Packages](/docs/tutorial/modules)**.
-
----
-
-## Next Steps
-
-Now that your environment is working:
-- Take **[The Language Tour](/docs/tutorial/tour)** to explore all language features.
-- Learn about **[Variables & Scoping](/docs/tutorial/variables)**.
-- Read about **[Static Types & Null Safety](/docs/tutorial/types)**.
-- Split code with **[Modules & Packages](/docs/tutorial/modules)**.
+1. Follow the [language tour](/docs/tutorial/tour).
+2. Learn [variables and bindings](/docs/tutorial/variables).
+3. Understand [types and nullability](/docs/tutorial/types).
+4. Split a project with [modules and packages](/docs/tutorial/modules).
