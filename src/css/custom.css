@@ -702,6 +702,29 @@ tr:nth-child(2n) {
   max-width: 100%;
 }
 
+.kyna-install-picker {
+  width: min(100%, 900px);
+}
+
+.kyna-install-picker__tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+}
+
+.kyna-install-picker .kyna-copybar {
+  display: flex;
+  width: 100%;
+}
+
+.kyna-install-picker__note {
+  color: var(--kyna-text-muted);
+  font-size: 0.8rem;
+  margin: 0.65rem 0 0;
+}
+
 .kyna-copybar__prefix {
   color: #818cf8;
   font-weight: 750;
@@ -739,6 +762,22 @@ tr:nth-child(2n) {
   display: inline-flex;
   align-items: center;
   color: #10b981;
+}
+
+@media (max-width: 640px) {
+  .kyna-copybar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 0.8rem;
+  }
+
+  .kyna-copybar__cmd {
+    flex: 1 1 calc(100% - 2rem);
+  }
+
+  .kyna-copybar__btn {
+    margin-left: 1.6rem;
+  }
 }
 
 /* Dots */

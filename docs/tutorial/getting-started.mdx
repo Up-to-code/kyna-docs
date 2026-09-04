@@ -19,6 +19,30 @@ ky --version
 The package installs the native compiler for your platform and exposes both
 `ky` and `kyna` commands.
 
+### Other installers
+
+With Bun, use `--trust` so it runs Kyna's native installation and checksum
+verification:
+
+```sh
+bun add --global --trust @kyna-language/cli@preview
+```
+
+macOS or Linux without a JavaScript package manager:
+
+```sh
+curl -fsSL https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3
+```
+
+Windows PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm 'https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3
+```
+
+The direct installers do not require Node.js. The Bun package path currently
+does because the published command shim uses Node.js.
+
 ## 2. Create a project
 
 ```sh

@@ -3,7 +3,34 @@ import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
 
-const INSTALL_COMMAND = 'npm install --global @kyna-language/cli@preview';
+const INSTALLERS = [
+  {
+    id: 'npm',
+    label: 'npm',
+    command: 'npm install --global @kyna-language/cli@preview',
+    note: 'Recommended. Requires Node.js 18 or newer.',
+  },
+  {
+    id: 'bun',
+    label: 'Bun',
+    command: 'bun add --global --trust @kyna-language/cli@preview',
+    note: 'The trust flag allows the checksum-verified native installation step.',
+  },
+  {
+    id: 'curl',
+    label: 'curl',
+    command:
+      'curl -fsSL https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3',
+    note: 'Direct installer for macOS and Linux. Node.js is not required.',
+  },
+  {
+    id: 'powershell',
+    label: 'PowerShell',
+    command:
+      "& ([scriptblock]::Create((irm 'https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3",
+    note: 'Direct installer for Windows x64. Node.js is not required.',
+  },
+];
 
 const FIRST_PROGRAM = `fn greet(name: str): str {
     return "Hello, " + name;
@@ -40,10 +67,12 @@ const LEARNING_PATHS = [
 ];
 
 export default function Home() {
+  const [activeInstaller, setActiveInstaller] = useState(0);
   const [copied, setCopied] = useState(false);
+  const installer = INSTALLERS[activeInstaller];
 
   const copyInstallCommand = async () => {
-    await navigator.clipboard.writeText(INSTALL_COMMAND);
+    await navigator.clipboard.writeText(installer.command);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
   };
@@ -80,17 +109,37 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="kyna-copybar">
-              <span className="kyna-copybar__prefix">$</span>
-              <span className="kyna-copybar__cmd">{INSTALL_COMMAND}</span>
-              <button
-                type="button"
-                className="kyna-copybar__btn"
-                onClick={copyInstallCommand}
-                aria-label="Copy npm installation command"
-              >
-                {copied ? 'Copied' : 'Copy'}
-              </button>
+            <div className="kyna-install-picker">
+              <div className="kyna-install-picker__tabs" role="tablist" aria-label="Install Kyna">
+                {INSTALLERS.map((option, index) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeInstaller === index}
+                    className={`kyna-tab-btn ${activeInstaller === index ? 'kyna-tab-btn--active' : ''}`}
+                    onClick={() => {
+                      setActiveInstaller(index);
+                      setCopied(false);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="kyna-copybar">
+                <span className="kyna-copybar__prefix">$</span>
+                <span className="kyna-copybar__cmd">{installer.command}</span>
+                <button
+                  type="button"
+                  className="kyna-copybar__btn"
+                  onClick={copyInstallCommand}
+                  aria-label={`Copy ${installer.label} installation command`}
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+              <p className="kyna-install-picker__note">{installer.note}</p>
             </div>
           </div>
         </section>
