@@ -41,24 +41,28 @@ print(greet(language));`;
 
 const LEARNING_PATHS = [
   {
+    number: '01',
     title: 'Install and run',
     description: 'Install the CLI, create a project, and run your first Kyna program.',
     label: 'Getting started',
     to: '/docs/tutorial/getting-started',
   },
   {
+    number: '02',
     title: 'Learn the language',
     description: 'Work through bindings, types, functions, modules, classes, and errors.',
     label: 'Language tour',
     to: '/docs/tutorial/tour',
   },
   {
+    number: '03',
     title: 'Find exact behavior',
     description: 'Use the reference for syntax, semantics, networking, and async behavior.',
     label: 'Language reference',
     to: '/docs/reference/bindings',
   },
   {
+    number: '04',
     title: 'Build with the library',
     description: 'Explore text, collections, files, formats, system tools, and timing APIs.',
     label: 'Standard library',
@@ -157,6 +161,7 @@ export default function Home() {
             <div className="kyna-bento-grid">
               {LEARNING_PATHS.map((path) => (
                 <article className="kyna-bento-card" key={path.to}>
+                  <span className="kyna-bento-card__number" aria-hidden="true">{path.number}</span>
                   <h3 className="kyna-bento-card__title">{path.title}</h3>
                   <p className="kyna-bento-card__desc">{path.description}</p>
                   <Link to={path.to}>{path.label} →</Link>

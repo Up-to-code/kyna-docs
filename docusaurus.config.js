@@ -157,8 +157,9 @@ const config = {
         },
         {
           href: 'https://www.npmjs.com/package/@kyna-language/cli',
-          label: 'npm',
           position: 'right',
+          className: 'header-npm-link',
+          'aria-label': 'Kyna CLI on npm',
         },
       ],
     },
