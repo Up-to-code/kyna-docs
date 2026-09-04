@@ -453,6 +453,35 @@ body,
   color: var(--kyna-text);
 }
 
+@media (max-width: 996px) {
+  .navbar-sidebar {
+    height: 100dvh !important;
+    background: var(--kyna-bg) !important;
+    border-right: 1px solid var(--kyna-border);
+  }
+
+  .navbar-sidebar__brand {
+    height: 60px;
+    border-bottom: 1px solid var(--kyna-border);
+  }
+
+  .navbar-sidebar__items {
+    height: calc(100dvh - 60px) !important;
+    background: var(--kyna-bg);
+  }
+
+  .navbar-sidebar__item {
+    height: 100% !important;
+    padding: 0.75rem;
+  }
+
+  .navbar-sidebar__backdrop {
+    background: rgba(2, 6, 23, 0.65);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+}
+
 /* ==========================================================================
    Documentation Styles & Typography
    ========================================================================== */
@@ -519,14 +548,18 @@ div[class*='docItemContainer'] {
   padding: 2.5rem 1rem 5rem !important;
 }
 
+.theme-doc-markdown hr {
+  display: none;
+}
+
 article header h1 {
   font-size: 2.25rem;
   font-weight: 750;
   letter-spacing: -0.03em;
   margin-bottom: 1.25rem;
   color: var(--kyna-text);
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--kyna-border);
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 article h2 {
@@ -535,8 +568,8 @@ article h2 {
   letter-spacing: -0.02em;
   margin-top: 2.25rem;
   margin-bottom: 0.85rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--kyna-border-subtle);
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 article h3 {
@@ -655,6 +688,21 @@ tr:nth-child(2n) {
   padding: 1.15rem 1.25rem;
   background: var(--kyna-editor-bg) !important;
   color: var(--kyna-editor-text);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--kyna-editor-bg);
+}
+
+.theme-code-block .prism-code::-webkit-scrollbar {
+  height: 6px;
+}
+
+.theme-code-block .prism-code::-webkit-scrollbar-track {
+  background: var(--kyna-editor-bg);
+}
+
+.theme-code-block .prism-code::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
 }
 
 .theme-code-block-highlighted-line {
@@ -818,9 +866,15 @@ tr:nth-child(2n) {
   margin-bottom: 2.5rem;
 }
 
+.kyna-hero__actions .kyna-btn {
+  min-width: 142px;
+}
+
 .kyna-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.65rem 1.35rem;
   font-size: 0.92rem;
   font-weight: 600;
@@ -828,6 +882,12 @@ tr:nth-child(2n) {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none !important;
   cursor: pointer;
+}
+
+.kyna-btn__icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }
 
 .kyna-btn--primary {
@@ -1441,10 +1501,6 @@ tr:nth-child(2n) {
 
   .kyna-hero__actions .kyna-btn {
     justify-content: center;
-  }
-
-  .kyna-hero__actions .kyna-btn--ghost {
-    grid-column: 1 / -1;
   }
 
   .kyna-install-picker .kyna-copybar__btn {
