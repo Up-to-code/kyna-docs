@@ -3,6 +3,11 @@
 The source for the [Kyna documentation website](https://up-to-code.github.io/kyna-docs/),
 built with [Docusaurus](https://docusaurus.io/).
 
+
+<p align="center">
+  <img src="./static/img/kyna-docs-home.png" alt="Kyna documentation homepage" width="100%">
+</p>
+
 ## Work locally
 
 Requires Node.js 20 or newer.
