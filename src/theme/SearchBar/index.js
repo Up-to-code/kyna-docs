@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import LocalSearchBar from '@easyops-cn/docusaurus-search-local/dist/client/client/theme/SearchBar/SearchBar';
+import {useLocation} from '@docusaurus/router';
 
 function SearchIcon() {
   return (
@@ -13,6 +14,12 @@ function SearchIcon() {
 export default function SearchBar() {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef(null);
+  const triggerRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     const handleShortcut = (event) => {
@@ -38,20 +45,42 @@ export default function SearchBar() {
     }
 
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement;
     document.body.style.overflow = 'hidden';
 
-    window.requestAnimationFrame(() => {
-      dialogRef.current?.querySelector('input')?.focus();
+    const frame = window.requestAnimationFrame(() => {
+      (dialogRef.current?.querySelector('input') || dialogRef.current)?.focus();
     });
 
+    function keepFocusInDialog(event) {
+      if (event.key !== 'Tab') return;
+      const elements = Array.from(dialogRef.current?.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex="0"]',
+      ) || []).filter((element) => element.getClientRects().length > 0);
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (!first) { event.preventDefault(); return; }
+      if (event.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault(); first.focus();
+      }
+    }
+    document.addEventListener('keydown', keepFocusInDialog);
+
     return () => {
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener('keydown', keepFocusInDialog);
       document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected && previousFocus !== document.body) previousFocus.focus();
+      else triggerRef.current?.focus();
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         className="kyna-command-trigger"
         aria-label="Search documentation"
@@ -79,6 +108,7 @@ export default function SearchBar() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="kyna-command-title"
+            tabIndex={-1}
             onClick={(event) => {
               if (event.target.closest('a')) {
                 setOpen(false);

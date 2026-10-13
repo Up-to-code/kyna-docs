@@ -1,0 +1,65 @@
+/* Typography and surfaces follow https://qentrah.com/. */
+html:root {
+  --ifm-font-family-base: 'Geist', Arial, sans-serif;
+  --ifm-font-family-monospace: 'Geist Mono', ui-monospace, monospace;
+  --ifm-heading-font-weight: 550;
+  --ifm-line-height-base: 1.7;
+  --ifm-code-font-size: 88%;
+  --ifm-color-primary: #141414;
+  --ifm-color-primary-dark: #101010;
+  --ifm-color-primary-darker: #0c0c0c;
+  --ifm-color-primary-darkest: #080808;
+  --ifm-color-primary-light: #292929;
+  --ifm-color-primary-lighter: #383838;
+  --ifm-color-primary-lightest: #484848;
+  --ifm-color-primary-contrast-foreground: #fff;
+  --kyna-bg: #fff;
+  --kyna-surface: #fafafa;
+  --kyna-surface-soft: #f2f2f2;
+  --kyna-border: #e5e5e5;
+  --kyna-text: #0a0a0a;
+  --kyna-text-muted: #666;
+  --ifm-background-color: var(--kyna-bg);
+  --ifm-background-surface-color: var(--kyna-surface);
+  --ifm-font-color-base: var(--kyna-text);
+  --ifm-navbar-background-color: var(--kyna-bg);
+  --ifm-footer-background-color: var(--kyna-bg);
+  --ifm-code-background: var(--kyna-surface-soft);
+  --ifm-toc-border-color: var(--kyna-border);
+  --ifm-table-border-color: var(--kyna-border);
+  --ifm-table-stripe-background: var(--kyna-surface);
+  --ifm-global-radius: 0.65rem;
+  --ifm-navbar-height: 4rem;
+  --ifm-navbar-shadow: none;
+  --ifm-link-decoration: underline;
+}
+html:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ifm-color-primary: #f5f5f5;
+  --ifm-color-primary-dark: #e5e5e5;
+  --ifm-color-primary-darker: #d4d4d4;
+  --ifm-color-primary-darkest: #c4c4c4;
+  --ifm-color-primary-light: #fafafa;
+  --ifm-color-primary-lighter: #fdfdfd;
+  --ifm-color-primary-lightest: #fff;
+  --ifm-color-primary-contrast-foreground: #080808;
+  --kyna-bg: #080808;
+  --kyna-surface: #121212;
+  --kyna-surface-soft: #1a1a1a;
+  --kyna-border: #292929;
+  --kyna-text: #f5f5f5;
+  --kyna-text-muted: #a3a3a3;
+  --ifm-background-color: var(--kyna-bg);
+  --ifm-background-surface-color: var(--kyna-surface);
+  --ifm-table-stripe-background: var(--kyna-surface);
+  --ifm-code-background: var(--kyna-surface-soft);
+}
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { letter-spacing: -0.035em; }
+button, a, input, summary, [tabindex] { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid #0098ff; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

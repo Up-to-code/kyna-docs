@@ -1,0 +1,63 @@
+/* Landing page and verified applications, using Qentrah's quiet layout. */
+.kyna-home-section { padding: 5rem 1.5rem; border-bottom: 1px solid var(--kyna-border); }
+.kyna-container { max-width: 1120px; margin: 0 auto; }
+.kyna-hero { padding-block: 7rem 5rem; text-align: center; }
+.kyna-eyebrow { display: inline-block; font-size: 0.8rem; color: var(--kyna-text-muted); margin-bottom: 1.25rem; }
+.kyna-hero h1 { max-width: 950px; margin: 0 auto 1.5rem; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.08; font-weight: 500; letter-spacing: -0.055em; text-wrap: balance; }
+.kyna-hero h1 span { display: block; }
+.kyna-hero p { max-width: 650px; margin: 0 auto 2rem; font-size: 1.1rem; color: var(--kyna-text-muted); text-wrap: balance; }
+.kyna-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+.kyna-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.6rem 1.25rem; border: 1px solid var(--kyna-border); border-radius: 99px; background: var(--kyna-surface); color: var(--kyna-text); font-weight: 500; font-size: 0.9rem; text-decoration: none; cursor: pointer; }
+.kyna-button:hover { color: var(--kyna-text); background: var(--kyna-surface-soft); text-decoration: none; }
+.kyna-button--primary { background: var(--kyna-text); border-color: var(--kyna-text); color: var(--kyna-bg); }
+.kyna-button--primary:hover { background: var(--kyna-text); color: var(--kyna-bg); opacity: 0.88; }
+.kyna-install { max-width: 790px; margin: 2.5rem auto 0; text-align: left; }
+.kyna-install-options { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.65rem; }
+.kyna-install-options button { min-height: 44px; border: 1px solid transparent; border-radius: 99px; padding: 0.5rem 1rem; background: transparent; color: var(--kyna-text-muted); font: inherit; font-size: 0.85rem; cursor: pointer; }
+.kyna-install-options button[aria-pressed='true'] { border-color: var(--kyna-border); background: var(--kyna-surface-soft); color: var(--kyna-text); }
+.kyna-install-command { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; border: 1px solid var(--kyna-border); border-radius: 0.9rem; background: var(--kyna-surface); }
+.kyna-install-command code { display: block; flex: 1; min-width: 0; padding: 0; border: 0; background: none; color: var(--kyna-text); overflow-x: auto; white-space: nowrap; font-size: 0.83rem; }
+.kyna-install-command button { flex-shrink: 0; min-height: 44px; padding: 0.4rem 0.9rem; background: var(--kyna-surface-soft); color: var(--kyna-text); border: 1px solid var(--kyna-border); border-radius: 99px; cursor: pointer; }
+.kyna-install .kyna-install-note { color: var(--kyna-text-muted); font-size: 0.8rem; margin: 0.7rem 0 0; max-width: none; }
+.kyna-section-heading { margin-bottom: 2rem; }
+.kyna-section-heading h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 500; margin-bottom: 0.7rem; }
+.kyna-section-heading p { color: var(--kyna-text-muted); max-width: 700px; margin: 0; }
+.kyna-app-feature { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(250px, 1fr); gap: 2.5rem; align-items: center; margin-bottom: 2.5rem; }
+.kyna-app-feature h3 { font-size: 1.8rem; font-weight: 500; }
+.kyna-app-feature p { color: var(--kyna-text-muted); }
+.kyna-app-feature .kyna-actions { justify-content: flex-start; }
+.kyna-app-image, .kyna-app-video { width: 100%; height: auto; display: block; border: 1px solid var(--kyna-border); border-radius: 0.9rem; }
+.kyna-app-media { margin: 0 0 1.5rem; }
+.kyna-app-media figcaption { margin-top: 0.6rem; color: var(--kyna-text-muted); font-size: 0.8rem; }
+.kyna-app-table-scroll { overflow-x: auto; width: 100%; border: 1px solid var(--kyna-border); border-radius: 0.8rem; }
+.kyna-app-table-hint { display: none; }
+.kyna-app-table { display: table; border-collapse: collapse; margin: 0; width: 100%; min-width: 620px; font-size: 0.86rem; }
+.kyna-app-table th { background: var(--kyna-surface); color: var(--kyna-text-muted); font-weight: 500; white-space: nowrap; }
+.kyna-app-table th, .kyna-app-table td { border: 0; border-bottom: 1px solid var(--kyna-border); padding: 1.1rem; text-align: left; vertical-align: top; }
+.kyna-app-table tbody tr:last-child td { border-bottom: 0; }
+.kyna-app-table tr { background: none; border: 0; }
+.kyna-app-table tbody tr:nth-child(n) { background: transparent; }
+.kyna-app-table td:first-child { min-width: 165px; }
+.kyna-app-table td p { margin: 0.35rem 0 0; color: var(--kyna-text-muted); font-size: 0.78rem; }
+.kyna-app-table a { color: var(--kyna-text); text-decoration: underline; text-underline-offset: 0.2em; }
+.kyna-learning-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.kyna-learning-card { padding: 1.5rem; border: 1px solid var(--kyna-border); border-radius: 0.9rem; background: var(--kyna-surface); }
+.kyna-learning-card h3 { font-weight: 550; font-size: 1.2rem; }
+.kyna-learning-card p { color: var(--kyna-text-muted); font-size: 0.9rem; }
+.kyna-learning-card a { font-size: 0.9rem; text-underline-offset: 0.2em; }
+.kyna-first-program { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+.kyna-first-program .theme-code-block { margin: 0; }
+.kyna-first-program p { color: var(--kyna-text-muted); }
+.kyna-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 850px) {
+  .kyna-app-table-hint { display: block; font-size: 0.8rem; color: var(--kyna-text-muted); }
+  .kyna-app-feature, .kyna-first-program { grid-template-columns: 1fr; gap: 1.5rem; }
+  .kyna-learning-grid { grid-template-columns: 1fr; }
+  .kyna-home-section { padding: 3.5rem 1.25rem; }
+  .kyna-hero { padding-block: 4.5rem 3.5rem; }
+}
+@media (max-width: 500px) {
+  .kyna-install-command { flex-wrap: wrap; }
+  .kyna-install-command code { flex-basis: 100%; }
+  .kyna-hero h1 { font-size: 2.75rem; }
+}

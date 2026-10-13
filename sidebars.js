@@ -12,6 +12,7 @@ const sidebars = {
         'tutorial/getting-started',
         'tutorial/tour',
         'examples',
+        'built-with-kyna',
       ],
     },
     {
@@ -44,6 +45,12 @@ const sidebars = {
         'reference/async',
         'reference/networking',
       ],
+    },
+    {
+      type: 'category',
+      label: 'Native libraries',
+      collapsed: false,
+      items: ['libraries/native'],
     },
     {
       type: 'category',

@@ -2,259 +2,130 @@ import React, {useState} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
+import {AppsTable, MusicImage} from '@site/src/components/BuiltWithKyna';
 
 const INSTALLERS = [
-  {
-    id: 'npm',
-    label: 'npm',
-    command: 'npm install --global @kyna-language/cli@preview',
-    note: 'Recommended. Requires Node.js 18 or newer.',
-  },
-  {
-    id: 'bun',
-    label: 'Bun',
-    command: 'bun add --global --trust @kyna-language/cli@preview',
-    note: 'The trust flag allows the checksum-verified native installation step.',
-  },
-  {
-    id: 'curl',
-    label: 'curl',
-    command:
-      'curl -fsSL https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3',
-    note: 'Direct installer for macOS and Linux. Node.js is not required.',
-  },
-  {
-    id: 'powershell',
-    label: 'PowerShell',
-    command:
-      "& ([scriptblock]::Create((irm 'https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3",
-    note: 'Direct installer for Windows x64. Node.js is not required.',
-  },
+  {label: 'npm', command: 'npm install --global @kyna-language/cli@preview', note: 'Install the published preview. Requires Node.js 18 or newer.'},
+  {label: 'Bun', command: 'bun add --global --trust @kyna-language/cli@preview', note: 'Allow the checksum-verified native installation step.'},
+  {label: 'curl', command: 'curl -fsSL https://github.com/qentrah/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3', note: 'Published preview for macOS and Linux. Node.js is not required.'},
+  {label: 'PowerShell', command: "& ([scriptblock]::Create((irm 'https://github.com/qentrah/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3", note: 'Published preview for Windows x64. Node.js is not required.'},
 ];
 
-const FIRST_PROGRAM = `fn greet(name: str): str {
-    return "Hello, " + name;
-}
+const FIRST_PROGRAM = [
+  'fn greet(name: str): str {',
+  '    return "Hello, " + name;',
+  '}',
+  '',
+  'const language = "Kyna";',
+  'console.log(greet(language));',
+].join('\n');
 
-const language = "Kyna";
-print(greet(language));`;
-
-const LEARNING_PATHS = [
-  {
-    number: '01',
-    title: 'Install and run',
-    description: 'Install the CLI, create a project, and run your first Kyna program.',
-    label: 'Getting started',
-    to: '/docs/tutorial/getting-started',
-  },
-  {
-    number: '02',
-    title: 'Learn the language',
-    description: 'Work through bindings, types, functions, modules, classes, and errors.',
-    label: 'Language tour',
-    to: '/docs/tutorial/tour',
-  },
-  {
-    number: '03',
-    title: 'Find exact behavior',
-    description: 'Use the reference for syntax, semantics, networking, and async behavior.',
-    label: 'Language reference',
-    to: '/docs/reference/bindings',
-  },
-  {
-    number: '04',
-    title: 'Build with the library',
-    description: 'Explore text, collections, files, formats, system tools, and timing APIs.',
-    label: 'Standard library',
-    to: '/docs/stdlib/text',
-  },
+const PATHS = [
+  {title: 'Start with the language', description: 'Install Kyna, write a small program, and learn types, functions and modules.', to: '/docs/tutorial/getting-started', label: 'Getting started'},
+  {title: 'Build a native app', description: 'Connect Kyna behavior to GUI, geometry and machine-learning packages.', to: '/docs/libraries/native', label: 'Native libraries'},
+  {title: 'Find an exact answer', description: 'Read the syntax, control-flow rules and standard-library reference.', to: '/docs/reference/bindings', label: 'Language reference'},
 ];
 
 export default function Home() {
   const [activeInstaller, setActiveInstaller] = useState(0);
-  const [copied, setCopied] = useState(false);
+  const [copyMessage, setCopyMessage] = useState('');
   const installer = INSTALLERS[activeInstaller];
 
-  const copyInstallCommand = async () => {
-    await navigator.clipboard.writeText(installer.command);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
-  };
+  async function copyInstallCommand() {
+    try {
+      await navigator.clipboard.writeText(installer.command);
+      setCopyMessage(installer.label + ' command copied.');
+    } catch {
+      setCopyMessage('Copy unavailable. Select and copy the command above.');
+    }
+  }
 
   return (
-    <Layout
-      title="Kyna programming language"
-      description="Learn Kyna, a statically typed language with an inspectable compiler and native CLI."
-    >
-      <div className="kyna-landing">
-        <section className="kyna-hero">
-          <div className="kyna-hero__container">
-            <span className="kyna-section-kicker">Kyna programming language</span>
-            <h1 className="kyna-hero__title">Readable code. Explicit types. One practical CLI.</h1>
-            <p className="kyna-hero__subtitle">
-              Learn the language, run examples, and inspect every compiler stage—from source
-              tokens to HIR, MIR, bytecode, and the virtual machine.
-            </p>
-
-            <div className="kyna-hero__actions">
-              <Link to="/docs/tutorial/getting-started" className="kyna-btn kyna-btn--primary">
-                Get started
-              </Link>
-              <a
-                href="https://github.com/Up-to-code/Kyna"
-                target="_blank"
-                rel="noreferrer"
-                className="kyna-btn kyna-btn--secondary"
-              >
-                <svg className="kyna-btn__icon" aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.58 2 12.23c0 4.52 2.87 8.35 6.84 9.71.5.09.68-.22.68-.49v-1.9c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.64-1.36-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.4 9.4 0 0 1 12 6.8c.85 0 1.71.12 2.5.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.93-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9v2.97c0 .27.18.59.69.49A10.24 10.24 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z" />
-                </svg>
-                GitHub
-              </a>
-            </div>
-
-            <div className="kyna-install-picker">
-              <div className="kyna-install-picker__tabs" role="tablist" aria-label="Install Kyna">
-                {INSTALLERS.map((option, index) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeInstaller === index}
-                    className={`kyna-tab-btn ${activeInstaller === index ? 'kyna-tab-btn--active' : ''}`}
-                    onClick={() => {
-                      setActiveInstaller(index);
-                      setCopied(false);
-                    }}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-              <div className="kyna-copybar">
-                <span className="kyna-copybar__prefix">$</span>
-                <span className="kyna-copybar__cmd">{installer.command}</span>
-                <button
-                  type="button"
-                  className="kyna-copybar__btn"
-                  onClick={copyInstallCommand}
-                  aria-label={`Copy ${installer.label} installation command`}
-                >
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-              </div>
-              <p className="kyna-install-picker__note">{installer.note}</p>
-            </div>
+    <Layout title="Build with Kyna" description="Learn Kyna and explore real applications built with its typed compiler, CLI and native libraries.">
+      <section className="kyna-home-section kyna-hero">
+        <div className="kyna-container">
+          <span className="kyna-eyebrow">Kyna · a Qentrah language</span>
+          <h1>One language.<span>From idea to application.</span></h1>
+          <p>Write readable, typed code. Build real applications with Kyna's compiler,
+            practical CLI and native libraries.</p>
+          <div className="kyna-actions">
+            <Link to="/docs/tutorial/getting-started" className="kyna-button kyna-button--primary">Start building ↗</Link>
+            <Link to="/docs/built-with-kyna" className="kyna-button">Explore Kyna apps</Link>
           </div>
-        </section>
-
-        <section className="kyna-bento-section">
-          <div className="kyna-bento__container">
-            <div className="kyna-section-header">
-              <span className="kyna-section-kicker">Documentation</span>
-              <h2 className="kyna-section-title">Choose a clear path</h2>
-              <p className="kyna-section-desc">
-                Start with a guided lesson, or go directly to the reference you need.
-              </p>
-            </div>
-
-            <div className="kyna-bento-grid">
-              {LEARNING_PATHS.map((path) => (
-                <article className="kyna-bento-card" key={path.to}>
-                  <span className="kyna-bento-card__number" aria-hidden="true">{path.number}</span>
-                  <h3 className="kyna-bento-card__title">{path.title}</h3>
-                  <p className="kyna-bento-card__desc">{path.description}</p>
-                  <Link to={path.to}>{path.label} →</Link>
-                </article>
+          <div className="kyna-install">
+            <div className="kyna-install-options" role="group" aria-label="Installation method">
+              {INSTALLERS.map((option, index) => (
+                <button key={option.label} type="button" aria-pressed={activeInstaller === index}
+                  onClick={() => {setActiveInstaller(index); setCopyMessage('');}}>
+                  {option.label}
+                </button>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="kyna-playground-section">
-          <div className="kyna-playground__container">
-            <div className="kyna-section-header">
-              <span className="kyna-section-kicker">Language</span>
-              <h2 className="kyna-section-title">Small syntax, visible behavior</h2>
-              <p className="kyna-section-desc">
-                Types can be inferred or written explicitly. State is mutable only when declared
-                with <code>var</code>; <code>const</code> bindings stay immutable.
-              </p>
+            <div className="kyna-install-command">
+              <code>{installer.command}</code>
+              <button type="button" onClick={copyInstallCommand} aria-label={'Copy ' + installer.label + ' installation command'}>Copy</button>
             </div>
+            <p className="kyna-install-note">{installer.note} Native app features use the current source build.</p>
+            <span role="status" className="kyna-install-note">{copyMessage}</span>
+          </div>
+        </div>
+      </section>
 
-            <div className="kyna-interactive-card">
-              <div className="kyna-tab-bar">
-                <div className="kyna-tab-bar__dots" aria-hidden="true">
-                  <span className="dot dot--red" />
-                  <span className="dot dot--yellow" />
-                  <span className="dot dot--green" />
-                </div>
-                <span className="kyna-tab-btn kyna-tab-btn--active">hello.kyna</span>
-                <span className="kyna-tab-bar__badge">Kyna</span>
-              </div>
-
-              <div className="kyna-interactive-card__body">
-                <div className="kyna-interactive-card__editor">
-                  <CodeBlock language="kyna">{FIRST_PROGRAM}</CodeBlock>
-                </div>
-                <div className="kyna-interactive-card__sidebar">
-                  <span className="kyna-interactive-card__pill">First program</span>
-                  <h3 className="kyna-interactive-card__heading">Run it with one command</h3>
-                  <p className="kyna-interactive-card__text">
-                    Save the example as <code>hello.kyna</code>, then run
-                    <code> ky run hello.kyna</code>. Use <code>ky check</code> to type-check
-                    without executing.
-                  </p>
-                  <Link to="/docs/tutorial/getting-started">Follow the tutorial →</Link>
-                </div>
+      <section className="kyna-home-section" aria-labelledby="built-with-kyna">
+        <div className="kyna-container">
+          <div className="kyna-section-heading">
+            <span className="kyna-eyebrow">Built with Kyna</span>
+            <h2 id="built-with-kyna">The language, in real applications.</h2>
+            <p>Application logic in Kyna. Native libraries for the work around it.
+              Follow the source, run the examples, and see how the pieces fit.</p>
+          </div>
+          <div className="kyna-app-feature">
+            <Link to="/docs/built-with-kyna" aria-label="See how Kyna Music is built"><MusicImage /></Link>
+            <div>
+              <span className="kyna-eyebrow">Featured application</span>
+              <h3>Kyna Music</h3>
+              <p>A native desktop player for your own music. Search, build playlists,
+                queue tracks, shuffle and repeat. The application behavior runs in Kyna.</p>
+              <p>Verified on Windows x64, Linux x64 and macOS ARM64.</p>
+              <div className="kyna-actions">
+                <Link to="/docs/built-with-kyna" className="kyna-button kyna-button--primary">How it is built ↗</Link>
+                <a href="https://github.com/qentrah/kyna-music" className="kyna-button">Source code</a>
               </div>
             </div>
           </div>
-        </section>
+          <AppsTable />
+        </div>
+      </section>
 
-        <section className="kyna-pillars-section">
-          <div className="kyna-pillars__container">
-            <article className="kyna-pillar-item">
-              <div className="kyna-pillar-num">01</div>
-              <h3 className="kyna-pillar-title">Check</h3>
-              <p className="kyna-pillar-desc">
-                Validate bindings, types, nullability, calls, and control flow before execution.
-              </p>
-            </article>
-            <article className="kyna-pillar-item">
-              <div className="kyna-pillar-num">02</div>
-              <h3 className="kyna-pillar-title">Inspect</h3>
-              <p className="kyna-pillar-desc">
-                Print tokens, syntax trees, HIR, MIR, and bytecode directly from the CLI.
-              </p>
-            </article>
-            <article className="kyna-pillar-item">
-              <div className="kyna-pillar-num">03</div>
-              <h3 className="kyna-pillar-title">Run</h3>
-              <p className="kyna-pillar-desc">
-                Execute scripts and projects through Kyna’s compiler and runtime pipeline.
-              </p>
-            </article>
+      <section className="kyna-home-section" aria-labelledby="learn-kyna">
+        <div className="kyna-container">
+          <div className="kyna-section-heading">
+            <span className="kyna-eyebrow">Documentation</span>
+            <h2 id="learn-kyna">Choose your next step.</h2>
           </div>
-        </section>
+          <div className="kyna-learning-grid">
+            {PATHS.map((path) => (
+              <article className="kyna-learning-card" key={path.to}>
+                <h3>{path.title}</h3><p>{path.description}</p>
+                <Link to={path.to}>{path.label} →</Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <section className="kyna-cta">
-          <div className="kyna-cta__container">
-            <h2 className="kyna-cta__title">Start with the first program</h2>
-            <p className="kyna-cta__desc">
-              Install the preview CLI, create a project, and learn each language feature in order.
-            </p>
-            <div className="kyna-cta__actions">
-              <Link to="/docs/tutorial/getting-started" className="kyna-btn kyna-btn--primary">
-                Open getting started
-              </Link>
-              <Link to="/docs/examples" className="kyna-btn kyna-btn--secondary">
-                Browse examples
-              </Link>
-            </div>
+      <section className="kyna-home-section" aria-labelledby="first-program">
+        <div className="kyna-container kyna-first-program">
+          <div className="kyna-section-heading">
+            <span className="kyna-eyebrow">First program</span>
+            <h2 id="first-program">Readable code. Visible behavior.</h2>
+            <p>Save the example as <code>hello.kyna</code> and run <code>ky run hello.kyna</code>.
+              Check types before execution with <code>ky check hello.kyna</code>.</p>
+            <Link to="/docs/tutorial/tour">Take the language tour →</Link>
           </div>
-        </section>
-      </div>
+          <CodeBlock language="kyna" title="hello.kyna">{FIRST_PROGRAM}</CodeBlock>
+        </div>
+      </section>
     </Layout>
   );
 }

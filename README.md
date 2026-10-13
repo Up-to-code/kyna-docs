@@ -5,7 +5,7 @@ built with [Docusaurus](https://docusaurus.io/).
 
 
 <p align="center">
-  <img src="./static/img/kyna-docs-home.png" alt="Kyna documentation homepage" width="100%">
+  <img src="./static/img/docs-home-qentrah.jpg" alt="Kyna documentation with the current Qentrah theme" width="100%">
 </p>
 
 ## Work locally
@@ -38,6 +38,8 @@ docs/
   reference/      language behavior and APIs
   stdlib/         standard-library modules
   examples.mdx    practical recipes
+  built-with-kyna.mdx  application gallery and build tour
+  libraries/      optional native GUI, geometry and ML packages
 src/
   pages/          landing page
   components/     shared React components
@@ -59,5 +61,12 @@ npm run deploy
 Manual deployment requires authenticated GitHub access.
 
 The compiler and language implementation live in
-[Up-to-code/Kyna](https://github.com/Up-to-code/Kyna). The npm installer is
+[qentrah/Kyna](https://github.com/qentrah/Kyna). The npm installer is
 [`@kyna-language/cli`](https://www.npmjs.com/package/@kyna-language/cli).
+## Brand and media
+
+The theme follows [Qentrah](https://qentrah.com/): Geist typography, neutral surfaces and the current Qentrah mark. Light and dark marks replace the former purple K logo. Actual Kyna Music screenshots and its silent walkthrough are copied from the [application repository](https://github.com/qentrah/kyna-music); original app assets are CC0. No Spotify images or recordings are shipped.
+
+## Design verification
+
+Production builds and route checks pass. The theme was inspected in light/dark mode and at a 390-pixel mobile width; navigation, app-table scrolling, installer copying, search results/focus/closure and actual video playback were verified. Rams quick_review was requested with via set to rules, but the workspace has exhausted its one-time credits and returned no findings. This is not a Rams approval.
