@@ -70,3 +70,7 @@ The theme follows [Qentrah](https://qentrah.com/): Geist typography, neutral sur
 ## Design verification
 
 Production builds and route checks pass. The theme was inspected in light/dark mode and at a 390-pixel mobile width; navigation, app-table scrolling, installer copying, search results/focus/closure and actual video playback were verified. Rams quick_review was requested with via set to rules, but the workspace has exhausted its one-time credits and returned no findings. This is not a Rams approval.
+
+## Project links
+
+[Source](https://github.com/Up-to-code/kyna-docs) · [Issues](https://github.com/Up-to-code/kyna-docs/issues) · [Public project directory](https://github.com/qentrah/.github/blob/main/profile/PROJECTS.md)
