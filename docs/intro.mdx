@@ -11,7 +11,7 @@ tree-walk compatibility engine.
 
 :::note Preview status
 Kyna is under active development. Check the
-[implementation status](https://github.com/Up-to-code/Kyna/blob/main/docs/implementation-status.md)
+[implementation status](https://github.com/qentrah/Kyna/blob/main/docs/implementation-status.md)
 before using it in production.
 :::
 
@@ -38,13 +38,13 @@ bun add --global --trust @kyna-language/cli@preview
 Install directly on macOS or Linux without Node.js:
 
 ```sh
-curl -fsSL https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3
+curl -fsSL https://github.com/qentrah/Kyna/releases/download/v1.0.0-preview.3/install.sh | sh -s -- --channel preview --version 1.0.0-preview.3
 ```
 
 Install directly with Windows PowerShell:
 
 ```powershell
-& ([scriptblock]::Create((irm 'https://github.com/Up-to-code/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3
+& ([scriptblock]::Create((irm 'https://github.com/qentrah/Kyna/releases/download/v1.0.0-preview.3/install.ps1'))) -Channel preview -Version 1.0.0-preview.3
 ```
 
 The Bun package path currently requires Node.js 18+ for the command shim. The
@@ -113,6 +113,10 @@ The `ky` CLI exposes the compilation pipeline instead of hiding it:
 | MIR | `ky mir app.kyna` |
 | Bytecode | `ky bytecode app.kyna` |
 | Execution | `ky run app.kyna` |
+
+## Build real applications
+
+Kyna Music uses Kyna for navigation, search, playlists, queues and playback decisions. A typed Qt adapter supplies native presentation and audio. Browse the [applications table and build tour](/docs/built-with-kyna), or start with [GUI, geometry and ML packages](/docs/libraries/native).
 
 ## Choose your next step
 

@@ -4,8 +4,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Kyna',
-  tagline: 'A statically typed language with an inspectable compiler',
-  favicon: 'img/logo.svg',
+  tagline: 'Build real applications with Kyna',
+  favicon: 'img/favicon.svg',
 
   url: 'https://up-to-code.github.io',
   baseUrl: '/kyna-docs/',
@@ -33,7 +33,7 @@ const config = {
       tagName: 'link',
       attributes: {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap',
       },
     },
   ],
@@ -91,112 +91,42 @@ const config = {
     navbar: {
       title: 'Kyna',
       logo: {
-        alt: 'Kyna Logo',
+        alt: 'Qentrah mark',
         src: 'img/logo.svg',
-        width: 26,
-        height: 26,
+        srcDark: 'img/logo-dark.svg',
+        width: 30,
+        height: 30,
       },
       items: [
-        {
-          type: 'docSidebar',
-          sidebarId: 'docs',
-          position: 'left',
-          label: 'Documentation',
-        },
-        {
-          type: 'dropdown',
-          label: 'Learn',
-          position: 'left',
-          items: [
-            {label: 'Getting started', to: '/docs/tutorial/getting-started'},
-            {label: 'Language tour', to: '/docs/tutorial/tour'},
-            {label: 'Modules & imports', to: '/docs/tutorial/modules'},
-          ],
-        },
-        {
-          type: 'dropdown',
-          label: 'Reference',
-          position: 'left',
-          items: [
-            {label: 'Bindings & types', to: '/docs/reference/bindings'},
-            {label: 'Control flow & matching', to: '/docs/reference/control-flow'},
-            {label: 'Functions & closures', to: '/docs/reference/functions'},
-            {label: 'Classes & objects', to: '/docs/reference/classes-and-objects'},
-            {label: 'Exceptions & errors', to: '/docs/reference/exceptions'},
-            {label: 'Async & concurrency', to: '/docs/reference/async'},
-            {label: 'Networking & HTTP', to: '/docs/reference/networking'},
-          ],
-        },
-        {
-          type: 'dropdown',
-          label: 'Library',
-          position: 'left',
-          items: [
-            {label: 'Text', to: '/docs/stdlib/text'},
-            {label: 'Collections', to: '/docs/stdlib/collections'},
-            {label: 'Files', to: '/docs/stdlib/files'},
-            {label: 'System', to: '/docs/stdlib/system'},
-            {label: 'Data formats', to: '/docs/stdlib/data-formats'},
-            {label: 'Timing & memory', to: '/docs/stdlib/timing-and-memory'},
-          ],
-        },
-        {
-          to: '/docs/examples',
-          label: 'Examples',
-          position: 'left',
-        },
-        {
-          type: 'search',
-          position: 'right',
-        },
-        {
-          href: 'https://github.com/Up-to-code/Kyna',
-          position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub repository',
-        },
-        {
-          href: 'https://www.npmjs.com/package/@kyna-language/cli',
-          position: 'right',
-          className: 'header-npm-link',
-          'aria-label': 'Kyna CLI on npm',
-        },
+        {type: 'docSidebar', sidebarId: 'docs', position: 'left', label: 'Guide'},
+        {to: '/docs/libraries/native', label: 'Libraries', position: 'left'},
+        {to: '/docs/built-with-kyna', label: 'Built with Kyna', position: 'left'},
+        {href: 'https://qentrah.com/', label: 'Qentrah', position: 'right'},
+        {type: 'search', position: 'right'},
+        {href: 'https://github.com/qentrah/Kyna', position: 'right', className: 'header-github-link', 'aria-label': 'Kyna on GitHub'},
+        {href: 'https://www.npmjs.com/package/@kyna-language/cli', position: 'right', className: 'header-npm-link', 'aria-label': 'Kyna CLI on npm'},
       ],
     },
     footer: {
       style: 'dark',
       links: [
-        {
-          title: 'Learn',
-          items: [
-            {label: 'Introduction', to: '/docs/intro'},
-            {label: 'Language Tour', to: '/docs/tutorial/tour'},
-            {label: 'Getting Started', to: '/docs/tutorial/getting-started'},
-          ],
-        },
-        {
-          title: 'Reference',
-          items: [
-            {label: 'Bindings & Types', to: '/docs/reference/bindings'},
-            {label: 'Standard Library', to: '/docs/stdlib/text'},
-            {label: 'Networking API', to: '/docs/reference/networking'},
-          ],
-        },
-        {
-          title: 'Community & Code',
-          items: [
-            {
-              label: 'GitHub Repository',
-              href: 'https://github.com/Up-to-code/Kyna',
-            },
-            {
-              label: 'Issue Tracker',
-              href: 'https://github.com/Up-to-code/Kyna/issues',
-            },
-          ],
-        },
+        {title: 'Learn', items: [
+          {label: 'Introduction', to: '/docs/intro'},
+          {label: 'Language tour', to: '/docs/tutorial/tour'},
+          {label: 'Getting started', to: '/docs/tutorial/getting-started'},
+        ]},
+        {title: 'Build', items: [
+          {label: 'Native libraries', to: '/docs/libraries/native'},
+          {label: 'Built with Kyna', to: '/docs/built-with-kyna'},
+          {label: 'Kyna Music source', href: 'https://github.com/qentrah/kyna-music'},
+        ]},
+        {title: 'Qentrah', items: [
+          {label: 'Projects, tools & ideas', href: 'https://qentrah.com/'},
+          {label: 'Kyna source', href: 'https://github.com/qentrah/Kyna'},
+          {label: 'Report an issue', href: 'https://github.com/qentrah/Kyna/issues'},
+        ]},
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kyna Language Contributors. Built with Docusaurus.`,
+      copyright: 'Kyna by Ahmed Mansour · Qentrah. Documentation built with Docusaurus.',
     },
     prism: {
       theme: prismThemes.github,

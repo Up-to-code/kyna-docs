@@ -3,6 +3,7 @@ name: Deploy Kyna documentation
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -32,6 +33,7 @@ jobs:
           path: build
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:

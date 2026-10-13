@@ -1,0 +1,99 @@
+---
+title: Native libraries
+description: Build GUI, geometry and machine-learning applications with Kyna's optional typed C++ packages.
+---
+
+# Native libraries
+
+Kyna keeps application code in Kyna and connects it to C++ libraries through typed C ABI 2 packages. The same export contracts serve static checking and runtime registration. Callbacks retain Kyna values; resources use opaque handles with checked lifetimes.
+
+:::note Current source build
+These APIs belong to the prepared 1.0.16 upgrade. Its release and npm publication remain pending. Build the current [Kyna source](https://github.com/qentrah/Kyna) to use them; the published preview installer is a separate version.
+:::
+
+| Package | Native implementation | Kyna APIs |
+| --- | --- | --- |
+| `gui` | Qt Quick | Windows, text, buttons, inputs, row/column layouts, drawing, timers, callbacks, icons and lifecycle. |
+| `geometry` | CGAL | 2D predicates, intersections and hulls; OFF triangle meshes, topology checks, bounds, area and volume. |
+| `ml` | mlpack | Linear-regression training and prediction through typed arrays and model handles. |
+
+See [applications built with Kyna](/docs/built-with-kyna) for the desktop player and runnable examples.
+
+## Build optional packages
+
+Install the development dependencies for the packages you enable. The [dependency inventory](https://github.com/qentrah/Kyna/blob/main/docs/native-dependencies.md) records the versions, build setup and package-specific licenses. Qt, CGAL and mlpack remain optional.
+
+From the Kyna source checkout:
+
+```sh
+cmake -S . -B build-native -DCMAKE_BUILD_TYPE=Release \
+  -DKYNA_WITH_GUI=ON -DKYNA_WITH_GEOMETRY=ON -DKYNA_WITH_ML=ON
+cmake --build build-native --config Release --parallel 3
+ctest --test-dir build-native -C Release --output-on-failure
+```
+
+Choose only the options your application needs. Checked wrappers live in [examples/native/packages](https://github.com/qentrah/Kyna/tree/main/examples/native/packages).
+
+## GUI and Kyna callbacks
+
+The [hull viewer](https://github.com/qentrah/Kyna/blob/main/examples/native/apps/gui_hull.ky) is a complete small program:
+
+```kyna
+var window = guiWindow("CGAL hull in Kyna", 640, 480);
+var hull = geometryHull([
+    [20.0, 20.0], [300.0, 30.0], [200.0, 200.0],
+    [150.0, 50.0], [40.0, 250.0]
+]);
+var drawing = guiDraw(window, hull, "#2368bd");
+guiRun();
+```
+
+Load the native adapters when running a raw build. On macOS/Linux the module names end in `.so`; Windows uses `build-native/native/Release/kyna_gui.dll` and `kyna_geometry.dll`.
+
+```sh
+build-native/bin/ky \
+  --native-library build-native/native/libkyna_gui.so \
+  --native-library build-native/native/libkyna_geometry.so \
+  run examples/native/apps/gui_hull.ky
+```
+
+Button and timer handlers are Kyna functions. They run synchronously on the VM/UI thread. Handler failures end the event loop with a native diagnostic; `unsubscribe` releases an event subscription. The [showcase source](https://github.com/qentrah/Kyna/blob/main/examples/native/apps/showcase.ky) demonstrates callbacks and garbage collection before the UI loop.
+
+Set a running application's icon using `guiIcon("assets/icon.png")`, or the checked wrapper's `gui.icon(...)`. Missing or corrupt images report `KNATIVE1003`. Platform launcher/bundle icons are part of application packaging.
+
+## Geometry
+
+CGAL uses exact predicates with approximate constructed coordinates and measurements. The package supports points, segments, orientation, intersection, distance and convex hull. Triangle mesh inspection accepts OFF input and reports topology, self-intersection, bounds, area and signed volume. Volume rejects open or self-intersecting meshes.
+
+The [mesh example](https://github.com/qentrah/Kyna/blob/main/examples/native/apps/mesh.ky) uses the included tetrahedron fixture. See the [API details](https://github.com/qentrah/Kyna/blob/main/docs/libraries.md) for the inspection result layout.
+
+## Machine learning
+
+Feature arrays use **feature rows × observation columns**. Responses contain one value per observation.
+
+```kyna
+var model = mlTrain([[1.0, 2.0, 3.0]], [3.0, 5.0, 7.0]);
+console.log(mlPredict(model, [[4.0, 5.0]]));
+mlDispose(model);
+```
+
+This [regression example](https://github.com/qentrah/Kyna/blob/main/examples/native/apps/regression.ky) predicts `[9, 11]`. Training and prediction validate dimensions and finite values. Disposing a model releases it immediately; using a stale handle reports `KNATIVE1006`.
+
+## Verified installation and application assets
+
+Declare native artifacts in `kyna.toml` with their version, target, ABI and SHA-256, then run `ky install`. Verified portable archives include their runtime dependencies. Installation checks the artifact and its files without dependency-provided install scripts.
+
+Include local application resources explicitly:
+
+```toml
+[build]
+assets = ["assets/icon.png"]
+```
+
+`ky build main.ky --output dist/my-app` checks and stages application modules, native packages, the CLI, launchers and checksums. Missing files, path traversal and source/asset symlinks escaping their owner are rejected. See [native installation and packaging](https://github.com/qentrah/Kyna/blob/main/docs/libraries.md) and [C++ binding authoring](https://github.com/qentrah/Kyna/blob/main/docs/native-bindings.md).
+
+## Desktop and Android verification
+
+The [release rehearsal](https://github.com/qentrah/Kyna/actions/runs/38353364260) passes Linux x64/ARM64, macOS x64/ARM64 and Windows x64 application/relocation checks. Android ARM64 cross-compilation passes separately. A [recorded Android 14 emulator smoke](https://github.com/qentrah/Kyna/blob/main/docs/videos/README.md) exercises lifecycle, callbacks and shutdown; physical-device and dedicated hosted-emulator verification remain pending.
+
+Qt and CGAL have distinct licensing conditions. Distribution requires package-specific notices, corresponding sources and final license clearance. See the [release status](https://github.com/qentrah/Kyna/blob/main/docs/releases/v1.0.16.md).

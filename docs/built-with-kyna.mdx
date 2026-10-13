@@ -1,0 +1,84 @@
+---
+sidebar_position: 5
+title: Built with Kyna
+description: Real applications and runnable examples built with Kyna, with source, screenshots and build instructions.
+---
+
+import {AppsTable, MusicVideo} from '@site/src/components/BuiltWithKyna';
+
+# Built with Kyna
+
+These projects keep their application behavior in Kyna and use typed native packages where needed. The table distinguishes a complete desktop application from focused examples; every entry links to its source.
+
+<AppsTable />
+
+## Kyna Music
+
+[Kyna Music](https://github.com/qentrah/kyna-music) is a native player for local audio. Kyna handles search, navigation, likes, playlists, queues, shuffle, repeat and playback decisions. Qt Quick renders the interface and Qt Multimedia supplies audio through a typed C ABI 2 adapter.
+
+<MusicVideo />
+
+The application includes six original CC0 instrumentals and original artwork. Import your own audio to extend the library. Titles currently come from filenames; the player does not connect to Spotify.
+
+### Which parts use Kyna?
+
+| Part | Source | Responsibility |
+| --- | --- | --- |
+| Entry point and icon | [main.ky](https://github.com/qentrah/kyna-music/blob/main/main.ky) | Starts the application and chooses its icon. |
+| Application behavior | [src/app.ky](https://github.com/qentrah/kyna-music/blob/main/src/app.ky) | Navigation, search, playlists, queues and playback decisions. |
+| Behavior tests | [tests](https://github.com/qentrah/kyna-music/tree/main/tests) | Real audio, callbacks after GC, persistence and application assertions. |
+| Native presentation | [ui](https://github.com/qentrah/kyna-music/tree/main/ui) | Accessible Qt Quick controls, layouts and artwork. |
+| Native services | [native/src](https://github.com/qentrah/kyna-music/tree/main/native/src) | Audio, file selection, validated storage and typed exports. |
+| Automated builds | [tools/build.py](https://github.com/qentrah/kyna-music/blob/main/tools/build.py) | Build, check, test, run and portable packaging. |
+
+### Build and run
+
+Clone the application and build Kyna from source using its [source build instructions](https://github.com/qentrah/Kyna#build-from-source). The application CI pins Kyna revision `9d33bfb898f3e8261a2a2dde7e8cc579bb54092d` and uses Qt 6.8.3.
+
+```sh
+git clone https://github.com/qentrah/kyna-music.git
+cd kyna-music
+```
+
+The build CLI takes explicit paths. Replace the placeholders with your Kyna checkout, built CLI and Qt installation:
+
+```sh
+python tools/build.py build --kyna-root ../Kyna --ky /path/to/ky --qt-prefix /path/to/Qt
+python tools/build.py check --kyna-root ../Kyna --ky /path/to/ky
+python tools/build.py test --kyna-root ../Kyna --ky /path/to/ky
+python tools/build.py run --kyna-root ../Kyna --ky /path/to/ky
+python tools/build.py package --kyna-root ../Kyna --ky /path/to/ky
+```
+
+Windows uses `ky.exe` and Qt's matching MSVC kit. macOS and Linux use their platform Qt kits; Linux packaging also needs `patchelf` and an audio server. See the [complete build tour](https://github.com/qentrah/kyna-music/blob/main/docs/build-tour.md) and [platform requirements](https://github.com/qentrah/kyna-music#run-and-build).
+
+Packaging calls `ky build main.ky`, then includes the native runtime, platform launcher, icons, license notices and checksums. Recipients do not need a compiler or Qt SDK.
+
+### Verified targets
+
+| Target | Application evidence |
+| --- | --- |
+| Windows x64 | Playback, persistence, native launcher and package smoke passed. |
+| Linux x64 / Ubuntu 24.04 | Application and package smoke passed under Xvfb and PulseAudio. |
+| macOS ARM64 / macOS 14 | Application, relocated package and signature verification passed. |
+
+All three passed the [desktop workflow](https://github.com/qentrah/kyna-music/actions/runs/38350021366) at `72a79fa`. Other CPU/OS versions are not established by those results. The preview uses ad-hoc macOS signing; production signing and notarization are pending.
+
+## Native-library examples
+
+The [native showcase](https://github.com/qentrah/Kyna/blob/main/examples/native/apps/showcase.ky) combines GUI callbacks, CGAL hull drawing and mlpack regression. Its [actual desktop recording](https://github.com/qentrah/Kyna/blob/main/docs/videos/kyna-native-showcase-macos.mp4) shows input, hull and prediction actions. The mesh and regression examples are small CLI programs for checking the individual APIs.
+
+Start with the [native library guide](/docs/libraries/native), then copy an example and keep its handlers in Kyna.
+
+## Start your own repository
+
+With the current source build:
+
+```sh
+ky generate repo my-app
+cd my-app
+ky check
+ky run
+```
+
+To create and push a **public** GitHub repository, use `ky generate repo my-app --github qentrah/my-app`. Git identity and GitHub CLI authentication must already be configured. Existing directories are never overwritten. See the [repository generation guide](https://github.com/qentrah/Kyna/blob/main/docs/repository-generation.md).
